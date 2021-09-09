@@ -13,4 +13,4 @@ jobs:
       - name: Install Ansible
         env:
           DEBIAN_FRONTEND: noninteractive
-        run: sudo apt update && sudo apt install -y software-properties-common && apt-add-repository ppa:ansible/ansible -y && apt install -y ansible
+        run: sudo apt update && sudo apt install -y software-properties-common && sudo apt-add-repository ppa:ansible/ansible -y && sudo apt install -y ansible
