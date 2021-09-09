@@ -1,0 +1,16 @@
+name: Rust
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create-prs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - name: Install Ansible
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: sudo apt update && sudo apt install -y software-properties-common && apt-add-repository ppa:ansible/ansible -y && apt install -y ansible
