@@ -11,7 +11,7 @@
     msg: "{{ cloneresult }}"
 
 - name: Create new branch
-  shell: git checkout -b template_{{ commit_hash[:6] }}
+  shell: git checkout -b template_{{ commit_hash[:7] }}
   args:
     chdir: "{{ work_dir }}/{{ operator.name }}"
 
@@ -84,11 +84,10 @@
   args:
     chdir: "{{ work_dir }}/{{ operator.name }}"
 
-- name: git status
-  shell: git status
+- name: Push changes
+  shell: git push origin
+
+- name: Create PR
+  shell: gh pr create --title "Update templated files to rev {{ commit_hash[:7] }}" --body "Automatically created PR based on commit {{ commit_hash }} in templates repo.\nOriginal commit message:\n\n {{ commit_message }}"
   args:
     chdir: "{{ work_dir }}/{{ operator.name }}"
-  register: status
-
-- debug:
-    msg: "{{ status }}"
