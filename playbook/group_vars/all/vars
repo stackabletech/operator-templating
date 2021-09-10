@@ -14,6 +14,11 @@ repositories:
     url: stackabletech/kafka-operator.git
     product_string: kafka
     pretty_string: Kafka
+  - name: opa-operator
+    url: stackabletech/opa-operator.git
+    product_string: opa
+    pretty_string: Opa
+
 
 # Anything specified in the retired_files variable will be deleted
 #retired_files:
