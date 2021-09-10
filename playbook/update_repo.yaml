@@ -75,7 +75,7 @@
     msg: "{{ status }}"
 
 - name: Commit changes
-  shell: git commit -m 'test'
+  shell: git commit -a -m 'Automatically created PR based on commit {{ commit_hash }} in templates repo.\nOriginal commit message:\n\n {{ commit_message }}'
   args:
     chdir: "{{ work_dir }}/{{ operator.name }}"
 
