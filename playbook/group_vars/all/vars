@@ -10,6 +10,10 @@ repositories:
     url: stackabletech/dummy-operator.git
     product_string: dummy
     pretty_string: Dummy
+  - name: kafka-operator
+    url: stackabletech/kafka-operator.git
+    product_string: kafka
+    pretty_string: Kafka
 
 retired_files:
   - "github"
