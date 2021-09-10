@@ -15,4 +15,5 @@ repositories:
     product_string: kafka
     pretty_string: Kafka
 
-retired_files:
+# Anything specified in the retired_files variable will be deleted
+#retired_files:

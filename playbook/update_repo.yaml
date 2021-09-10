@@ -72,6 +72,7 @@
     state: absent
   with_items: "{{ retired_files }}"
   register: deletion_result
+  when: retired_files is defined
 
 # Check if anything was changed, if yes commit changes and create a pull request, otherwise skip rest of this play
 - name: Create PR if changes were performed
