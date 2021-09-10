@@ -2,12 +2,6 @@ work_dir: "{{ base_dir }}/work"
 template_dir: "{{ base_dir }}/template"
 
 repositories:
-  - name: kafka-operator
-    url: stackabletech/kafka-operator
-    product_string: kafkaxxx
-  - name: zookeeper-operator
-    url: stackabletech/zookeeper-operator
-    product_string: zookeeper
-  - name: opa-operator
-    url: stackabletech/opa-operator
-    product_string: opaxxx
+  - name: dummy-operator
+    url: stackabletech/dummy-operator
+    product_string: dummy

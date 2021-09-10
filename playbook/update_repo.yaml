@@ -71,12 +71,12 @@
     dest: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) }}"
   with_items: "{{ files_normal.files }}"
 
-#
-#- name: Commit changes
-#  shell: git commit -m 'test'
-#  args:
-#    chdir: "{{ work_dir }}/{{ item.name }}"
-#
+
+- name: Commit changes
+  shell: git commit -m 'test'
+  args:
+    chdir: "{{ work_dir }}/{{ item.name }}"
+
 - name: git status
   shell: git status
   args:
