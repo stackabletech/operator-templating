@@ -68,7 +68,7 @@
 
 - name: "Remove retired files and directories"
   file:
-    path: "{{ item }}"
+    path: "{{ work_dir }}/{{ operator.name }}/{{ item }}"
     state: absent
   with_items: "{{ retired_files }}"
   register: deletion_result
@@ -87,7 +87,7 @@
 
     # TODO: Add a check if anything was changed
     - name: Stage all changes
-      shell: git add -A
+      shell: git add .
       args:
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
