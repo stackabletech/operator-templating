@@ -10,5 +10,18 @@
       msg: "{{ loginresult }}"
 
 - name: Clone {{ item.name }}
-  shell: gh repo clone {{ item.url }}
+  shell: gh repo clone {{ item.url }} {{ workdir.stdout}}/{{ item.name }}
 
+- name: Create new branch
+  shell:
+    cmd: git checkout -b testbranch
+    chdir: {{ workdir.stdout}}/{{ item.name }}
+
+- name: git status
+  shell:
+    cmd: git status
+    chdir: {{ workdir.stdout}}/{{ item.name }}
+    register: status
+
+- debug:
+    msg: "{{ status }}"
