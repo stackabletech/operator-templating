@@ -1,7 +1,7 @@
 - debug:
     msg: "{{ item }}"
 
-- shell: gh auth login --with-token {{ gh_access_token }}
+- shell: echo "{{ gh_access_token }}" | gh auth login --with-token
   register: loginresult
   ignore_errors: yes
 
