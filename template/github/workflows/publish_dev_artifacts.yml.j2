@@ -7,7 +7,7 @@ on:
   pull_request:
 
 env:
-  PRODUCT_NAME: {{ item.product_string }}
+  PRODUCT_NAME: {{ operator.product_string }}
   CARGO_TERM_COLOR: always
   CARGO_INCREMENTAL: '0'
   CARGO_PROFILE_DEV_DEBUG: '0'
