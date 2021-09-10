@@ -10,17 +10,17 @@
       msg: "{{ loginresult }}"
 
 - name: Clone
-  shell: gh repo clone {{ item.url }} {{ current_working_directory.stdout}}/{{ item.name }}
+  shell: gh repo clone {{ item.url }} "{{ current_working_directory.stdout}}/work/{{ item.name }}"
 
 - name: Create new branch
   shell: git checkout -b testbranch
   args:
-    chdir: "{{ current_working_directory.stdout}}/{{ item.name }}"
+    chdir: "{{ current_working_directory.stdout}}/work/{{ item.name }}"
 
 - name: git status
   shell: git status
   args:
-    chdir: "{{ current_working_directory.stdout}}/{{ item.name }}"
+    chdir: "{{ current_working_directory.stdout}}/work/{{ item.name }}"
   register: status
 
 - debug:
