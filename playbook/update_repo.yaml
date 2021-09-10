@@ -68,8 +68,8 @@
 
 - name: "Remove retired files and directories"
   file:
-    path: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) | dirname }}"
-    state: directory
+    path: "{{ item }}"
+    state: absent
   with_items: "{{ retired_files }}"
   register: deletion_result
 
