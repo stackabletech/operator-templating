@@ -15,7 +15,7 @@
 - name: Create new branch
   shell:
     cmd: git checkout -b testbranch
-    chdir: {{ workdir.stdout}}/{{ item.name }}
+    chdir: "{{ workdir.stdout}}/{{ item.name }}"
 
 - name: git status
   shell: git status
