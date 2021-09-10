@@ -4,6 +4,11 @@
   connection: local
 
   tasks:
+    - name: Ensure work directory exists
+      file:
+        path: "{{ work_dir }}"
+        state: directory
+
     - name: "Update repositories from templates"
       include: "update_repo.yaml"
       with_items: "{{ repositories }}"
