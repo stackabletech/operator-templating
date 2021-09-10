@@ -25,4 +25,4 @@ jobs:
             sudo apt update && \
             sudo apt install gh
       - name: Run playbook
-        run: ansible-playbook playbook/playbook.yaml --extra-vars "gh_access_token=${{ secrets.GH_ACCESS_TOKEN }} base_dir=$(pwd)"
+        run: ansible-playbook playbook/playbook.yaml --extra-vars "gh_access_token=${{ github.token }} base_dir=$(pwd) commit_hash=${{ github.sha }} commit_message=${{ github.event.head_commit.message }}"
