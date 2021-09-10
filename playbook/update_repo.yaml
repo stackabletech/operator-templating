@@ -11,7 +11,7 @@
     msg: "{{ cloneresult }}"
 
 - name: Create new branch
-  shell: git checkout -b template_{{ commit_hash }}
+  shell: git checkout -b template_{{ commit_hash[:6] }}
   args:
     chdir: "{{ work_dir }}/{{ operator.name }}"
 
