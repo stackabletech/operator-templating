@@ -53,13 +53,15 @@
     - "{{ files_j2.files }}"
     - "{{ files_normal.files }}"
 
+# Since a few of our files contain github actions env vars which are delimited by ${{  }} we need to change
+# the variable_start/end_strings here to avoid collisions
 - name: "Copy templates files"
   template:
     src: "{{ item.path }}"
     mode: "preserve"
     dest: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) | regex_replace('.j2$', '') }}"
-    variable_start_string: [[
-    variable_end_string: ]]
+    variable_start_string: "[["
+    variable_end_string: "]]"
   with_items: "{{ files_j2.files }}"
 
 - name: "Copy normal files to temp directory"
