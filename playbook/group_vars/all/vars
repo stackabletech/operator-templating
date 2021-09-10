@@ -4,7 +4,8 @@ template_dir: "{{ base_dir }}/template"
 # The name for the branch that will be created and from which the pr will be initialized
 pr_branch_name: template_{{ commit_hash[:7] }}
 
+
 repositories:
   - name: dummy-operator
-    url: stackabletech/dummy-operator
+    url: github.com/stackabletech/dummy-operator.git
     product_string: dummy

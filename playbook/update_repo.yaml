@@ -1,10 +1,8 @@
 - debug:
     msg: "{{ operator }}"
 
-
-
 - name: Clone
-  shell: gh repo clone {{ operator.url }} "{{ work_dir }}/{{ operator.name }}"
+  shell: git clone https://{{ github.token }}@github.com/{{ soenkeliebau }}/{{ operator.url }} "{{ work_dir }}/{{ operator.name }}"
   register: cloneresult
 
 - debug:
