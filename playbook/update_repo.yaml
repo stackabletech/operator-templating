@@ -53,28 +53,20 @@
     - "{{ files_j2.files }}"
     - "{{ files_normal.files }}"
 
-#- name: "Copy templates files"
-#  template:
-#    src: "{{ item.path }}"
-#    mode: "preserve"
-#    dest: "{{ item.path | replace(role_path + '/files', temp_file_path.path) | regex_replace('.j2$', '') }}"
-#  with_items: "{{ files_j2.files }}"
-#
-#- name: "Copy normal files to temp directory"
-#  template:
-#    src: "{{ item.path }}"
-#    mode: "preserve"
-#    dest: "{{ item.path | replace(role_path + '/files', temp_file_path.path) }}"
-#  with_items: "{{ files_normal.files }}"
-#
-#- name: git status
-#  shell: git status
-#  args:
-#    chdir: "{{ work_dir }}/{{ item.name }}"
-#  register: status
-#
-#- debug:
-#    msg: "{{ status }}"
+- name: "Copy templates files"
+  template:
+    src: "{{ item.path }}"
+    mode: "preserve"
+    dest: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) | regex_replace('.j2$', '') }}"
+  with_items: "{{ files_j2.files }}"
+
+- name: "Copy normal files to temp directory"
+  template:
+    src: "{{ item.path }}"
+    mode: "preserve"
+    dest: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) }}"
+  with_items: "{{ files_normal.files }}"
+
 #
 #- name: Commit changes
 #  shell: git commit -m 'test'
