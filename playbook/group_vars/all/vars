@@ -9,3 +9,6 @@ repositories:
   - name: dummy-operator
     url: stackabletech/dummy-operator.git
     product_string: dummy
+
+retired_files:
+  - "github"
