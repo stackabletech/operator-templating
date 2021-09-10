@@ -59,7 +59,7 @@
   register: template_result
 
 - name: "Copy normal files to temp directory"
-  template:
+  copy:
     src: "{{ item.path }}"
     mode: "preserve"
     dest: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) }}"
