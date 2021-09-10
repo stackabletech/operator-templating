@@ -6,10 +6,11 @@ commit_short_hash: {{ commit_hash[:7] }}
 pr_branch_name: template_{{ commit_short_hash }}
 
 commit_message: |
-    Automatically created based on commit {{ commit_hash }} in stackabletech/operator-templating repo.
+    Update templated files to rev {{ commit_short_hash }} in stackabletech/operator-templating repo
 
     Original commit message:
     {{ original_commit_message }}
+    Automatically created based on commit {{ commit_hash }} in stackabletech/operator-templating repo.
 
 pr_title: "Update templated files to rev {{ commit_short_hash }}"
 
