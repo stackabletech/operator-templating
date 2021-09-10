@@ -6,4 +6,4 @@
   tasks:
     - name: "Update repositories from templates"
       include: "update_repo.yaml"
-      with_items: {{ repositories }}
+      with_items: "{{ repositories }}"
