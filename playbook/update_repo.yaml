@@ -81,11 +81,11 @@
 #  args:
 #    chdir: "{{ work_dir }}/{{ item.name }}"
 #
-#- name: git status
-#  shell: git status
-#  args:
-#    chdir: "{{ work_dir }}/{{ item.name }}"
-#  register: status
+- name: git status
+  shell: git status
+  args:
+    chdir: "{{ work_dir }}/{{ item.name }}"
+  register: status
 
 - debug:
     msg: "{{ status }}"
