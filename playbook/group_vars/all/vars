@@ -7,5 +7,5 @@ pr_branch_name: template_{{ commit_hash[:7] }}
 
 repositories:
   - name: dummy-operator
-    url: github.com/stackabletech/dummy-operator.git
+    url: stackabletech/dummy-operator.git
     product_string: dummy
