@@ -1,10 +1,6 @@
 - debug:
     msg: "{{ item }}"
 
-- name: current_working_directory
-  shell: pwd
-  register: current_working_directory
-
 - name: Login to github
   shell: echo "{{ gh_access_token }}" | gh auth login --with-token
   register: loginresult
@@ -14,17 +10,17 @@
       msg: "{{ loginresult }}"
 
 - name: Clone
-  shell: gh repo clone {{ item.url }} {{ workdir.stdout}}/{{ item.name }}
+  shell: gh repo clone {{ item.url }} {{ current_working_directory.stdout}}/{{ item.name }}
 
 - name: Create new branch
   shell:
     cmd: git checkout -b testbranch
-    chdir: "{{ workdir.stdout}}/{{ item.name }}"
+    chdir: "{{ current_working_directory.stdout}}/{{ item.name }}"
 
 - name: git status
   shell: git status
   args:
-    chdir: "{{ workdir.stdout}}/{{ item.name }}"
+    chdir: "{{ current_working_directory.stdout}}/{{ item.name }}"
     register: status
 
 - debug:
