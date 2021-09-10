@@ -16,4 +16,3 @@ repositories:
     pretty_string: Kafka
 
 retired_files:
-  - "github"
