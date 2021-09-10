@@ -74,6 +74,9 @@
 - debug:
     msg: "{{ status }}"
 
+- name: Stage all changes
+  shell: git add -A
+
 - name: Commit changes
   shell: git commit -a -m 'Automatically created PR based on commit {{ commit_hash }} in templates repo.\nOriginal commit message:\n\n {{ commit_message }}'
   args:
