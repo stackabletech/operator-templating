@@ -58,8 +58,8 @@
     src: "{{ item.path }}"
     mode: "preserve"
     dest: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) | regex_replace('.j2$', '') }}"
-    variable_end_string: [[
-    variable_start_string: ]]
+    variable_start_string: [[
+    variable_end_string: ]]
   with_items: "{{ files_j2.files }}"
 
 - name: "Copy normal files to temp directory"
