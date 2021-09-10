@@ -20,7 +20,7 @@
 - name: git status
   shell: git status
   args:
-    chdir: {{ workdir.stdout}}/{{ item.name }}
+    chdir: "{{ workdir.stdout}}/{{ item.name }}"
     register: status
 
 - debug:
