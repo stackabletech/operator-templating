@@ -44,6 +44,7 @@
   with_items:
     - "{{ files_j2.files }}"
     - "{{ files_normal.files }}"
+  register: directory_result
 
 # Since a few of our files contain github actions env vars which are delimited by ${{  }} we need to change
 # the variable_start/end_strings here to avoid collisions
@@ -55,6 +56,7 @@
     variable_start_string: "[["
     variable_end_string: "]]"
   with_items: "{{ files_j2.files }}"
+  register: template_result
 
 - name: "Copy normal files to temp directory"
   template:
@@ -62,33 +64,38 @@
     mode: "preserve"
     dest: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) }}"
   with_items: "{{ files_normal.files }}"
+  register: file_result
 
-- name: git status
-  shell: git status
-  args:
-    chdir: "{{ work_dir }}/{{ operator.name }}"
-  register: status
+# Check if anything was changed, if yes commit changes and create a pull request, otherwise skip rest of this play
+- block:
+  when: directory_result.changed or template_result.changed or file_result.changed
 
-- debug:
-    msg: "{{ status }}"
+  - name: git status
+    shell: git status
+    args:
+      chdir: "{{ work_dir }}/{{ operator.name }}"
+    register: status
 
-# TODO: Add a check if anything was changed
-- name: Stage all changes
-  shell: git add -A
-  args:
-    chdir: "{{ work_dir }}/{{ operator.name }}"
+  - debug:
+      msg: "{{ status }}"
 
-- name: Commit changes
-  shell: git commit -a -m 'Automatically created PR based on commit {{ commit_hash }} in templates repo.' -m 'Original commit message {{ commit_message }}'
-  args:
-    chdir: "{{ work_dir }}/{{ operator.name }}"
+  # TODO: Add a check if anything was changed
+  - name: Stage all changes
+    shell: git add -A
+    args:
+      chdir: "{{ work_dir }}/{{ operator.name }}"
 
-- name: Push changes
-  shell: git push --set-upstream origin {{ pr_branch_name }}
-  args:
-    chdir: "{{ work_dir }}/{{ operator.name }}"
+  - name: Commit changes
+    shell: git commit -a -m 'Automatically created PR based on commit {{ commit_hash }} in templates repo.' -m 'Original commit message {{ commit_message }}'
+    args:
+      chdir: "{{ work_dir }}/{{ operator.name }}"
 
-- name: Create PR
-  shell: gh pr create --base main --title "Update templated files to rev {{ commit_hash[:7] }}" --body "Automatically created PR based on commit {{ commit_hash }} in templates repo.\\nOriginal commit message:\\n\\n {{ commit_message }}"
-  args:
-    chdir: "{{ work_dir }}/{{ operator.name }}"
+  - name: Push changes
+    shell: git push --set-upstream origin {{ pr_branch_name }}
+    args:
+      chdir: "{{ work_dir }}/{{ operator.name }}"
+
+  - name: Create PR
+    shell: gh pr create --base main --title "Update templated files to rev {{ commit_hash[:7] }}" --body "Automatically created PR based on commit {{ commit_hash }} in templates repo.\\nOriginal commit message:\\n\\n {{ commit_message }}"
+    args:
+      chdir: "{{ work_dir }}/{{ operator.name }}"
