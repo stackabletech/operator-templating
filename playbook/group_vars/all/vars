@@ -4,10 +4,10 @@ template_dir: "{{ base_dir }}/template"
 repositories:
   - name: kafka-operator
     url: stackabletech/kafka-operator
-    product_string: kafka
+    product_string: kafkaxxx
   - name: zookeeper-operator
     url: stackabletech/zookeeper-operator
     product_string: zookeeper
   - name: opa-operator
     url: stackabletech/opa-operator
-    product_string: opa
+    product_string: opaxxx

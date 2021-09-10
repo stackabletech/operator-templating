@@ -21,32 +21,38 @@
   args:
     chdir: "{{ work_dir }}/{{ item.name }}"
 
-#- name: "Find j2 files"
-#  find:
-#    paths: "{{ template_dir }}/"
-#    patterns: "*.j2"
-#    file_type: file
-#    use_regex: no
-#    recurse: yes
-#  register: files_j2
-#
-#- name: "Find normal files"
-#  find:
-#    paths: "{{ template_dir }}/"
-#    excludes: "*.j2"
-#    file_type: file
-#    use_regex: no
-#    recurse: yes
-#  register: files_normal
+- name: "Find j2 files"
+  find:
+    paths: "{{ template_dir }}/"
+    patterns: "*.j2"
+    file_type: file
+    use_regex: no
+    recurse: yes
+  register: files_j2
 
-#- name: "Ensure directory exists"
-#  file:
-#    path: "{{ item.path | replace(role_path + '/files', temp_file_path.path) | dirname }}"
-#    state: directory
-#  with_items:
-#    - "{{ files_j2.files }}"
-#    - "{{ files_normal.files }}"
-#
+- debug:
+    msg: "{{ files_j2 }}"
+
+- name: "Find normal files"
+  find:
+    paths: "{{ template_dir }}/"
+    excludes: "*.j2"
+    file_type: file
+    use_regex: no
+    recurse: yes
+  register: files_normal
+
+- debug:
+    msg: "{{ files_normal }}"
+
+- name: "Ensure directory exists"
+  file:
+    path: "{{ item.path | replace(template_dir, work_dir + '/' + item.name) | dirname }}"
+    state: directory
+  with_items:
+    - "{{ files_j2.files }}"
+    - "{{ files_normal.files }}"
+
 #- name: "Copy templates files"
 #  template:
 #    src: "{{ item.path }}"
@@ -54,7 +60,7 @@
 #    dest: "{{ item.path | replace(role_path + '/files', temp_file_path.path) | regex_replace('.j2$', '') }}"
 #  with_items: "{{ files_j2.files }}"
 #
-#- name: "Copy normal  files to temp directory"
+#- name: "Copy normal files to temp directory"
 #  template:
 #    src: "{{ item.path }}"
 #    mode: "preserve"
@@ -80,6 +86,6 @@
 #  args:
 #    chdir: "{{ work_dir }}/{{ item.name }}"
 #  register: status
-#
-#- debug:
-#    msg: "{{ status }}"
+
+- debug:
+    msg: "{{ status }}"
