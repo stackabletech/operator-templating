@@ -2,7 +2,7 @@
     msg: "{{ operator }}"
 
 - name: Clone
-  shell: git clone https://{{ gh_access_token }}@github.com/soenkeliebau/{{ operator.url }} "{{ work_dir }}/{{ operator.name }}"
+  shell: git clone https://{{ gh_access_token }}@github.com/{{ operator.url }} "{{ work_dir }}/{{ operator.name }}"
   register: cloneresult
 
 - debug:
