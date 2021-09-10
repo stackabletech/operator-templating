@@ -84,7 +84,7 @@
 - name: git status
   shell: git status
   args:
-    chdir: "{{ work_dir }}/{{ item.name }}"
+    chdir: "{{ work_dir }}/{{ operator.name }}"
   register: status
 
 - debug:
