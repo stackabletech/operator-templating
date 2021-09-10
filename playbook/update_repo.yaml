@@ -14,11 +14,13 @@
 
 - name: Create new branch
   shell: git checkout -b testbranch
-  chdir: "{{ current_working_directory.stdout}}/{{ item.name }}"
+  args:
+    chdir: "{{ current_working_directory.stdout}}/{{ item.name }}"
 
 - name: git status
   shell: git status
-  chdir: "{{ current_working_directory.stdout}}/{{ item.name }}"
+  args:
+    chdir: "{{ current_working_directory.stdout}}/{{ item.name }}"
   register: status
 
 - debug:
