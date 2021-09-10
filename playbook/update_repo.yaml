@@ -18,8 +18,8 @@
     chdir: {{ workdir.stdout}}/{{ item.name }}
 
 - name: git status
-  shell:
-    cmd: git status
+  shell: git status
+  args:
     chdir: {{ workdir.stdout}}/{{ item.name }}
     register: status
 
