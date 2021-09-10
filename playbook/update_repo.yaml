@@ -9,7 +9,7 @@
 - debug:
       msg: "{{ loginresult }}"
 
-- name: Clone {{ item.name }}
+- name: Clone
   shell: gh repo clone {{ item.url }} {{ workdir.stdout}}/{{ item.name }}
 
 - name: Create new branch
