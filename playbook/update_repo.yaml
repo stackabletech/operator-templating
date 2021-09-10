@@ -1,4 +1,5 @@
 - debug:
     msg: "{{ item }}"
 
-- shell: gh clone {{ item.url }}
+- shell: gh repo clone {{ item.url }}
+
