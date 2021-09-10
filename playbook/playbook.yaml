@@ -4,6 +4,10 @@
   connection: local
 
   tasks:
+    - name: Show workdir
+      debug:
+        msg: "{{ work_dir }}"
+
     - name: Ensure work directory exists
       file:
         path: "{{ work_dir }}"
@@ -14,7 +18,7 @@
       with_items: "{{ repositories }}"
 
     - name: "List directory"
-      shell: tree
+      shell: tree {{ work_dir }}
       register: dirtree
 
     - name: Show tree
