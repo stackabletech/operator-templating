@@ -67,35 +67,36 @@
   register: file_result
 
 # Check if anything was changed, if yes commit changes and create a pull request, otherwise skip rest of this play
-- block:
-  - name: git status
-    shell: git status
-    args:
-      chdir: "{{ work_dir }}/{{ operator.name }}"
-    register: status
+- name: Create PR if changes were performed
+  block:
+    - name: git status
+      shell: git status
+      args:
+        chdir: "{{ work_dir }}/{{ operator.name }}"
+      register: status
 
-  - debug:
-      msg: "{{ status }}"
+    - debug:
+        msg: "{{ status }}"
 
-  # TODO: Add a check if anything was changed
-  - name: Stage all changes
-    shell: git add -A
-    args:
-      chdir: "{{ work_dir }}/{{ operator.name }}"
+    # TODO: Add a check if anything was changed
+    - name: Stage all changes
+      shell: git add -A
+      args:
+        chdir: "{{ work_dir }}/{{ operator.name }}"
 
-  - name: Commit changes
-    shell: git commit -a -m 'Automatically created PR based on commit {{ commit_hash }} in templates repo.' -m 'Original commit message {{ commit_message }}'
-    args:
-      chdir: "{{ work_dir }}/{{ operator.name }}"
+    - name: Commit changes
+      shell: git commit -a -m 'Automatically created PR based on commit {{ commit_hash }} in templates repo.' -m 'Original commit message {{ commit_message }}'
+      args:
+        chdir: "{{ work_dir }}/{{ operator.name }}"
 
-  - name: Push changes
-    shell: git push --set-upstream origin {{ pr_branch_name }}
-    args:
-      chdir: "{{ work_dir }}/{{ operator.name }}"
+    - name: Push changes
+      shell: git push --set-upstream origin {{ pr_branch_name }}
+      args:
+        chdir: "{{ work_dir }}/{{ operator.name }}"
 
-  - name: Create PR
-    shell: gh pr create --base main --title "Update templated files to rev {{ commit_hash[:7] }}" --body "Automatically created PR based on commit {{ commit_hash }} in templates repo.\\nOriginal commit message:\\n\\n {{ commit_message }}"
-    args:
-      chdir: "{{ work_dir }}/{{ operator.name }}"
+    - name: Create PR
+      shell: gh pr create --base main --title "Update templated files to rev {{ commit_hash[:7] }}" --body "Automatically created PR based on commit {{ commit_hash }} in templates repo.\\nOriginal commit message:\\n\\n {{ commit_message }}"
+      args:
+        chdir: "{{ work_dir }}/{{ operator.name }}"
 
   when: directory_result.changed or template_result.changed or file_result.changed
