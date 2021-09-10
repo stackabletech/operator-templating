@@ -17,11 +17,65 @@
   args:
     chdir: "{{ current_working_directory.stdout}}/work/{{ item.name }}"
 
-- name: git status
-  shell: git status
-  args:
-    chdir: "{{ current_working_directory.stdout}}/work/{{ item.name }}"
-  register: status
+#- name: "Find j2 files"
+#  find:
+#    paths: "{{ current_working_directory.stdout}}/shared_files/"
+#    patterns: "*.j2"
+#    file_type: file
+#    use_regex: no
+#    recurse: yes
+#  register: files_j2
+#
+#- name: "Find normal files"
+#  find:
+#    paths: "{{ current_working_directory.stdout}}/shared_files/"
+#    excludes: "*.j2"
+#    file_type: file
+#    use_regex: no
+#    recurse: yes
+#  register: files_normal
 
-- debug:
-    msg: "{{ status }}"
+#- name: "Ensure directory exists"
+#  file:
+#    path: "{{ item.path | replace(role_path + '/files', temp_file_path.path) | dirname }}"
+#    state: directory
+#  with_items:
+#    - "{{ files_j2.files }}"
+#    - "{{ files_normal.files }}"
+#
+#- name: "Copy templates files"
+#  template:
+#    src: "{{ item.path }}"
+#    mode: "preserve"
+#    dest: "{{ item.path | replace(role_path + '/files', temp_file_path.path) | regex_replace('.j2$', '') }}"
+#  with_items: "{{ files_j2.files }}"
+#
+#- name: "Copy normal  files to temp directory"
+#  template:
+#    src: "{{ item.path }}"
+#    mode: "preserve"
+#    dest: "{{ item.path | replace(role_path + '/files', temp_file_path.path) }}"
+#  with_items: "{{ files_normal.files }}"
+#
+#- name: git status
+#  shell: git status
+#  args:
+#    chdir: "{{ current_working_directory.stdout}}/work/{{ item.name }}"
+#  register: status
+#
+#- debug:
+#    msg: "{{ status }}"
+#
+#- name: Commit changes
+#  shell: git commit -m 'test'
+#  args:
+#    chdir: "{{ current_working_directory.stdout}}/work/{{ item.name }}"
+#
+#- name: git status
+#  shell: git status
+#  args:
+#    chdir: "{{ current_working_directory.stdout}}/work/{{ item.name }}"
+#  register: status
+#
+#- debug:
+#    msg: "{{ status }}"
