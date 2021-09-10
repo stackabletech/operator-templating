@@ -39,7 +39,7 @@
 
 - name: "Ensure directories exist"
   file:
-    path: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) | dirname }}"
+    path: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) |  replace('[[product]]', operator.name) | dirname }}"
     state: directory
   with_items:
     - "{{ files_j2.files }}"
@@ -52,7 +52,7 @@
   template:
     src: "{{ item.path }}"
     mode: "preserve"
-    dest: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) | regex_replace('.j2$', '') }}"
+    dest: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) | replace('[[product]]', operator.name) | regex_replace('.j2$', '') }}"
     variable_start_string: "[["
     variable_end_string: "]]"
   with_items: "{{ files_j2.files }}"
