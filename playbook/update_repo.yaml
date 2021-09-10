@@ -88,6 +88,6 @@
     chdir: "{{ work_dir }}/{{ operator.name }}"
 
 - name: Create PR
-  shell: gh pr create --title "Update templated files to rev {{ commit_hash[:7] }}" --body "Automatically created PR based on commit {{ commit_hash }} in templates repo.\nOriginal commit message:\n\n {{ commit_message }}"
+  shell: gh pr create --base main --title "Update templated files to rev {{ commit_hash[:7] }}" --body "Automatically created PR based on commit {{ commit_hash }} in templates repo.\nOriginal commit message:\n\n {{ commit_message }}"
   args:
     chdir: "{{ work_dir }}/{{ operator.name }}"
