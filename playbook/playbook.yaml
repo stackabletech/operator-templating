@@ -16,6 +16,8 @@
     - name: "Update repositories from templates"
       include: "update_repo.yaml"
       with_items: "{{ repositories }}"
+      loop_control:
+        loop_var: operator
 
     - name: "List directory"
       shell: tree {{ work_dir }}

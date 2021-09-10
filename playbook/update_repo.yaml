@@ -1,5 +1,5 @@
 - debug:
-    msg: "{{ item }}"
+    msg: "{{ operator }}"
 
 - name: Login to github
   shell: echo "{{ gh_access_token }}" | gh auth login --with-token
@@ -10,7 +10,7 @@
       msg: "{{ loginresult }}"
 
 - name: Clone
-  shell: gh repo clone {{ item.url }} "{{ work_dir }}/{{ item.name }}"
+  shell: gh repo clone {{ operator.url }} "{{ work_dir }}/{{ operator.name }}"
   register: cloneresult
 
 - debug:
@@ -19,7 +19,7 @@
 - name: Create new branch
   shell: git checkout -b testbranch
   args:
-    chdir: "{{ work_dir }}/{{ item.name }}"
+    chdir: "{{ work_dir }}/{{ operator.name }}"
 
 - name: "Find j2 files"
   find:
@@ -47,7 +47,7 @@
 
 - name: "Ensure directory exists"
   file:
-    path: "{{ item.path | replace(template_dir, work_dir + '/' + item.name) | dirname }}"
+    path: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) | dirname }}"
     state: directory
   with_items:
     - "{{ files_j2.files }}"
