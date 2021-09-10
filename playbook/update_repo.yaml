@@ -13,15 +13,13 @@
   shell: gh repo clone {{ item.url }} {{ current_working_directory.stdout}}/{{ item.name }}
 
 - name: Create new branch
-  shell:
-    cmd: git checkout -b testbranch
-    chdir: "{{ current_working_directory.stdout}}/{{ item.name }}"
+  shell: git checkout -b testbranch
+  chdir: "{{ current_working_directory.stdout}}/{{ item.name }}"
 
 - name: git status
   shell: git status
-  args:
-    chdir: "{{ current_working_directory.stdout}}/{{ item.name }}"
-    register: status
+  chdir: "{{ current_working_directory.stdout}}/{{ item.name }}"
+  register: status
 
 - debug:
     msg: "{{ status }}"
