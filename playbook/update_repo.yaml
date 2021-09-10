@@ -1,5 +1,7 @@
 - debug:
     msg: "{{ item }}"
 
+- shell: gh auth login --with-token {{ gh_access_token }}
+
 - shell: gh repo clone {{ item.url }}
 

@@ -25,4 +25,4 @@ jobs:
             sudo apt update && \
             sudo apt install gh
       - name: Run playbook
-        run: ansible-playbook playbook/playbook.yaml
+        run: ansible-playbook playbook/playbook.yaml --extra-vars "gh_access_token=${{ GH_ACCESS_TOKEN }}"
