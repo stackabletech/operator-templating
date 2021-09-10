@@ -72,6 +72,7 @@
 - debug:
     msg: "{{ status }}"
 
+# TODO: Add a check if anything was changed
 - name: Stage all changes
   shell: git add -A
   args:
