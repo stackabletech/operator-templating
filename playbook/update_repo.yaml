@@ -1,6 +1,10 @@
 - debug:
     msg: "{{ item }}"
 
+- name: current_working_directory
+  shell: pwd
+  register: current_working_directory
+
 - name: Login to github
   shell: echo "{{ gh_access_token }}" | gh auth login --with-token
   register: loginresult
