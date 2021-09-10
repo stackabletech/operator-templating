@@ -13,6 +13,20 @@
         path: "{{ work_dir }}"
         state: directory
 
+    - name: Configure git author mail
+      shell: git config --global user.email "info@stackable.de"
+
+    - name: Configure git author name
+      git config --global user.name "Stacky McStackface"
+
+    - name: Login to github
+      shell: echo "{{ gh_access_token }}" | gh auth login --with-token
+      register: loginresult
+      ignore_errors: yes
+
+    - debug:
+        msg: "{{ loginresult }}"
+
     - name: "Update repositories from templates"
       include: "update_repo.yaml"
       with_items: "{{ repositories }}"

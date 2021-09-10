@@ -1,13 +1,7 @@
 - debug:
     msg: "{{ operator }}"
 
-- name: Login to github
-  shell: echo "{{ gh_access_token }}" | gh auth login --with-token
-  register: loginresult
-  ignore_errors: yes
 
-- debug:
-      msg: "{{ loginresult }}"
 
 - name: Clone
   shell: gh repo clone {{ operator.url }} "{{ work_dir }}/{{ operator.name }}"
@@ -17,7 +11,7 @@
     msg: "{{ cloneresult }}"
 
 - name: Create new branch
-  shell: git checkout -b testbranch
+  shell: git checkout -b template_{{ commit_hash }}
   args:
     chdir: "{{ work_dir }}/{{ operator.name }}"
 
