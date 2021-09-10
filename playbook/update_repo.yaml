@@ -10,16 +10,16 @@
       msg: "{{ loginresult }}"
 
 - name: Clone
-  shell: gh repo clone {{ item.url }} "{{ current_working_directory.stdout}}/work/{{ item.name }}"
+  shell: gh repo clone {{ item.url }} "{{ work_dir }}/{{ item.name }}"
 
 - name: Create new branch
   shell: git checkout -b testbranch
   args:
-    chdir: "{{ current_working_directory.stdout}}/work/{{ item.name }}"
+    chdir: "{{ work_dir }}/{{ item.name }}"
 
 #- name: "Find j2 files"
 #  find:
-#    paths: "{{ current_working_directory.stdout}}/shared_files/"
+#    paths: "{{ template_dir }}/"
 #    patterns: "*.j2"
 #    file_type: file
 #    use_regex: no
@@ -28,7 +28,7 @@
 #
 #- name: "Find normal files"
 #  find:
-#    paths: "{{ current_working_directory.stdout}}/shared_files/"
+#    paths: "{{ template_dir }}/"
 #    excludes: "*.j2"
 #    file_type: file
 #    use_regex: no
@@ -60,7 +60,7 @@
 #- name: git status
 #  shell: git status
 #  args:
-#    chdir: "{{ current_working_directory.stdout}}/work/{{ item.name }}"
+#    chdir: "{{ work_dir }}/{{ item.name }}"
 #  register: status
 #
 #- debug:
@@ -69,12 +69,12 @@
 #- name: Commit changes
 #  shell: git commit -m 'test'
 #  args:
-#    chdir: "{{ current_working_directory.stdout}}/work/{{ item.name }}"
+#    chdir: "{{ work_dir }}/{{ item.name }}"
 #
 #- name: git status
 #  shell: git status
 #  args:
-#    chdir: "{{ current_working_directory.stdout}}/work/{{ item.name }}"
+#    chdir: "{{ work_dir }}/{{ item.name }}"
 #  register: status
 #
 #- debug:

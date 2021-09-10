@@ -4,25 +4,9 @@
   connection: local
 
   tasks:
-    - name: Show work_dir
-      debug:
-        msg: "{{ work_dir }}"
-
-    - name: current_working_directory
-      shell: pwd
-      register: current_working_directory
-
     - name: "Update repositories from templates"
       include: "update_repo.yaml"
       with_items: "{{ repositories }}"
-
-    - name: "Show workdir"
-      shell: cd .. && pwd
-      register: workdir
-
-    - name: Show workdir - debug
-      debug:
-        msg: "{{ workdir }}"
 
     - name: "List directory"
       shell: tree

@@ -1,3 +1,5 @@
+work_dir: {{ base_dir }}/work
+template_dir: {{ base_dir }}/template
 repositories:
   - name: kafka-operator
     url: stackabletech/kafka-operator
