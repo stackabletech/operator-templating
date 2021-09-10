@@ -68,8 +68,6 @@
 
 # Check if anything was changed, if yes commit changes and create a pull request, otherwise skip rest of this play
 - block:
-  when: directory_result.changed or template_result.changed or file_result.changed
-
   - name: git status
     shell: git status
     args:
@@ -99,3 +97,5 @@
     shell: gh pr create --base main --title "Update templated files to rev {{ commit_hash[:7] }}" --body "Automatically created PR based on commit {{ commit_hash }} in templates repo.\\nOriginal commit message:\\n\\n {{ commit_message }}"
     args:
       chdir: "{{ work_dir }}/{{ operator.name }}"
+
+  when: directory_result.changed or template_result.changed or file_result.changed
