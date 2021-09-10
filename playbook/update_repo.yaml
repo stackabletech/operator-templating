@@ -2,6 +2,11 @@
     msg: "{{ item }}"
 
 - shell: gh auth login --with-token {{ gh_access_token }}
+  register: loginresult
+  ignore_errors: yes
+
+- debug:
+      msg: "{{ loginresult.stdout }}"
 
 - shell: gh repo clone {{ item.url }}
 
