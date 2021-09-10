@@ -6,7 +6,7 @@
   ignore_errors: yes
 
 - debug:
-      msg: "{{ loginresult.stdout }}"
+      msg: "{{ loginresult }}"
 
 - shell: gh repo clone {{ item.url }}
 
