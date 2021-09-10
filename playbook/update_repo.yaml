@@ -1,12 +1,14 @@
 - debug:
     msg: "{{ item }}"
 
-- shell: echo "{{ gh_access_token }}" | gh auth login --with-token
+- name: Login to github
+  shell: echo "{{ gh_access_token }}" | gh auth login --with-token
   register: loginresult
   ignore_errors: yes
 
 - debug:
       msg: "{{ loginresult }}"
 
-- shell: gh repo clone {{ item.url }}
+- name: Clone {{ item.name }}
+  shell: gh repo clone {{ item.url }}
 

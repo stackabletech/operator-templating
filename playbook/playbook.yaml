@@ -11,3 +11,19 @@
     - name: "Update repositories from templates"
       include: "update_repo.yaml"
       with_items: "{{ repositories }}"
+
+    - name: "Show workdir"
+      shell: pwd
+      register: workdir
+
+    - name: Show workdir - debug
+      debug:
+        msg: "{{ workdir }}"
+
+    - name: "List directory"
+      shell: tree
+      register: dirtree
+
+    - name: Show tree
+      debug:
+        msg: "{{ dirtree }}"
