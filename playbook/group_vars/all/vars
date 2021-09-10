@@ -1,0 +1,10 @@
+repositories:
+  - name: kafka-operator
+    url: stackabletech/kafka-operator
+    product_string: kafka
+  - name: zookeeper-operator
+    url: stackabletech/zookeeper-operator
+    product_string: zookeeper
+  - name: opa-operator
+    url: stackabletech/opa-operator
+    product_string: opa
