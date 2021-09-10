@@ -1,2 +1,4 @@
 - debug:
     msg: "{{ item }}"
+
+- shell: gh clone {{ item.url }}

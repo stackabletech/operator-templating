@@ -4,6 +4,10 @@
   connection: local
 
   tasks:
+    - name: current_working_directory
+      shell: pwd
+      register: current_working_directory
+
     - name: "Update repositories from templates"
       include: "update_repo.yaml"
       with_items: "{{ repositories }}"
