@@ -2,7 +2,7 @@ work_dir: "{{ base_dir }}/work"
 template_dir: "{{ base_dir }}/template"
 
 # The name for the branch that will be created and from which the pr will be initialized
-commit_short_hash: "{{ commit_hash[:7] }}""
+commit_short_hash: "{{ commit_hash[:7] }}"
 pr_branch_name: template_{{ commit_short_hash }}
 
 commit_message: |
