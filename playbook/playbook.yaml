@@ -4,6 +4,9 @@
   connection: local
 
   tasks:
+    - name: Include data which repositories to check
+      include_vars: ../repositories.yaml
+
     - name: Show workdir
       debug:
         msg: "{{ work_dir }}"
