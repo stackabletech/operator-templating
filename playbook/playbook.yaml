@@ -14,10 +14,10 @@
         state: directory
 
     - name: Configure git author mail
-      shell: git config --global user.email "info@stackable.de"
+      shell: git config --global user.email "soenke.liebau@stackable.de"
 
     - name: Configure git author name
-      shell: git config --global user.name "Stacky McStackface"
+      shell: git config --global user.name "Sönke Liebau"
 
     - name: Login to github
       shell: echo "{{ gh_access_token }}" | gh auth login --with-token
