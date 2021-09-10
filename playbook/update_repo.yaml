@@ -11,6 +11,10 @@
 
 - name: Clone
   shell: gh repo clone {{ item.url }} "{{ work_dir }}/{{ item.name }}"
+  register: cloneresult
+
+- debug:
+    msg: "{{ cloneresult }}"
 
 - name: Create new branch
   shell: git checkout -b testbranch
