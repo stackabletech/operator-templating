@@ -1,16 +1,25 @@
+# These values are set in the git config before creating and pushing the commits on the target repositories
+author_name: "Sönke Liebau"
+author_mail: "soenke.liebau@stackable.de"
+
+# Defines which subdirectory to check the target repos out in
 work_dir: "{{ base_dir }}/work"
+
+# Directory containinng the template structure to roll out
 template_dir: "{{ base_dir }}/template"
 
 # The name for the branch that will be created and from which the pr will be initialized
 commit_short_hash: "{{ commit_hash[:7] }}"
 pr_branch_name: template_{{ commit_short_hash }}
 
+# Message that will be set on commits
 commit_message: |
     Generated commit to update templated files based on rev {{ commit_short_hash }} in stackabletech/operator-templating repo.
 
     Original commit message:
     {{ original_commit_message }}
 
+# Title and body of created PRs
 pr_title: "Update templated files to rev {{ commit_short_hash }}"
 
 pr_body: |

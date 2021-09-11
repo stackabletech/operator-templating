@@ -1,19 +1,13 @@
-- debug:
-    msg: "{{ operator }}"
-
-- name: Clone
+- name: Clone operator repository into working directory
   shell: git clone https://{{ gh_access_token }}@github.com/{{ operator.url }} "{{ work_dir }}/{{ operator.name }}"
   register: cloneresult
-
-- debug:
-    msg: "{{ cloneresult }}"
 
 - name: Create new branch
   shell: git checkout -b {{ pr_branch_name }}
   args:
     chdir: "{{ work_dir }}/{{ operator.name }}"
 
-- name: "Find j2 files"
+- name: Find template files
   find:
     paths: "{{ template_dir }}/"
     patterns: "*.j2"
@@ -22,10 +16,7 @@
     recurse: yes
   register: files_j2
 
-- debug:
-    msg: "{{ files_j2 }}"
-
-- name: "Find normal files"
+- name: Find regular files that need to templating
   find:
     paths: "{{ template_dir }}/"
     excludes: "*.j2"
@@ -34,10 +25,7 @@
     recurse: yes
   register: files_normal
 
-- debug:
-    msg: "{{ files_normal }}"
-
-- name: "Ensure directories exist"
+- name: Ensure directories exist
   file:
     path: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) |  replace('[[product]]', operator.product_string) | dirname }}"
     state: directory
@@ -48,7 +36,7 @@
 
 # Since a few of our files contain github actions env vars which are delimited by ${{  }} we need to change
 # the variable_start/end_strings here to avoid collisions
-- name: "Copy templates files"
+- name: Copy templates files
   template:
     src: "{{ item.path }}"
     mode: "preserve"
@@ -58,7 +46,7 @@
   with_items: "{{ files_j2.files }}"
   register: template_result
 
-- name: "Copy normal files to temp directory"
+- name: Copy normal files to temp directory
   copy:
     src: "{{ item.path }}"
     mode: "preserve"
@@ -66,7 +54,7 @@
   with_items: "{{ files_normal.files }}"
   register: file_result
 
-- name: "Remove retired files and directories"
+- name: Remove retired files and directories
   file:
     path: "{{ work_dir }}/{{ operator.name }}/{{ item }}"
     state: absent
@@ -77,16 +65,6 @@
 # Check if anything was changed, if yes commit changes and create a pull request, otherwise skip rest of this play
 - name: Create PR if changes were performed
   block:
-    - name: git status
-      shell: git status
-      args:
-        chdir: "{{ work_dir }}/{{ operator.name }}"
-      register: status
-
-    - debug:
-        msg: "{{ status }}"
-
-    # TODO: Add a check if anything was changed
     - name: Stage all changes
       shell: git add .
       args:

@@ -1,5 +1,5 @@
 ---
-- name: "Playing with Ansible and Git"
+- name: Synchronize operator template files with operator repositories
   hosts: localhost
   connection: local
 
@@ -7,39 +7,24 @@
     - name: Include data which repositories to check
       include_vars: ../repositories.yaml
 
-    - name: Show workdir
-      debug:
-        msg: "{{ work_dir }}"
-
     - name: Ensure work directory exists
       file:
         path: "{{ work_dir }}"
         state: directory
 
     - name: Configure git author mail
-      shell: git config --global user.email "soenke.liebau@stackable.de"
+      shell: git config --global user.email "{{ author_mail }}"
 
     - name: Configure git author name
-      shell: git config --global user.name "Sönke Liebau"
+      shell: git config --global user.name "{{ author_name }}"
 
     - name: Login to github
       shell: echo "{{ gh_access_token }}" | gh auth login --with-token
       register: loginresult
       ignore_errors: yes
 
-    - debug:
-        msg: "{{ loginresult }}"
-
-    - name: "Update repositories from templates"
+    - name: Update repositories from templates
       include: "update_repo.yaml"
       with_items: "{{ repositories }}"
       loop_control:
         loop_var: operator
-
-    - name: "List directory"
-      shell: tree {{ work_dir }}
-      register: dirtree
-
-    - name: Show tree
-      debug:
-        msg: "{{ dirtree }}"
