@@ -1,20 +1,20 @@
 repositories:
-  - name: dummy-operator
-    url: stackabletech/dummy-operator.git
-    product_string: dummy
-    pretty_string: Dummy
-#  - name: kafka-operator
-#    url: stackabletech/kafka-operator.git
-#    product_string: kafka
-#    pretty_string: Kafka
-#  - name: opa-operator
-#    url: stackabletech/opa-operator.git
-#    product_string: opa
-#    pretty_string: OpenPolicyAgent
-#  - name: zookeeper-operator
-#    url: stackabletech/zookeeper-operator.git
-#    product_string: zookeeper
-#    pretty_string: ZooKeeper
+#  - name: dummy-operator
+#    url: stackabletech/dummy-operator.git
+#    product_string: dummy
+#    pretty_string: Dummy
+  - name: kafka-operator
+    url: stackabletech/kafka-operator.git
+    product_string: kafka
+    pretty_string: Kafka
+  - name: opa-operator
+    url: stackabletech/opa-operator.git
+    product_string: opa
+    pretty_string: OpenPolicyAgent
+  - name: zookeeper-operator
+    url: stackabletech/zookeeper-operator.git
+    product_string: zookeeper
+    pretty_string: ZooKeeper
 
 
 # Anything specified in the retired_files variable will be deleted.

@@ -9,6 +9,15 @@ This repository is intended to help with these changes by keeping common files a
 
 == Using
 === Via Github Actions
+==== Authentication
+Since this tool needs to authenticate itself in order to push commits it needs credentials of a user.
+This is currently solved via a personal access token that needs to be provided as a repository (or org) secret with the name `github_token`.
+
+The personal access token needs to have the following permissions for this to work:
+
+- repo
+- org:read
+- workflow
 
 ==== Configuring repositories
 The actions in this repository are set up so that the playbooks are automatically executed whenever a commit is made to the `main` branch of this repository.
