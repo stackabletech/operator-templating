@@ -11,7 +11,7 @@ This repository is intended to help with these changes by keeping common files a
 === Via Github Actions
 ==== Authentication
 Since this tool needs to authenticate itself in order to push commits it needs credentials of a user.
-This is currently solved via a personal access token that needs to be provided as a repository (or org) secret with the name `github_token`.
+This is currently solved via a personal access token that needs to be provided as a repository (or org) secret with the name `GH_ACCESS_TOKEN`.
 
 The personal access token needs to have the following permissions for this to work:
 
@@ -54,7 +54,6 @@ These are the only variables currently being used on the playbooks, but can be e
 NOTE: If a new variable is introduced, it needs to be added to all repository objects!
 
 ==== Templating
-
 The folder and file structure under `template` is considered as source structure which will be synchronized across all repositories in the following manner:
 
 * Regular files and folders are simply copied
@@ -70,12 +69,10 @@ NOTE: Deletion is the last step that is performed, so if there is an overlap bet
 === Local
 While this can in theory also be used locally this has not yet been tested and may or may not be documented and supported here in the future.
 
-
 == Limitations
 There is currently no synchronization with existing PRs on the target repositories whatsoever. A new pull request will be created for every commit made tho this repository.
 
 To update a PR that was created via this tool, it will have to be closed and necessary changes pushed here, which will result in a new PR.
-
 
 == Structure
 **Github Actions**
