@@ -1,7 +1,7 @@
 = Templates for Common Files in Operator Repositories
 
 == Purpose
-Stackable develops and maintins a growing number of operators for open source software.
+Stackable develops and maintains a growing number of operators for open source software.
 
 The high level structure of the repository is consistent across all repositories, which in the past has led to repetitive maintenance tasks in many repositories even for small changes.
 
@@ -32,7 +32,6 @@ Target repositories are configured in `repositories.yaml` in the following form:
   product_string: kafka
   pretty_string: Kafka
 ----
-
 
 |===
 |Field |Description
@@ -73,7 +72,7 @@ While this can in theory also be used locally this has not yet been tested and m
 
 
 == Limitations
-There is currently no syncronization with existing PRs on the target repositories whatsoever. A new pull request will be created for every commit made tho this repository.
+There is currently no synchronization with existing PRs on the target repositories whatsoever. A new pull request will be created for every commit made tho this repository.
 
 To update a PR that was created via this tool, it will have to be closed and necessary changes pushed here, which will result in a new PR.
 
