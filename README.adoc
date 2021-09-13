@@ -47,7 +47,19 @@ Target repositories are configured in `repositories.yaml` in the following form:
 
 |pretty_string
 | The actual name of the product, including whitespaces and proper capitalization. This is intended to be used in doc or man files or similar things.
+
+|include_productconfig
+| Whether to include files from the `deploy/crd` folder into the os package.
+
+*Default*: true
+
+|include_crds
+| Whether to include files from the `deploy/config-spec` folder into the os package.
+
+*Default*: true
 |===
+
+
 
 These are the only variables currently being used on the playbooks, but can be extended easily as more are needed.
 
