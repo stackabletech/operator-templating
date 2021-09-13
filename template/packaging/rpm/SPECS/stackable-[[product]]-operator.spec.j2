@@ -11,6 +11,7 @@
 %define _name %{getenv:BINARY_FILE_NAME}
 %define _bindir /opt/stackable/%{getenv:WORKSPACE_NAME}
 [[% if operator.include_productconfig is not none and operator.include_productconfig is true %]]%define _productconfigdir /etc/stackable/%{getenv:WORKSPACE_NAME}/config-spec[[% endif %]]
+
 [[% if operator.include_crds is not none and operator.include_crds is true %]]%define _crddir /etc/stackable/%{getenv:WORKSPACE_NAME}/crd[[% endif %]]
 %define _description %{getenv:PACKAGE_DESCRIPTION}
 
@@ -59,4 +60,5 @@ rm -rf %{buildroot}
 %{_bindir}/*
 %{_servicedir}/%{name}.service
 [[% if operator.include_productconfig is not none and operator.include_productconfig is true %]]%{_productconfigdir}/*[[% endif %]]
+
 [[% if operator.include_crds is not none and operator.include_crds is true %]]%{_crddir}/*[[% endif %]]

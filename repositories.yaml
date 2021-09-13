@@ -34,7 +34,7 @@ repositories:
     product_string: dummy
     pretty_string: Dummy
     include_crds: true
-    include_productconfig: true
+    include_productconfig: yes
 
 # Anything specified in the retired_files variable will be deleted.
 # This is uncommented as I had issues with everything being deleted when this was just present as an empty key.
