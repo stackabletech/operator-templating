@@ -1,36 +1,38 @@
 repositories:
-  - name: kafka-operator
-    url: stackabletech/kafka-operator.git
-    product_string: kafka
-    pretty_string: Kafka
-  - name: opa-operator
-    url: stackabletech/opa-operator.git
-    product_string: opa
-    pretty_string: OpenPolicyAgent
-  - name: zookeeper-operator
-    url: stackabletech/zookeeper-operator.git
-    product_string: zookeeper
-    pretty_string: ZooKeeper
-  - name: monitoring-operator
-    url: stackabletech/monitoring-operator.git
-    product_string: monitoring
-    pretty_string: Monitoring
-  - name: regorule-operator
-    url: stackabletech/regorule-operator.git
-    product_string: regorule
-    pretty_string: RegoRule
-  - name: spark-operator
-    url: stackabletech/spark-operator.git
-    product_string: spark
-    pretty_string: Spark
-  - name: nifi-operator
-    url: stackabletech/nifi-operator.git
-    product_string: nifi
-    pretty_string: NiFi
-#  - name: dummy-operator
-#    url: stackabletech/dummy-operator.git
-#    product_string: dummy
-#    pretty_string: Dummy
+#  - name: kafka-operator
+#    url: stackabletech/kafka-operator.git
+#    product_string: kafka
+#    pretty_string: Apache Kafka
+#  - name: opa-operator
+#    url: stackabletech/opa-operator.git
+#    product_string: opa
+#    pretty_string: OpenPolicyAgent
+#  - name: zookeeper-operator
+#    url: stackabletech/zookeeper-operator.git
+#    product_string: zookeeper
+#    pretty_string: Apache ZooKeeper
+#    include_crds: yes
+#    include_productconfig: yes
+#  - name: monitoring-operator
+#    url: stackabletech/monitoring-operator.git
+#    product_string: monitoring
+#    pretty_string: Monitoring
+#  - name: regorule-operator
+#    url: stackabletech/regorule-operator.git
+#    product_string: regorule
+#    pretty_string: RegoRules
+#  - name: spark-operator
+#    url: stackabletech/spark-operator.git
+#    product_string: spark
+#    pretty_string: Apache Spark
+#  - name: nifi-operator
+#    url: stackabletech/nifi-operator.git
+#    product_string: nifi
+#    pretty_string: Apache NiFi
+  - name: dummy-operator
+    url: stackabletech/dummy-operator.git
+    product_string: dummy
+    pretty_string: Dummy
 
 # Anything specified in the retired_files variable will be deleted.
 # This is uncommented as I had issues with everything being deleted when this was just present as an empty key.
