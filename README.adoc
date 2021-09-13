@@ -81,6 +81,12 @@ NOTE: Deletion is the last step that is performed, so if there is an overlap bet
 === Local
 While this can in theory also be used locally this has not yet been tested and may or may not be documented and supported here in the future.
 
+What is supported is locally testing that all templates are rendered correctly.
+
+The process here is to manually check out all operators that should be tested into the `work` subdirectory and then running `test.sh`.
+
+This will perform templating into the subdirectories, which can then be checked via `git status` or similar methods.
+
 == Limitations
 There is currently no synchronization with existing PRs on the target repositories whatsoever. A new pull request will be created for every commit made to this repository.
 

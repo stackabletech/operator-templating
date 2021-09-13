@@ -6,6 +6,7 @@
   tasks:
     - name: Include data which repositories to check
       include_vars: ../repositories.yaml
+      tags: local
 
     - name: Ensure work directory exists
       file:

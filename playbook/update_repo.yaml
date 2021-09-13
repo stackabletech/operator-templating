@@ -7,62 +7,66 @@
   args:
     chdir: "{{ work_dir }}/{{ operator.name }}"
 
-- name: Find template files
-  find:
-    paths: "{{ template_dir }}/"
-    patterns: "*.j2"
-    file_type: file
-    use_regex: no
-    recurse: yes
-  register: files_j2
+# Check if anything was changed, if yes commit changes and create a pull request, otherwise skip rest of this play
+- name: Perform local file operations
+  block:
+    - name: Find template files
+      find:
+        paths: "{{ template_dir }}/"
+        patterns: "*.j2"
+        file_type: file
+        use_regex: no
+        recurse: yes
+      register: files_j2
 
-- name: Find regular files that need to templating
-  find:
-    paths: "{{ template_dir }}/"
-    excludes: "*.j2"
-    file_type: file
-    use_regex: no
-    recurse: yes
-  register: files_normal
+    - name: Find regular files that need to templating
+      find:
+        paths: "{{ template_dir }}/"
+        excludes: "*.j2"
+        file_type: file
+        use_regex: no
+        recurse: yes
+      register: files_normal
 
-- name: Ensure directories exist
-  file:
-    path: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) |  replace('[[product]]', operator.product_string) | dirname }}"
-    state: directory
-  with_items:
-    - "{{ files_j2.files }}"
-    - "{{ files_normal.files }}"
-  register: directory_result
+    - name: Ensure directories exist
+      file:
+        path: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) |  replace('[[product]]', operator.product_string) | dirname }}"
+        state: directory
+      with_items:
+        - "{{ files_j2.files }}"
+        - "{{ files_normal.files }}"
+      register: directory_result
 
-# Since a few of our files contain github actions env vars which are delimited by ${{  }} we need to change
-# the variable_start/end_strings here to avoid collisions
-- name: Copy templates files
-  template:
-    src: "{{ item.path }}"
-    mode: "preserve"
-    dest: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) | replace('[[product]]', operator.product_string) | regex_replace('.j2$', '') }}"
-    variable_start_string: "[["
-    variable_end_string: "]]"
-    block_start_string: "[[%"
-    block_end_string: "%]]"
-  with_items: "{{ files_j2.files }}"
-  register: template_result
+    # Since a few of our files contain github actions env vars which are delimited by ${{  }} we need to change
+    # the variable_start/end_strings here to avoid collisions
+    - name: Copy templates files
+      template:
+        src: "{{ item.path }}"
+        mode: "preserve"
+        dest: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) | replace('[[product]]', operator.product_string) | regex_replace('.j2$', '') }}"
+        variable_start_string: "[["
+        variable_end_string: "]]"
+        block_start_string: "[[%"
+        block_end_string: "%]]"
+      with_items: "{{ files_j2.files }}"
+      register: template_result
 
-- name: Copy normal files to temp directory
-  copy:
-    src: "{{ item.path }}"
-    mode: "preserve"
-    dest: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) | replace('[[product]]', operator.product_string)}}"
-  with_items: "{{ files_normal.files }}"
-  register: file_result
+    - name: Copy normal files to temp directory
+      copy:
+        src: "{{ item.path }}"
+        mode: "preserve"
+        dest: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) | replace('[[product]]', operator.product_string)}}"
+      with_items: "{{ files_normal.files }}"
+      register: file_result
 
-- name: Remove retired files and directories
-  file:
-    path: "{{ work_dir }}/{{ operator.name }}/{{ item }}"
-    state: absent
-  with_items: "{{ retired_files }}"
-  register: deletion_result
-  when: retired_files is defined
+    - name: Remove retired files and directories
+      file:
+        path: "{{ work_dir }}/{{ operator.name }}/{{ item }}"
+        state: absent
+      with_items: "{{ retired_files }}"
+      register: deletion_result
+      when: retired_files is defined
+  tags: local
 
 # Check if anything was changed, if yes commit changes and create a pull request, otherwise skip rest of this play
 - name: Create PR if changes were performed
