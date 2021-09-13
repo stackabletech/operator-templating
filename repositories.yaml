@@ -33,7 +33,7 @@ repositories:
     url: stackabletech/dummy-operator.git
     product_string: dummy
     pretty_string: Dummy
-    include_crds: yes
+    include_crds: true
     include_productconfig: true
 
 # Anything specified in the retired_files variable will be deleted.
