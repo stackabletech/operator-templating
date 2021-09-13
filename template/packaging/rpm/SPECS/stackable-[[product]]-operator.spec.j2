@@ -14,7 +14,7 @@
 [[% if operator.include_productconfig is undefined or operator.include_productconfig is true %]]%define _productconfigdir /etc/stackable/%{getenv:WORKSPACE_NAME}/config-spec[[% endif %]]
 
 [[% if operator.include_crds is undefined or operator.include_crds is true %]]%define _crddir /etc/stackable/%{getenv:WORKSPACE_NAME}/crd[[% endif %]]
-%define _description %{getenv:PACKAGE_DESCRIPTION}
+
 
 Name: %{_name}
 Summary: %{_description}
