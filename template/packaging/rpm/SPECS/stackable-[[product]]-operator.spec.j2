@@ -58,5 +58,5 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{_bindir}/*
 %{_servicedir}/%{name}.service
-[[% if operator.include_productconfig | default(no) %}%{_productconfigdir}/*[[% endif %]]
-[[% if operator.include_crds | default(no) %}%{_crddir}/*[[% endif %]]
+[[% if operator.include_productconfig | default(no) %]]%{_productconfigdir}/*[[% endif %]]
+[[% if operator.include_crds | default(no) %]]%{_crddir}/*[[% endif %]]
