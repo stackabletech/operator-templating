@@ -39,6 +39,8 @@ exceptions = [
     { name = "stackable-{[ operator.product_string }]-crd", allow = ["OSL-3.0"] },
     { name = "stackable-{[ operator.product_string }]-operator", allow = ["OSL-3.0"] },
     { name = "stackable-{[ operator.product_string }]-operator-binary", allow = ["OSL-3.0"] },
+    {[% if operator.extra_crates is not undefined %}]{[% for crate in operator.extra_crates %}]{ name = "{[crate}]", allow = ["OSL-3.0"] },
+    {[% endfor %}]{[% endif -%}]
 ]
 
 [[licenses.clarify]]

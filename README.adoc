@@ -69,7 +69,7 @@ NOTE: If a new variable is introduced, it needs to be added to all repository ob
 The folder and file structure under `template` is considered as source structure which will be synchronized across all repositories in the following manner:
 
 * Regular files and folders are simply copied
-* Files with an extension of `.j2` will be processed as jinja2 templates and copied to the target repositories with the `.j2` extension removed. The default jinja2 variable delimiter has been replaced with `[[ ]]` since a lot of the template files contain `{{  }}` and caused issues.
+* Files with an extension of `.j2` will be processed as jinja2 templates and copied to the target repositories with the `.j2` extension removed. The default jinja2 variable delimiter has been replaced with `{[ }]` since a lot of the template files contain `{{  }}` and caused issues.
 * File and directory names which contain `\[[product]]` will have this substituted for the value of the `product_string` variable. For example: "stackable-\[[product]]-operator.service" would become `stackable-kafka-operator.service`.
 
 To remove files or directories that already exist in the target repositories these need to be configured in `repositories.yaml` under the `retired_files` key.

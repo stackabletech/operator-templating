@@ -24,6 +24,9 @@ repositories:
     url: stackabletech/spark-operator.git
     product_string: spark
     pretty_string: Apache Spark
+    extra_crates:
+      - stackable-spark-test-utils
+      - stackable-spark-common
   - name: nifi-operator
     url: stackabletech/nifi-operator.git
     product_string: nifi
