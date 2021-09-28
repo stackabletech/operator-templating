@@ -11,9 +11,9 @@
 %define _name %{getenv:BINARY_FILE_NAME}
 %define _description %{getenv:PACKAGE_DESCRIPTION}
 %define _bindir /opt/stackable/%{getenv:WORKSPACE_NAME}
-[[% if operator.include_productconfig is undefined or operator.include_productconfig is true %]]%define _productconfigdir /etc/stackable/%{getenv:WORKSPACE_NAME}/config-spec[[% endif %]]
+{[% if operator.include_productconfig is undefined or operator.include_productconfig is true %}]%define _productconfigdir /etc/stackable/%{getenv:WORKSPACE_NAME}/config-spec{[% endif %}]
 
-[[% if operator.include_crds is undefined or operator.include_crds is true %]]%define _crddir /etc/stackable/%{getenv:WORKSPACE_NAME}/crd[[% endif %]]
+{[% if operator.include_crds is undefined or operator.include_crds is true %}]%define _crddir /etc/stackable/%{getenv:WORKSPACE_NAME}/crd{[% endif %}]
 
 
 Name: %{_name}
@@ -60,6 +60,6 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{_bindir}/*
 %{_servicedir}/%{name}.service
-[[% if operator.include_productconfig is undefined or operator.include_productconfig is true %]]%{_productconfigdir}/*[[% endif %]]
+{[% if operator.include_productconfig is undefined or operator.include_productconfig is true %}]%{_productconfigdir}/*{[% endif %}]
 
-[[% if operator.include_crds is undefined or operator.include_crds is true %]]%{_crddir}/*[[% endif %]]
+{[% if operator.include_crds is undefined or operator.include_crds is true %}]%{_crddir}/*{[% endif %}]
