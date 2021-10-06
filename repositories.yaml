@@ -31,6 +31,14 @@ repositories:
     url: stackabletech/nifi-operator.git
     product_string: nifi
     pretty_string: Apache NiFi
+  - name: hbase-operator
+    url: stackabletech/hbase-operator.git
+    product_string: hbase
+    pretty_string: Apache HBase
+  - name: hdfs-operator
+    url: stackabletech/hdfs-operator.git
+    product_string: hdfs
+    pretty_string: Apache HDFS
 #  - name: dummy-operator
 #    url: stackabletech/dummy-operator.git
 #    product_string: dummy
