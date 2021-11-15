@@ -7,10 +7,11 @@ repositories:
     url: stackabletech/opa-operator.git
     product_string: opa
     pretty_string: OpenPolicyAgent
-  - name: zookeeper-operator
-    url: stackabletech/zookeeper-operator.git
-    product_string: zookeeper
-    pretty_string: Apache ZooKeeper
+#   zookeeper-operator is disabled until the Helm chart is incorporated into the template.
+#   - name: zookeeper-operator
+#     url: stackabletech/zookeeper-operator.git
+#     product_string: zookeeper
+#     pretty_string: Apache ZooKeeper
   - name: monitoring-operator
     url: stackabletech/monitoring-operator.git
     product_string: monitoring
@@ -25,7 +26,6 @@ repositories:
     product_string: spark
     pretty_string: Apache Spark
     extra_crates:
-      - stackable-spark-test-utils
       - stackable-spark-common
   - name: nifi-operator
     url: stackabletech/nifi-operator.git
@@ -41,6 +41,10 @@ repositories:
     url: stackabletech/hdfs-operator.git
     product_string: hdfs
     pretty_string: Apache HDFS
+  - name: superset-operator
+    url: stackabletech/superset-operator.git
+    product_string: superset
+    pretty_string: Apache Superset
 #  - name: dummy-operator
 #    url: stackabletech/dummy-operator.git
 #    product_string: dummy
