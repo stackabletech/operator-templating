@@ -7,11 +7,10 @@ repositories:
     url: stackabletech/opa-operator.git
     product_string: opa
     pretty_string: OpenPolicyAgent
-   zookeeper-operator is disabled until the Helm chart is incorporated into the template.
-   - name: zookeeper-operator
-     url: stackabletech/zookeeper-operator.git
-     product_string: zookeeper
-     pretty_string: Apache ZooKeeper
+  - name: zookeeper-operator
+    url: stackabletech/zookeeper-operator.git
+    product_string: zookeeper
+    pretty_string: Apache ZooKeeper
   - name: monitoring-operator
     url: stackabletech/monitoring-operator.git
     product_string: monitoring
