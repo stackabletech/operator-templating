@@ -7,6 +7,8 @@
 
 TAG    := $(shell git rev-parse --short HEAD)
 
+VERSION := $(cargo metadata --format-version 1 | jq '.packages[] | select(.name=="stackable-{[ operator.product_string }]-operator") | .version')
+
 docker:
 	docker build --force-rm -t "docker.stackable.tech/stackable/{[ operator.product_string }]-operator:${TAG}" -t "docker.stackable.tech/stackable/{[ operator.product_string }]-operator:latest" -f docker/Dockerfile .
 	echo "${NEXUS_PASSWORD}" | docker login --username github --password-stdin docker.stackable.tech
@@ -20,8 +22,7 @@ chart-clean:
 	rm -rf deploy/helm/{[ operator.product_string }]-operator/templates/crds.yaml
 
 version:
-    sed -i deploy/helm/{[ operator.product_string }]-operator/Chart.yaml "<version_placeholder" "$(cargo metadata | jq ... version)"
-    # cargo metadata --format-version 1| jq -r --arg NAME "zookeeper-operator" '.packages[] | select(.name == "zookeeper-operator") | .description'
+	sed -i deploy/helm/{[ operator.product_string }]-operator/Chart.yaml "<version_placeholder>" ${VERSION}
 
 config: deploy/helm/{[ operator.product_string }]-operator/configs
 
