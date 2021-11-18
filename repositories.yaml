@@ -1,50 +1,50 @@
 repositories:
-#  - name: kafka-operator
-#    url: stackabletech/kafka-operator.git
-#    product_string: kafka
-#    pretty_string: Apache Kafka
-#  - name: opa-operator
-#    url: stackabletech/opa-operator.git
-#    product_string: opa
-#    pretty_string: OpenPolicyAgent
-#   zookeeper-operator is disabled until the Helm chart is incorporated into the template.
+  - name: kafka-operator
+    url: stackabletech/kafka-operator.git
+    product_string: kafka
+    pretty_string: Apache Kafka
+  - name: opa-operator
+    url: stackabletech/opa-operator.git
+    product_string: opa
+    pretty_string: OpenPolicyAgent
+   zookeeper-operator is disabled until the Helm chart is incorporated into the template.
    - name: zookeeper-operator
      url: stackabletech/zookeeper-operator.git
      product_string: zookeeper
      pretty_string: Apache ZooKeeper
-#  - name: monitoring-operator
-#    url: stackabletech/monitoring-operator.git
-#    product_string: monitoring
-#    pretty_string: Monitoring
-#  - name: regorule-operator
-#    url: stackabletech/regorule-operator.git
-#    product_string: regorule
-#    pretty_string: RegoRules
-#    include_productconfig: no
-#  - name: spark-operator
-#    url: stackabletech/spark-operator.git
-#    product_string: spark
-#    pretty_string: Apache Spark
-#    extra_crates:
-#      - stackable-spark-common
-#  - name: nifi-operator
-#    url: stackabletech/nifi-operator.git
-#    product_string: nifi
-#    pretty_string: Apache NiFi
-#  - name: hbase-operator
-#    url: stackabletech/hbase-operator.git
-#    product_string: hbase
-#    pretty_string: Apache HBase
-#    extra_crates:
-#      - stackable-hdfs-crd
-#  - name: hdfs-operator
-#    url: stackabletech/hdfs-operator.git
-#    product_string: hdfs
-#    pretty_string: Apache HDFS
-#  - name: superset-operator
-#    url: stackabletech/superset-operator.git
-#    product_string: superset
-#    pretty_string: Apache Superset
+  - name: monitoring-operator
+    url: stackabletech/monitoring-operator.git
+    product_string: monitoring
+    pretty_string: Monitoring
+  - name: regorule-operator
+    url: stackabletech/regorule-operator.git
+    product_string: regorule
+    pretty_string: RegoRules
+    include_productconfig: no
+  - name: spark-operator
+    url: stackabletech/spark-operator.git
+    product_string: spark
+    pretty_string: Apache Spark
+    extra_crates:
+      - stackable-spark-common
+  - name: nifi-operator
+    url: stackabletech/nifi-operator.git
+    product_string: nifi
+    pretty_string: Apache NiFi
+  - name: hbase-operator
+    url: stackabletech/hbase-operator.git
+    product_string: hbase
+    pretty_string: Apache HBase
+    extra_crates:
+      - stackable-hdfs-crd
+  - name: hdfs-operator
+    url: stackabletech/hdfs-operator.git
+    product_string: hdfs
+    pretty_string: Apache HDFS
+  - name: superset-operator
+    url: stackabletech/superset-operator.git
+    product_string: superset
+    pretty_string: Apache Superset
 #  - name: dummy-operator
 #    url: stackabletech/dummy-operator.git
 #    product_string: dummy
