@@ -32,10 +32,6 @@ jobs:
           version: v3.6.2
       - name: Compile chart
         run: make compile-chart
-      - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.1.0
-      - name: Run chart-testing (lint)
-        run: ct lint --config ${CT_CONFIG}
       - name: Package Chart
         run: mkdir -p target/helm && helm package --destination target/helm deploy/helm/${{ env.PRODUCT_NAME }}-operator
       - name: Publish Chart
