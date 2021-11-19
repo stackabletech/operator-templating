@@ -29,9 +29,10 @@ config: deploy/helm/{[ operator.product_string }]-operator/configs
 deploy/helm/{[ operator.product_string }]-operator/configs:
 	cp -r deploy/config-spec deploy/helm/{[ operator.product_string }]-operator/configs
 
-crds: deploy/helm/{[ operator.product_string }]-operator/templates/crds.yaml
+crds: deploy/helm/{[ operator.product_string }]-operator/crds/crds.yaml
 
-deploy/helm/{[ operator.product_string }]-operator/templates/crds.yaml:
+deploy/helm/{[ operator.product_string }]-operator/crds/crds.yaml:
+    mkdir -p deploy/helm/{[ operator.product_string }]-operator/crds
 	cat deploy/crd/*.yaml | yq e '.metadata.annotations["helm.sh/resource-policy"]="keep"' - > ${@}
 
 chart-lint: compile-chart
