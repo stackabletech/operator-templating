@@ -33,11 +33,6 @@ jobs:
           version: v3.6.2
       - name: Compile chart
         run: make compile-chart
-      - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.1.0
-      # Disabled for now until we come up with a way
-      #- name: Run chart-testing (lint)
-      #  run: ct lint --config ${CT_CONFIG}
       - name: Change version if is PR
         if: ${{ github.event_name == 'pull_request' }}
         # We use "mr" instead of "pr" to denote pull request builds, as this prefix comes before "nightly" when lexically
