@@ -7,10 +7,11 @@ repositories:
     url: stackabletech/opa-operator.git
     product_string: opa
     pretty_string: OpenPolicyAgent
-  - name: zookeeper-operator
-    url: stackabletech/zookeeper-operator.git
-    product_string: zookeeper
-    pretty_string: Apache ZooKeeper
+#   zookeeper-operator is disabled until the Helm chart is incorporated into the template.
+#   - name: zookeeper-operator
+#     url: stackabletech/zookeeper-operator.git
+#     product_string: zookeeper
+#     pretty_string: Apache ZooKeeper
   - name: monitoring-operator
     url: stackabletech/monitoring-operator.git
     product_string: monitoring
@@ -56,5 +57,5 @@ repositories:
 # Anything specified in the retired_files variable will be deleted.
 # This is uncommented as I had issues with everything being deleted when this was just present as an empty key.
 # May be something to investigate.
-retired_files:
-  - "packaging"
+
+#retired_files:
