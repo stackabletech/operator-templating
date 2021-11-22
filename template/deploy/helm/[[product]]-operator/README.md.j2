@@ -17,7 +17,10 @@ This Helm Chart can be used to install Custom Resource Definitions and the Opera
 ## Install the Stackble Operator for {[ operator.pretty_string }]
 
 ```bash
-helm install {[ operator.product_string }]-operator ./{[ operator.product_string }]-operator
+# From the root of the operator repository
+make compile-chart
+
+helm install {[ operator.product_string }]-operator deploy/helm/{[ operator.product_string }]-operator
 ```
 
 
