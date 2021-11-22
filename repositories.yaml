@@ -49,6 +49,11 @@ repositories:
     url: stackabletech/druid-operator.git
     product_string: druid
     pretty_string: Apache Druid
+  - name: restart-controller
+    url: stackabletech/restart-controller.git
+    product_string: restart-controller
+    pretty_string: Stackable Restart Controller
+    include_productconfig: no
 #  - name: dummy-operator
 #    url: stackabletech/dummy-operator.git
 #    product_string: dummy
