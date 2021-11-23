@@ -4,6 +4,32 @@ metadata:
   name: {{ include "operator.name" . }}-operator
 rules:
   - apiGroups:
+      - zookeeper.stackable.tech
+    resources:
+      - zookeeperclusters
+    verbs:
+      - get
+      - list
+  - apiGroups:
+      - opa.stackable.tech
+    resources:
+      - openpolicyagents
+      - openpolicyagents/status
+      - regorules
+    verbs:
+      - create
+      - get
+      - list
+      - watch
+      - patch
+  - apiGroups:
+      - hive.stackable.tech
+    resources:
+      - hiveclusters
+    verbs:
+      - get
+      - list
+  - apiGroups:
       - ""
     resources:
       - nodes
