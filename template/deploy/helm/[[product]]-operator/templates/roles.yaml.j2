@@ -3,6 +3,7 @@ kind: ClusterRole
 metadata:
   name: {{ include "operator.name" . }}-operator
 rules:
+{[% if operator.product_string in ['kafka', 'druid', 'nifi', 'hbase']%}]
   - apiGroups:
       - zookeeper.stackable.tech
     resources:
@@ -10,6 +11,16 @@ rules:
     verbs:
       - get
       - list
+{[% endif %}]
+{[% if operator.product_string in ['hbase']%}]
+  - apiGroups:
+      - hdfs.stackable.tech
+    resources:
+      - hdfsclusters
+    verbs:
+      - get
+      - list
+{[% endif %}]
   - apiGroups:
       - opa.stackable.tech
     resources:
@@ -66,6 +77,9 @@ rules:
       - restarts
       - starts
       - stops
+{[% if operator.product_string in ['hdfs']%}]
+      - formats
+{[% endif %}]
     verbs:
       - get
       - list
