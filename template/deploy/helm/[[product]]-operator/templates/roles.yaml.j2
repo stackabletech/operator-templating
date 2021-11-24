@@ -1,0 +1,115 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "operator.name" . }}-operator
+rules:
+{[% if operator.product_string in ['kafka', 'druid', 'nifi', 'hbase']%}]
+  # For Apache ZooKeeper dependents
+  - apiGroups:
+      - zookeeper.stackable.tech
+    resources:
+      - zookeeperclusters
+    verbs:
+      - get
+      - list
+{[% endif %}]
+{[% if operator.product_string in ['hbase']%}]
+  # For Apache HDFS dependents
+  - apiGroups:
+      - hdfs.stackable.tech
+    resources:
+      - hdfsclusters
+    verbs:
+      - get
+      - list
+{[% endif %}]
+{[% if operator.product_string in ['kafka', 'trino', 'opa']%}]
+  # For OPA dependents. Note that OPA it's self is listed here because it's own resource name
+  # doesn't follow the *clusters convention
+  - apiGroups:
+      - opa.stackable.tech
+    resources:
+      - openpolicyagents
+      - openpolicyagents/status
+      - regorules
+    verbs:
+      - create
+      - get
+      - list
+      - watch
+      - patch
+{[% endif %}]
+  - apiGroups:
+      - hive.stackable.tech
+    resources:
+      - hiveclusters
+    verbs:
+      - get
+      - list
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+    verbs:
+      - list
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - configmaps
+    verbs:
+      - create
+      - delete
+      - list
+      - update
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+    verbs:
+      - create
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - apiextensions.k8s.io
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - get
+  - apiGroups:
+      - command.{{ include "operator.name" . }}.stackable.tech
+    resources:
+      - inits
+      - restarts
+      - starts
+      - stops
+{[% if operator.product_string in ['hdfs']%}]
+      - formats
+{[% endif %}]
+    verbs:
+      - get
+      - list
+      - patch
+      - watch
+  - apiGroups:
+      - command.{{ include "operator.name" . }}.stackable.tech
+    resources:
+      - inits/status
+    verbs:
+      - patch
+  - apiGroups:
+      - {{ include "operator.name" . }}.stackable.tech
+    resources:
+      - {{ include "operator.name" . }}clusters
+    verbs:
+      - get
+      - list
+      - patch
+      - watch
+  - apiGroups:
+      - {{ include "operator.name" . }}.stackable.tech
+    resources:
+      - {{ include "operator.name" . }}clusters/status
+    verbs:
+      - patch
