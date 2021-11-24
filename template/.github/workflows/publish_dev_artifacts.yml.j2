@@ -33,13 +33,6 @@ jobs:
           version: v3.6.2
       - name: Compile chart
         run: make compile-chart
-      - name: Change version if is PR
-        if: ${{ github.event_name == 'pull_request' }}
-        # We use "mr" instead of "pr" to denote pull request builds, as this prefix comes before "nightly" when lexically
-        # sorting packages by version. This means that when installing the package without specifying a version the
-        # nighly version is considered more current than mr versions and installed by default
-        run: |
-          sed -i -e 's/^version: \([0-9]\+\.[0-9]\+\.[0-9]\+\).*/version: \1+mr${{ github.event.number }}/' deploy/helm/${{ env.PRODUCT_NAME }}-operator/Chart.yaml
       - name: Package Chart
         run: mkdir -p target/helm && helm package --destination target/helm deploy/helm/${{ env.PRODUCT_NAME }}-operator
       - name: Publish Chart
