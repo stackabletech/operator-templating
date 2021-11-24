@@ -4,6 +4,7 @@ metadata:
   name: {{ include "operator.name" . }}-operator
 rules:
 {[% if operator.product_string in ['kafka', 'druid', 'nifi', 'hbase']%}]
+  # For Apache ZooKeeper dependents
   - apiGroups:
       - zookeeper.stackable.tech
     resources:
@@ -13,6 +14,7 @@ rules:
       - list
 {[% endif %}]
 {[% if operator.product_string in ['hbase']%}]
+  # For Apache HDFS dependents
   - apiGroups:
       - hdfs.stackable.tech
     resources:
@@ -21,6 +23,9 @@ rules:
       - get
       - list
 {[% endif %}]
+{[% if operator.product_string in ['kafka', 'trino', 'opa']%}]
+  # For OPA dependents. Note that OPA it's self is listed here because it's own resource name
+  # doesn't follow the *clusters convention
   - apiGroups:
       - opa.stackable.tech
     resources:
@@ -33,6 +38,7 @@ rules:
       - list
       - watch
       - patch
+{[% endif %}]
   - apiGroups:
       - hive.stackable.tech
     resources:
