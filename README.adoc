@@ -92,6 +92,8 @@ There is currently no synchronization with existing PRs on the target repositori
 
 To update a PR that was created via this tool, it will have to be closed and necessary changes pushed here, which will result in a new PR.
 
+WARNING: The Helm Chart files that are rolled out by the templates in their current form do not include a ClusterRole object which may be needed for this to work with RBAC.
+
 == Structure
 **Github Actions**
 
