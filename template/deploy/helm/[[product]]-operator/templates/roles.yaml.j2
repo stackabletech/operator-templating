@@ -39,6 +39,7 @@ rules:
       - watch
       - patch
 {[% endif %}]
+{[% if operator.product_string in ['trino']%}]
   - apiGroups:
       - hive.stackable.tech
     resources:
@@ -46,6 +47,7 @@ rules:
     verbs:
       - get
       - list
+{[% endif %}]
   - apiGroups:
       - ""
     resources:
