@@ -87,7 +87,7 @@
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
     - name: Create PR
-      shell: gh pr create --base main --title "{{ pr_title }}" --body "{{ pr_body }}"
+      shell: gh pr create --base main --title "{{ pr_title }}" --body "{{ pr_body }} --reviewer "@stackabletech/developers""
       args:
         chdir: "{{ work_dir }}/{{ operator.name }}"
 

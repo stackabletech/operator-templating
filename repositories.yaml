@@ -18,6 +18,7 @@ repositories:
     url: stackabletech/regorule-operator.git
     product_string: regorule
     pretty_string: RegoRule
+    include_productconfig: no
   - name: zookeeper-operator
     url: stackabletech/zookeeper-operator.git
     product_string: zookeeper
