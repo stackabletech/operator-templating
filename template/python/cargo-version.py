@@ -49,6 +49,11 @@ class Crate:
         else:
             return str(v.bump_prerelease('nightly'))[:-2] ### remove the .1 suffix that semver always adds to the prererelease.
 
+    @classmethod
+    def prerelease(cls, version, prerelease):
+        v = semver.VersionInfo.parse(version)
+        return str(semver.VersionInfo(v.major, v.minor, v.patch, prerelease))
+
     def finalize_version(self):
         return Crate(self.path, self.name, Crate.finalize(self.version), self.dependencies.copy())
 
@@ -57,6 +62,9 @@ class Crate:
 
     def set_version(self, version):
         return Crate(self.path, self.name, version, self.dependencies.copy())
+
+    def set_prerelease(self, prerelease):
+        return Crate(self.path, self.name, Crate.prerelease(self.version, prerelease), self.dependencies.copy())
 
     def next_version(self):
         return Crate(self.path, self.name, str(semver.VersionInfo.parse(self.version).next_version('patch')), self.dependencies.copy())
@@ -100,6 +108,10 @@ class Workspace:
         crates = {c.name: c.set_version(version) for c in self.crates.values()}
         return Workspace(Workspace.update_dependencies(crates).values())
 
+    def set_prerelease(self, prerelease):
+        crates = {c.name: c.set_prerelease(prerelease) for c in self.crates.values()}
+        return Workspace(Workspace.update_dependencies(crates).values())
+
     def next_version(self):
         crates = {c.name: c.next_version() for c in self.crates.values()}
         return Workspace(Workspace.update_dependencies(crates).values())
@@ -137,6 +149,7 @@ def parse_args():
     parser.add_argument("-n", "--next", help="Version", choices=['major', 'minor', 'patch'])
     parser.add_argument("-s", "--set", help="Version" )
     parser.add_argument("-o", "--show", help="Version", action="store_true")
+    parser.add_argument("-m", "--prerelease", help="Set pre-prelease string." )
     return parser.parse_args()
 
 if __name__ == "__main__":
@@ -154,6 +167,9 @@ if __name__ == "__main__":
         # sanity check
         semver.VersionInfo.parse(args.set)
         new = old.set_version(args.set)
+        new.save(old)
+    elif args.prerelease:
+        new = old.set_prerelease(args.prerelease)
         new.save(old)
     elif args.show:
         print(old.show_version())
