@@ -62,6 +62,11 @@ repositories:
     url: stackabletech/druid-operator.git
     product_string: druid
     pretty_string: Apache Druid
+  - name: restart-controller
+    url: stackabletech/restart-controller.git
+    product_string: restart-controller
+    pretty_string: Stackable Restart Controller
+    include_productconfig: no
     extra_crates:
       - stackable-zookeeper-crd
 
