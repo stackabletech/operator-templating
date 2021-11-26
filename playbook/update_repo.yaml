@@ -1,6 +1,9 @@
 - name: Clone operator repository into working directory
-  shell: git clone https://{{ gh_access_token }}@github.com/{{ operator.url }} "{{ work_dir }}/{{ operator.name }}"
-  register: cloneresult
+  tags: local
+  ansible.builtin.git:
+    repo: "https://{{ gh_access_token }}@github.com/{{ operator.url }}"
+    dest: "{{ work_dir }}/{{ operator.name }}"
+    update: no
 
 - name: Create new branch
   shell: git checkout -b {{ pr_branch_name }}
