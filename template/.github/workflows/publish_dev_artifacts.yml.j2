@@ -41,10 +41,9 @@ jobs:
         run: python ./python/cargo-version.py -m mr${{ github.event.number }}
 
       - name: Build Docker image
-        - shell: bash
-          env:
-            NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-          run: make docker
+        env:
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+        run: make docker
 
       - name: Compile chart
         run: make compile-chart
