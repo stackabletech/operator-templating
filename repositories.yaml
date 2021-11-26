@@ -1,69 +1,69 @@
 repositories:
-  - name: hive-operator
-    url: stackabletech/hive-operator.git
-    product_string: hive
-    pretty_string: Apache Hive
-  - name: kafka-operator
-    url: stackabletech/kafka-operator.git
-    product_string: kafka
-    pretty_string: Apache Kafka
-    extra_crates:
-      - stackable-opa-crd
-      - stackable-zookeeper-crd
-  - name: opa-operator
-    url: stackabletech/opa-operator.git
-    product_string: opa
-    pretty_string: OpenPolicyAgent
+  #  - name: hive-operator
+  #    url: stackabletech/hive-operator.git
+  #    product_string: hive
+  #    pretty_string: Apache Hive
+  #  - name: kafka-operator
+  #    url: stackabletech/kafka-operator.git
+  #    product_string: kafka
+  #    pretty_string: Apache Kafka
+  #    extra_crates:
+  #      - stackable-opa-crd
+  #      - stackable-zookeeper-crd
+  #  - name: opa-operator
+  #    url: stackabletech/opa-operator.git
+  #    product_string: opa
+  #    pretty_string: OpenPolicyAgent
   - name: regorule-operator
     url: stackabletech/regorule-operator.git
     product_string: regorule
     pretty_string: RegoRule
     include_productconfig: no
-  - name: zookeeper-operator
-    url: stackabletech/zookeeper-operator.git
-    product_string: zookeeper
-    pretty_string: Apache ZooKeeper
-  - name: trino-operator
-    url: stackabletech/trino-operator.git
-    product_string: trino
-    pretty_string: Trino
-    extra_crates:
-      - stackable-hive-crd
-      - stackable-opa-crd
-      - stackable-regorule-crd
-  - name: spark-operator
-    url: stackabletech/spark-operator.git
-    product_string: spark
-    pretty_string: Apache Spark
-    extra_crates:
-      - stackable-spark-common
-  - name: nifi-operator
-    url: stackabletech/nifi-operator.git
-    product_string: nifi
-    pretty_string: Apache NiFi
-    extra_crates:
-      - stackable-zookeeper-crd
-  - name: hbase-operator
-    url: stackabletech/hbase-operator.git
-    product_string: hbase
-    pretty_string: Apache HBase
-    extra_crates:
-      - stackable-hdfs-crd
-      - stackable-zookeeper-crd
-  - name: hdfs-operator
-    url: stackabletech/hdfs-operator.git
-    product_string: hdfs
-    pretty_string: Apache HDFS
-  - name: superset-operator
-    url: stackabletech/superset-operator.git
-    product_string: superset
-    pretty_string: Apache Superset
-  - name: druid-operator
-    url: stackabletech/druid-operator.git
-    product_string: druid
-    pretty_string: Apache Druid
-    extra_crates:
-      - stackable-zookeeper-crd
+    #  - name: zookeeper-operator
+    #    url: stackabletech/zookeeper-operator.git
+    #    product_string: zookeeper
+    #    pretty_string: Apache ZooKeeper
+    #  - name: trino-operator
+    #    url: stackabletech/trino-operator.git
+    #    product_string: trino
+    #    pretty_string: Trino
+    #    extra_crates:
+    #      - stackable-hive-crd
+    #      - stackable-opa-crd
+    #      - stackable-regorule-crd
+    #  - name: spark-operator
+    #    url: stackabletech/spark-operator.git
+    #    product_string: spark
+    #    pretty_string: Apache Spark
+    #    extra_crates:
+    #      - stackable-spark-common
+    #  - name: nifi-operator
+    #    url: stackabletech/nifi-operator.git
+    #    product_string: nifi
+    #    pretty_string: Apache NiFi
+    #    extra_crates:
+    #      - stackable-zookeeper-crd
+    #  - name: hbase-operator
+    #    url: stackabletech/hbase-operator.git
+    #    product_string: hbase
+    #    pretty_string: Apache HBase
+    #    extra_crates:
+    #      - stackable-hdfs-crd
+    #      - stackable-zookeeper-crd
+    #  - name: hdfs-operator
+    #    url: stackabletech/hdfs-operator.git
+    #    product_string: hdfs
+    #    pretty_string: Apache HDFS
+    #  - name: superset-operator
+    #    url: stackabletech/superset-operator.git
+    #    product_string: superset
+    #    pretty_string: Apache Superset
+    #  - name: druid-operator
+    #    url: stackabletech/druid-operator.git
+    #    product_string: druid
+    #    pretty_string: Apache Druid
+    #    extra_crates:
+    #      - stackable-zookeeper-crd
 #  - name: restart-controller
 #    url: stackabletech/restart-controller.git
 #    product_string: restart-controller
