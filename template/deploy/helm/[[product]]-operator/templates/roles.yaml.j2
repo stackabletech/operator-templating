@@ -48,6 +48,16 @@ rules:
       - get
       - list
 {[% endif %}]
+{[% if operator.product_string in ['regorule']%}]
+  - apiGroups:
+      - opa.stackable.tech
+    resources:
+      - regorules
+    verbs:
+      - get
+      - list
+      - watch
+{[% endif %}]
   - apiGroups:
       - ""
     resources:
