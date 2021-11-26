@@ -77,4 +77,4 @@ repositories:
 # May be something to investigate.
 
 retired_files:
-  - template/.github/workflows/docker.yml
+  - .github/workflows/docker.yml
