@@ -33,10 +33,9 @@ jobs:
           version: v3.6.2
 
       - name: Build Docker image
-        - shell: bash
-          env:
-            NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-          run: make docker
+        env:
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+        run: make docker
 
       - name: Compile chart
         run: make compile-chart
