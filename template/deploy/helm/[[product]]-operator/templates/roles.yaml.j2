@@ -12,6 +12,7 @@ rules:
     verbs:
       - get
       - list
+      - watch
 {[% endif %}]
 {[% if operator.product_string in ['hbase']%}]
   # For Apache HDFS dependents
@@ -22,6 +23,7 @@ rules:
     verbs:
       - get
       - list
+      - watch
 {[% endif %}]
 {[% if operator.product_string in ['kafka', 'trino', 'opa']%}]
   # For OPA dependents. Note that OPA it's self is listed here because it's own resource name
@@ -39,6 +41,7 @@ rules:
       - watch
       - patch
 {[% endif %}]
+{[% if operator.product_string in ['trino']%}]
   - apiGroups:
       - hive.stackable.tech
     resources:
@@ -46,12 +49,25 @@ rules:
     verbs:
       - get
       - list
+      - watch
+{[% endif %}]
+{[% if operator.product_string in ['regorule']%}]
+  - apiGroups:
+      - opa.stackable.tech
+    resources:
+      - regorules
+    verbs:
+      - get
+      - list
+      - watch
+{[% endif %}]
   - apiGroups:
       - ""
     resources:
       - nodes
     verbs:
       - list
+      - watch
   - apiGroups:
       - ""
     resources:
@@ -61,6 +77,7 @@ rules:
       - create
       - delete
       - list
+      - watch
       - update
   - apiGroups:
       - batch

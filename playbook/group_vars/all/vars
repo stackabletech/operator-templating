@@ -1,6 +1,6 @@
 # These values are set in the git config before creating and pushing the commits on the target repositories
-author_name: "Sönke Liebau"
-author_mail: "soenke.liebau@stackable.de"
+author_name: "Stacky McStackface"
+author_mail: "github@stackable.de"
 
 # Defines which subdirectory to check the target repos out in
 work_dir: "{{ base_dir }}/work"

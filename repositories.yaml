@@ -64,9 +64,18 @@ repositories:
     pretty_string: Apache Druid
     extra_crates:
       - stackable-zookeeper-crd
+#  - name: restart-controller
+#    url: stackabletech/restart-controller.git
+#    product_string: restart-controller
+#    pretty_string: Stackable Restart Controller
+#    include_productconfig: no
+#    extra_crates:
+#      - stackable-zookeeper-crd
 
 # Anything specified in the retired_files variable will be deleted.
 # This is uncommented as I had issues with everything being deleted when this was just present as an empty key.
 # May be something to investigate.
 
-#retired_files:
+retired_files:
+  - .github/workflows/publish_dev_artifacts.yaml
+
