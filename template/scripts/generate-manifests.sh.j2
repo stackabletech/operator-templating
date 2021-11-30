@@ -1,4 +1,6 @@
 #!/bin/bash
+# This script reads a Helm chart from deploy/helm/{[ operator.product_string }]-operator and
+# generates manifest files into deploy/manifestss
 set -e
 
 generatedheader="\
@@ -9,7 +11,10 @@ generatedheader="\
 
 tmp=$(mktemp -d ./manifests-XXXXX)
 
-helm template --output-dir $tmp --include-crds deploy/helm/{[ operator.product_string }]-operator
+helm template --output-dir $tmp \
+              --include-crds \
+              --name-template {[ operator.product_string }]-operator \
+              deploy/helm/{[ operator.product_string }]-operator
 
 for file in $(find $tmp -type f)
 do
