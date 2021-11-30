@@ -42,7 +42,7 @@ chart-lint: compile-chart
 ## Manifest related targets
 clean-manifests:
 	mkdir -p deploy/manifests
-	rm -rf $$(find deploy/manifests -maxdepth 1 -mindepth 1 -not -name kustomization.yaml)
+	rm -rf $$(find deploy/manifests -maxdepth 1 -mindepth 1 -not -name Kustomization)
 
 generate-manifests: clean-manifests compile-chart
 	./scripts/generate-manifests.sh
