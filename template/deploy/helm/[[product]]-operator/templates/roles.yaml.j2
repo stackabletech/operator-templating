@@ -73,6 +73,18 @@ rules:
     resources:
       - pods
       - configmaps
+      - services
+      - endpoints
+    verbs:
+      - create
+      - delete
+      - list
+      - watch
+      - update
+  - apiGroups:
+      - apps
+    resources:
+      - statefulsets
     verbs:
       - create
       - delete
@@ -119,6 +131,9 @@ rules:
       - {{ include "operator.name" . }}.stackable.tech
     resources:
       - {{ include "operator.name" . }}clusters
+{[% if operator.product_string in ['zookeeper']%}]
+      - {{ include "operator.name" . }}znode
+{[% endif %}]
     verbs:
       - get
       - list

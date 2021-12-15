@@ -22,8 +22,7 @@ chart-clean:
 	rm -rf deploy/helm/{[ operator.product_string }]-operator/templates/crds.yaml
 
 version:
-	yq eval -i '.version = ${VERSION} | .appVersion = ${VERSION}' deploy/helm/{[ operator.product_string }]-operator/Chart.yaml
-
+	yq -yi '.version = ${VERSION} | .appVersion = ${VERSION}' deploy/helm/zookeeper-operator/Chart.yaml
 
 config: deploy/helm/{[ operator.product_string }]-operator/configs
 
@@ -34,7 +33,7 @@ crds: deploy/helm/{[ operator.product_string }]-operator/crds/crds.yaml
 
 deploy/helm/{[ operator.product_string }]-operator/crds/crds.yaml:
 	mkdir -p deploy/helm/{[ operator.product_string }]-operator/crds
-	cat deploy/crd/*.yaml | yq e '.metadata.annotations["helm.sh/resource-policy"]="keep"' - > ${@}
+	cat deploy/crd/*.yaml | yq '.metadata.annotations["helm.sh/resource-policy"]="keep"' - > ${@}
 
 chart-lint: compile-chart
 	docker run -it -v $(shell pwd):/build/helm-charts -w /build/helm-charts quay.io/helmpack/chart-testing:v3.4.0  ct lint --config deploy/helm/chart_testing.yaml
