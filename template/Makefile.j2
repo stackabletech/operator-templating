@@ -22,7 +22,7 @@ chart-clean:
 	rm -rf deploy/helm/{[ operator.product_string }]-operator/templates/crds.yaml
 
 version:
-	yq -yi '.version = ${VERSION} | .appVersion = ${VERSION}' deploy/helm/zookeeper-operator/Chart.yaml
+	yq -yi '.version = ${VERSION} | .appVersion = ${VERSION}' deploy/helm/{[ operator.product_string }]-operator/Chart.yaml
 
 config: deploy/helm/{[ operator.product_string }]-operator/configs
 
