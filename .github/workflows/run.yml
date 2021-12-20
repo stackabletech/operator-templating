@@ -29,4 +29,10 @@ jobs:
             sudo apt update && \
             sudo apt install gh
       - name: Run playbook
-        run: ansible-playbook playbook/playbook.yaml --extra-vars "gh_access_token=${{ secrets.gh_access_token }} base_dir=$(pwd) commit_hash=${{ github.sha }} original_commit_message='${{ github.event.head_commit.message }}'"
+        run: |
+          # Funnel via JSON to ensure that values are escaped properly
+          echo '{}' | jq '{commit_hash: $ENV.GITHUB_SHA, original_commit_message: $ENV.COMMIT_MESSAGE, base_dir: $pwd,  gh_access_token: $ENV.GH_ACCESS_TOKEN}' --arg pwd "$(pwd)" > vars.json
+          ansible-playbook playbook/playbook.yaml --extra-vars "@vars.json"
+        env:
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          GH_ACCESS_TOKEN: ${{ secrets.gh_access_token }}
