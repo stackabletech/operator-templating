@@ -78,6 +78,7 @@ rules:
     verbs:
       - create
       - delete
+      - get
       - list
       - patch
       - update
@@ -136,7 +137,7 @@ rules:
     resources:
       - {{ include "operator.name" . }}clusters
 {[% if operator.product_string in ['zookeeper']%}]
-      - {{ include "operator.name" . }}znode
+      - {{ include "operator.name" . }}znodes
 {[% endif %}]
     verbs:
       - get
