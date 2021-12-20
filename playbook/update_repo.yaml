@@ -6,8 +6,8 @@
     update: no
 
 - name: Create new branch
-  shell: git checkout -b {{ pr_branch_name }}
-  args:
+  command:
+    argv: [git, checkout, -b, "{{ pr_branch_name }}"]
     chdir: "{{ work_dir }}/{{ operator.name }}"
 
 # Check if anything was changed, if yes commit changes and create a pull request, otherwise skip rest of this play
@@ -75,23 +75,23 @@
 - name: Create PR if changes were performed
   block:
     - name: Stage all changes
-      shell: git add .
-      args:
+      command:
+        argv: [git, add, .]
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
     - name: Commit changes
-      shell: git commit -a -m '{{ commit_message }}'
-      args:
+      command:
+        argv: [git, commit, -a, -m, "{{ commit_message }}"]
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
     - name: Push changes
-      shell: git push --set-upstream origin {{ pr_branch_name }}
-      args:
+      command:
+        argv: [git, push, --set-upstream, origin, "{{ pr_branch_name }}"]
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
     - name: Create PR
-      shell: gh pr create --base main --title "{{ pr_title }}" --body "{{ pr_body }} --reviewer "@stackabletech/developers""
-      args:
+      command:
+        argv: [gh, pr, create, --base, main, --title, "{{ pr_title }}", --body, "{{ pr_body }}", --reviewer, "@stackabletech/developers"]
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
   when: directory_result.changed or template_result.changed or file_result.changed or deletion_result.changed

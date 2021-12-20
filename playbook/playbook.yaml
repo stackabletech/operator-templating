@@ -14,13 +14,17 @@
         state: directory
 
     - name: Configure git author mail
-      shell: git config --global user.email "{{ author_mail }}"
+      command:
+        argv: [git, config, --global, user.email, "{{ author_mail }}"]
 
     - name: Configure git author name
-      shell: git config --global user.name "{{ author_name }}"
+      command:
+        argv: [git, config, --global, user.name, "{{ author_name }}"]
 
     - name: Login to github
-      shell: echo "{{ gh_access_token }}" | gh auth login --with-token
+      command:
+        argv: [gh, auth, login, --with-token]
+        stdin: "{{ gh_access_token }}"
       register: loginresult
       ignore_errors: yes
 
