@@ -73,12 +73,31 @@ rules:
     resources:
       - pods
       - configmaps
+      - services
+      - endpoints
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - apps
+    resources:
+{[% if operator.product_string in ['opa'] %}]
+      - daemonsets
+{[% else %}]
+      - statefulsets
+{[% endif %}]
     verbs:
       - create
       - delete
       - list
-      - watch
+      - patch
       - update
+      - watch
   - apiGroups:
       - batch
     resources:
@@ -87,6 +106,8 @@ rules:
       - create
       - get
       - list
+      - patch
+      - update
       - watch
   - apiGroups:
       - apiextensions.k8s.io
@@ -119,6 +140,9 @@ rules:
       - {{ include "operator.name" . }}.stackable.tech
     resources:
       - {{ include "operator.name" . }}clusters
+{[% if operator.product_string in ['zookeeper']%}]
+      - {{ include "operator.name" . }}znodes
+{[% endif %}]
     verbs:
       - get
       - list
