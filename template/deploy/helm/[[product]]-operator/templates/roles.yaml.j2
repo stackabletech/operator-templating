@@ -86,7 +86,11 @@ rules:
   - apiGroups:
       - apps
     resources:
+{[% if operator.product_string in ['opa'] %}]
+      - daemonsets
+{[% else %}]
       - statefulsets
+{[% endif %}]
     verbs:
       - create
       - delete
