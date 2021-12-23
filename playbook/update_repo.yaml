@@ -18,6 +18,7 @@
         paths: "{{ template_dir }}/"
         patterns: "*.j2"
         file_type: file
+        hidden: yes
         use_regex: no
         recurse: yes
       register: files_j2
@@ -27,6 +28,7 @@
         paths: "{{ template_dir }}/"
         excludes: "*.j2"
         file_type: file
+        hidden: yes
         use_regex: no
         recurse: yes
       register: files_normal
