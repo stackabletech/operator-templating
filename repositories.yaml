@@ -79,5 +79,3 @@ repositories:
 
 retired_files:
   - .github/workflows/publish_dev_artifacts.yml
-  - deploy/helm/chart_testing.yaml
-  - python/cargo-version.py
