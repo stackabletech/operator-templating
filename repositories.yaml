@@ -1,3 +1,4 @@
+---
 repositories:
   - name: hive-operator
     url: stackabletech/hive-operator.git
@@ -18,7 +19,7 @@ repositories:
     url: stackabletech/regorule-operator.git
     product_string: regorule
     pretty_string: RegoRule
-    include_productconfig: no
+    include_productconfig: true
   - name: zookeeper-operator
     url: stackabletech/zookeeper-operator.git
     product_string: zookeeper
@@ -78,4 +79,3 @@ repositories:
 
 retired_files:
   - .github/workflows/publish_dev_artifacts.yml
-

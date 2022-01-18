@@ -1,9 +1,10 @@
+---
 - name: Clone operator repository into working directory
   tags: local
   ansible.builtin.git:
     repo: "https://{{ gh_access_token }}@github.com/{{ operator.url }}"
     dest: "{{ work_dir }}/{{ operator.name }}"
-    update: no
+    update: false
 
 - name: Create new branch
   command:
@@ -18,9 +19,9 @@
         paths: "{{ template_dir }}/"
         patterns: "*.j2"
         file_type: file
-        hidden: yes
-        use_regex: no
-        recurse: yes
+        hidden: true
+        use_regex: false
+        recurse: true
       register: files_j2
 
     - name: Find regular files that need to templating
@@ -28,9 +29,9 @@
         paths: "{{ template_dir }}/"
         excludes: "*.j2"
         file_type: file
-        hidden: yes
-        use_regex: no
-        recurse: yes
+        hidden: true
+        use_regex: false
+        recurse: true
       register: files_normal
 
     - name: Ensure directories exist
