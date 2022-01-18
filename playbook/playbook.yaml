@@ -26,7 +26,7 @@
         argv: [gh, auth, login, --with-token]
         stdin: "{{ gh_access_token }}"
       register: loginresult
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: Update repositories from templates
       include: "update_repo.yaml"
