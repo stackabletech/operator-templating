@@ -59,6 +59,10 @@ repositories:
     url: stackabletech/superset-operator.git
     product_string: superset
     pretty_string: Apache Superset
+  - name: airflow-operator
+    url: stackabletech/airflow-operator.git
+    product_string: airflow
+    pretty_string: Apache Airflow
   - name: druid-operator
     url: stackabletech/druid-operator.git
     product_string: druid
