@@ -78,4 +78,4 @@ repositories:
 # May be something to investigate.
 
 retired_files:
-  - .github/workflows/publish_dev_artifacts.yml
+  - .github/workflows/helm_tests.yml
