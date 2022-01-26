@@ -17,6 +17,6 @@ do
     sed -i '/# Source: .*/d' $file
 done
 
-cp -r $tmp/{[ operator.product_string }]-operator/*/* deploy/manifests/
+cp -r $tmp/{[ operator.name }]/*/* deploy/manifests/
 
 rm -rf $tmp

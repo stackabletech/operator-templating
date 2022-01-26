@@ -15,7 +15,7 @@ This Helm Chart can be used to install Custom Resource Definitions and the Opera
 # From the root of the operator repository
 make compile-chart
 
-helm install {[ operator.product_string }]-operator deploy/helm/{[ operator.product_string }]-operator
+helm install {[ operator.name }] deploy/helm/{[ operator.name }]
 ```
 
 
@@ -23,11 +23,11 @@ helm install {[ operator.product_string }]-operator deploy/helm/{[ operator.prod
 
 The usage of this operator and its CRDs is described in the [documentation](https://docs.stackable.tech/{[ operator.product_string }]/index.html)
 
-The operator has example requests included in the [`/examples`](https://github.com/stackabletech/{[ operator.product_string }]/operator/tree/main/examples) directory.
+The operator has example requests included in the [`/examples`](https://github.com/stackabletech/{[ operator.name }]/tree/main/examples) directory.
 
 
 ## Links
 
-https://github.com/stackabletech/{[ operator.product_string }]-operator
+https://github.com/stackabletech/{[ operator.name }]
 
 
