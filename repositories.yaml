@@ -65,6 +65,12 @@ repositories:
     pretty_string: Apache Druid
     extra_crates:
       - stackable-zookeeper-crd
+  - name: secret-operator
+    url: stackabletech/secret-operator.git
+    product_string: secret-operator
+    pretty_string: Stackable Secret Operator
+    include_productconfig: no
+    extra_crates: []
 #  - name: restart-controller
 #    url: stackabletech/restart-controller.git
 #    product_string: restart-controller
