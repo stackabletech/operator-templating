@@ -3,7 +3,9 @@
 # Utility for viewing and managing versions of cargo workspaces and crates.
 # For workspaces, it assumes that all crate members use a single shared version.
 #
-# usage: cargo-version.py [-h] [-p PROJECT] [-r] [-n {major,minor,patch}] [-s SET] [-o] [-m PRERELEASE]
+# usage:
+# cargo_version.py [-h] [-p PROJECT] [-r] [-n {major,minor,patch}]
+#                  [-s SET] [-o] [-m PRERELEASE]
 #
 # Change versions of cargo projects.
 #
