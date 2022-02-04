@@ -83,3 +83,10 @@ repositories:
 
 retired_files:
   - .github/workflows/helm_tests.yml
+  - .github/workflows/pr_generate_manifests.yml
+  - .github/workflows/publish_main_artifacts.yml
+  - .github/workflows/publish_pr_artifacts.yml
+  - .github/workflows/publish_release_artifacts.yml
+  - .github/workflows/rust.yml
+  - .github/dependabot.yml
+  - deploy/helm/[[product]]-operator/configs/config-spec

@@ -67,11 +67,16 @@
 
     - name: Remove retired files and directories
       file:
-        path: "{{ work_dir }}/{{ operator.name }}/{{ item }}"
+        path: "{{ work_dir }}/{{ operator.name }}/{{ item | replace('[[product]]', operator.product_string) }}"
         state: absent
       with_items: "{{ retired_files }}"
       register: deletion_result
       when: retired_files is defined
+
+    - name: Regenerate charts to update version
+      command:
+        argv: [ make, compile-chart, generate-manifests ]
+        chdir: "{{ work_dir }}/{{ operator.name }}"
   tags: local
 
 # Check if anything was changed, if yes commit changes and create a pull request, otherwise skip rest of this play
