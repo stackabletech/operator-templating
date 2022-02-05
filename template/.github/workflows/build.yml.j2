@@ -26,7 +26,8 @@ env:
 
 jobs:
   # Identify unused dependencies
-  udeps:
+  run_udeps:
+    name: Run Cargo Udeps
     runs-on: ubuntu-latest
     env:
       RUSTC_BOOTSTRAP: 1
@@ -180,6 +181,7 @@ jobs:
       - run_clippy
       - run_rustfmt
       - run_rustdoc
+      - run_udeps
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.4.0
@@ -277,16 +279,19 @@ jobs:
       - name: Install requirements for version tool
         if: ${{ github.event_name == 'pull_request' }}
         run: pip install -r python/requirements.txt
+
         # This step checks if the current run was triggered by a push to a pr (or a pr being created).
         # If this is the case it changes the version of this project in all Cargo.toml files to include the suffix
         # "-pr<prnumber>" so that the published artifacts can be linked to this PR.
       - name: Update version if PR
         if: ${{ github.event_name == 'pull_request' }}
         run: python/cargo_version.py -m pr${{ github.event.pull_request.number }}
+
       # Recreate charts with changed version if needed
       - name: Clean charts
         if: ${{ github.event_name == 'pull_request' }}
         run: make chart-clean clean-manifests compile-chart generate-manifests
+
       # Package and publish charts
       - name: Package Chart
         run: mkdir -p target/helm && helm package --destination target/helm deploy/helm/${{ env.PRODUCT_NAME }}-operator

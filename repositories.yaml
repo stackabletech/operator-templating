@@ -89,4 +89,5 @@ retired_files:
   - .github/workflows/publish_release_artifacts.yml
   - .github/workflows/rust.yml
   - .github/dependabot.yml
+  - python/cargo-version.py
   - deploy/helm/[[product]]-operator/configs/config-spec
