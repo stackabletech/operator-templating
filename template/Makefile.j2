@@ -40,7 +40,7 @@ version:
 
 config:
 	if [ -d "deploy/config-spec/" ]; then\
-		mkdir -p deploy/helm/zookeeper-operator/configs;\
+		mkdir -p deploy/helm/{[ operator.product_string }]-operator/configs;\
 		cp -r deploy/config-spec/* deploy/helm/{[ operator.product_string }]-operator/configs;\
 	fi
 
