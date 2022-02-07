@@ -39,8 +39,10 @@ version:
 	yq eval -i '.version = ${VERSION} | .appVersion = ${VERSION}' deploy/helm/{[ operator.product_string }]-operator/Chart.yaml
 
 config:
-	mkdir -p deploy/helm/zookeeper-operator/configs
-	cp -r deploy/config-spec/* deploy/helm/{[ operator.product_string }]-operator/configs
+	if [ -d "deploy/config-spec/" ]; then\
+		mkdir -p deploy/helm/zookeeper-operator/configs;\
+		cp -r deploy/config-spec/* deploy/helm/{[ operator.product_string }]-operator/configs;\
+	fi
 
 crds:
 	mkdir -p deploy/helm/{[ operator.product_string }]-operator/crds
