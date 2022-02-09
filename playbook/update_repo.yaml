@@ -86,6 +86,7 @@
       command:
         argv: [ git, diff, --exit-code ]
         chdir: "{{ work_dir }}/{{ operator.name }}"
+      ignore_errors: true
       register: git_change
 
   tags: local
