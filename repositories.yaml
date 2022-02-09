@@ -48,9 +48,6 @@ repositories:
     url: stackabletech/hbase-operator.git
     product_string: hbase
     pretty_string: Apache HBase
-    extra_crates:
-      - stackable-hdfs-crd
-      - stackable-zookeeper-crd
   - name: hdfs-operator
     url: stackabletech/hdfs-operator.git
     product_string: hdfs
