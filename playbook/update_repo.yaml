@@ -41,7 +41,6 @@
     - name: Find GitHub Workflow files
       find:
         paths: "{{ template_dir }}/.github/workflows/"
-        excludes: "*.j2"
         file_type: file
         hidden: true
         use_regex: false
