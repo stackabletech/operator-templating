@@ -29,6 +29,6 @@
     ]
   },
   "github-actions": {
-    "fileMatch": ["(^\\.github\\/workflows)\\/[^/]+\\.ya?ml$"]
+    "fileMatch": ["(^template\\/\\.github\\/workflows)\\/[^/]+\\.ya?ml$"]
   }
 }

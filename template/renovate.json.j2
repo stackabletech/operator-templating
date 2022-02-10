@@ -28,8 +28,5 @@
       "after 22:00 and before 6:00 every weekday"
     ]
   },
-  "github-actions": {
-    // Do not update GitHub Workflows that are owned by templating
-    "ignorePaths": {[ workflow_files.files | map(attribute='path') | map('replace', '.j2', '') | map('replace', base_dir+'/template/', '') | map('regex_escape') | to_json }]
-  }
+  "ignorePaths": {[ workflow_files.files | map(attribute='path') | map('replace', '.j2', '') | map('replace', base_dir+'/template/', '') | to_json }]
 }
