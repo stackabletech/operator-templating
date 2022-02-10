@@ -28,7 +28,7 @@
         recurse: true
       register: files_j2
 
-    - name: Find regular files that need to templating
+    - name: Find regular files that need no templating
       find:
         paths: "{{ template_dir }}/"
         excludes: "*.j2"
@@ -37,6 +37,16 @@
         use_regex: false
         recurse: true
       register: files_normal
+
+    - name: Find GitHub Workflow files
+      find:
+        paths: "{{ template_dir }}/.github/workflows/"
+        excludes: "*.j2"
+        file_type: file
+        hidden: true
+        use_regex: false
+        recurse: false
+      register: workflow_files
 
     - name: Ensure directories exist
       file:
