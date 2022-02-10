@@ -88,12 +88,12 @@
 
     - name: Regenerate charts to update version
       command:
-        argv: [ make, compile-chart, generate-manifests ]
+        argv: [make, compile-chart, generate-manifests]
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
     - name: Run 'git diff' to check for changes that would require creating a pr
       command:
-        argv: [ git, diff, --exit-code ]
+        argv: [git, diff, --exit-code]
         chdir: "{{ work_dir }}/{{ operator.name }}"
       ignore_errors: true
       register: git_change
