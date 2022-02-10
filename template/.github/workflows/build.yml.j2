@@ -259,12 +259,6 @@ jobs:
     name: All tests passed
     needs:
       - test_charts
-      - run_tests
-      - run_cargodeny
-      - run_clippy
-      - run_rustfmt
-      - run_rustdoc
-      - run_udeps
     runs-on: ubuntu-latest
     steps:
       - name: log
