@@ -28,5 +28,5 @@
       "after 5:00 and before 6:00 every weekday"
     ]
   },
-  "ignorePaths": {[ workflow_files.files | map(attribute='path') | map('replace', '.j2', '') | map('replace', base_dir+'/template/', '') | to_json }]
+  "ignorePaths": {[ workflow_files.files | map(attribute='path') | map('replace', '.j2', '') | map('replace', base_dir+'/template/', '') | sort() | to_json }]
 }
