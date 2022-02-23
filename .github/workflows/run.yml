@@ -1,14 +1,14 @@
 ---
-name: Rust
+name: Generate Downstream PRs
 
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - README.adoc
-      - LICENSE
-      - test.sh
+  workflow_dispatch:
+    inputs:
+      message:
+        description: "Message to include in the generated commits:"
+        required: true
+  schedule:
+    - cron: 5 4 * * * # run at 04:05 every morning
 
 jobs:
   create-prs:
@@ -23,17 +23,29 @@ jobs:
             sudo apt install -y software-properties-common && \
             sudo apt-add-repository ppa:ansible/ansible -y && \
             sudo apt install -y ansible
+
       - name: Install Github CLI
         run: |
             curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg && \
             echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
             sudo apt update && \
             sudo apt install gh
+
+      # Create commit message depending on whether this is run manually or due to a scheduled run
+      - name: Set commit message for manual dispatch
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          echo "REASON=Manual run triggered by: ${{ github.event.sender.login }} with message [${{ github.event.inputs.message }}]" >> "$GITHUB_ENV"
+      - name: Set commit message for schedule
+        if: ${{ github.event_name == 'schedule' }}
+        run: |
+          echo "REASON=Daily run triggered" >> "$GITHUB_ENV"
+
+      # Generate PRs
       - name: Run playbook
         run: |
           # Funnel via JSON to ensure that values are escaped properly
-          echo '{}' | jq '{commit_hash: $ENV.GITHUB_SHA, original_commit_message: $ENV.COMMIT_MESSAGE, base_dir: $pwd,  gh_access_token: $ENV.GH_ACCESS_TOKEN}' --arg pwd "$(pwd)" > vars.json
+          echo '{}' | jq '{commit_hash: $ENV.GITHUB_SHA, reason: $ENV.REASON, base_dir: $pwd,  gh_access_token: $ENV.GH_ACCESS_TOKEN}' --arg pwd "$(pwd)" > vars.json
           ansible-playbook playbook/playbook.yaml --extra-vars "@vars.json"
         env:
-          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
           GH_ACCESS_TOKEN: ${{ secrets.gh_access_token }}

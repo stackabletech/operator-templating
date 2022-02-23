@@ -16,8 +16,8 @@ pr_branch_name: template_{{ commit_short_hash }}
 commit_message: |
     Generated commit to update templated files based on rev {{ commit_short_hash }} in stackabletech/operator-templating repo.
 
-    Original commit message:
-    {{ original_commit_message }}
+    Triggered by:
+    {{ reason }}
 
 # Title and body of created PRs
 pr_title: "Update templated files to rev {{ commit_short_hash }}"
@@ -25,5 +25,5 @@ pr_title: "Update templated files to rev {{ commit_short_hash }}"
 pr_body: |
     Automatically created PR based on commit {{ commit_hash }} in stackabletech/operator-templating repo.
 
-    Original commit message:
-    {{ original_commit_message }}
+    Triggered by:
+    {{ reason }}
