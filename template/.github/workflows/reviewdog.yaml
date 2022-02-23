@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.4.0
-      - uses: reviewdog/action-hadolint@1e34f93387b47709298a91edb132af6c02a4bae1 # tag=v1.27.0
+      - uses: reviewdog/action-hadolint@2f36e7ddb63420bac655b14287cb6d6b82dd84e2 # tag=v1.28.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
