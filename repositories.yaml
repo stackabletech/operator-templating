@@ -8,18 +8,12 @@ repositories:
     url: stackabletech/kafka-operator.git
     product_string: kafka
     pretty_string: Apache Kafka
-    extra_crates:
-      - stackable-opa-crd
-      - stackable-zookeeper-crd
   - name: opa-operator
     url: stackabletech/opa-operator.git
     product_string: opa
     pretty_string: OpenPolicyAgent
-  - name: regorule-operator
-    url: stackabletech/regorule-operator.git
-    product_string: regorule
-    pretty_string: RegoRule
-    include_productconfig: false
+    extra_crates:
+      - stackable-opa-bundle-builder
   - name: zookeeper-operator
     url: stackabletech/zookeeper-operator.git
     product_string: zookeeper
@@ -28,22 +22,14 @@ repositories:
     url: stackabletech/trino-operator.git
     product_string: trino
     pretty_string: Trino
-    extra_crates:
-      - stackable-hive-crd
-      - stackable-opa-crd
-      - stackable-regorule-crd
   - name: spark-operator
     url: stackabletech/spark-operator.git
     product_string: spark
     pretty_string: Apache Spark
-    extra_crates:
-      - stackable-spark-common
   - name: nifi-operator
     url: stackabletech/nifi-operator.git
     product_string: nifi
     pretty_string: Apache NiFi
-    extra_crates:
-      - stackable-zookeeper-crd
   - name: hbase-operator
     url: stackabletech/hbase-operator.git
     product_string: hbase
@@ -64,15 +50,6 @@ repositories:
     url: stackabletech/druid-operator.git
     product_string: druid
     pretty_string: Apache Druid
-    extra_crates:
-      - stackable-zookeeper-crd
-#  - name: restart-controller
-#    url: stackabletech/restart-controller.git
-#    product_string: restart-controller
-#    pretty_string: Stackable Restart Controller
-#    include_productconfig: no
-#    extra_crates:
-#      - stackable-zookeeper-crd
 
 # Anything specified in the retired_files variable will be deleted.
 # This is uncommented as I had issues with everything being deleted when this was just present as an empty key.
