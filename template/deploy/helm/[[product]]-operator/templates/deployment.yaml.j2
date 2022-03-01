@@ -45,6 +45,11 @@ spec:
             - name: KAFKA_BROKER_CLUSTERROLE
               value: {{ .Release.Name }}-kafka-broker-clusterrole
 {[% endif %}]
+{[% if operator.product_string in ['opa'] %}]
+          env:
+            - name: OPA_BUILDER_CLUSTERROLE
+              value: {{ .Release.Name }}-opa-builder-clusterrole
+{[% endif %}]
       volumes:
         - name: config-spec
           configMap:

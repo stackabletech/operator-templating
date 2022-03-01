@@ -15,6 +15,9 @@ VERSION := $(shell cargo metadata --format-version 1 | jq '.packages[] | select(
 ## Docker related targets
 docker-build:
 	docker build --force-rm -t "docker.stackable.tech/stackable/{[ operator.product_string }]-operator:${VERSION}" -f docker/Dockerfile .
+{[% if operator.product_string in ['opa'] %}]
+	docker build --force-rm -t "docker.stackable.tech/stackable/{[ operator.product_string }]-bundle-builder:${VERSION}" -f docker/Dockerfile.builder .
+{[% endif %}]
 
 docker-build-latest: docker-build
 	docker tag "docker.stackable.tech/stackable/{[ operator.product_string }]-operator:${VERSION}" \
@@ -23,6 +26,9 @@ docker-build-latest: docker-build
 docker-publish:
 	echo "${NEXUS_PASSWORD}" | docker login --username github --password-stdin docker.stackable.tech
 	docker push --all-tags docker.stackable.tech/stackable/{[ operator.product_string }]-operator
+{[% if operator.product_string in ['opa'] %}]
+	docker push --all-tags docker.stackable.tech/stackable/{[ operator.product_string }]-bundle-builder
+{[% endif %}]
 
 docker: docker-build docker-publish
 
