@@ -52,6 +52,7 @@ jobs:
       - uses: reviewdog/action-markdownlint@40f5a7a4afc06d314a2c3a72f42c387b5187deaa # renovate: tag=v0.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          markdownlint_flags: '**/*.md.j2'
 
   shellcheck:
     runs-on: ubuntu-latest

@@ -5,10 +5,6 @@
 # Default state for all rules
 default: true
 
-files:
-  - '*.md'
-  - '*.md.j2'
-
 # MD013/line-length - Line length
 MD013:
   # Number of characters
