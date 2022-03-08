@@ -48,9 +48,6 @@ repositories:
     url: stackabletech/hbase-operator.git
     product_string: hbase
     pretty_string: Apache HBase
-    extra_crates:
-      - stackable-hdfs-crd
-      - stackable-zookeeper-crd
   - name: hdfs-operator
     url: stackabletech/hdfs-operator.git
     product_string: hdfs
@@ -59,6 +56,10 @@ repositories:
     url: stackabletech/superset-operator.git
     product_string: superset
     pretty_string: Apache Superset
+  - name: airflow-operator
+    url: stackabletech/airflow-operator.git
+    product_string: airflow
+    pretty_string: Apache Airflow
   - name: druid-operator
     url: stackabletech/druid-operator.git
     product_string: druid
@@ -84,4 +85,12 @@ repositories:
 # May be something to investigate.
 
 retired_files:
-  - .github/workflows/publish_dev_artifacts.yml
+  - .github/workflows/helm_tests.yml
+  - .github/workflows/pr_generate_manifests.yml
+  - .github/workflows/publish_main_artifacts.yml
+  - .github/workflows/publish_pr_artifacts.yml
+  - .github/workflows/publish_release_artifacts.yml
+  - .github/workflows/rust.yml
+  - .github/dependabot.yml
+  - python/cargo-version.py
+  - deploy/helm/[[product]]-operator/configs/config-spec

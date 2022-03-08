@@ -14,6 +14,10 @@
 # Check if anything was changed, if yes commit changes and create a pull request, otherwise skip rest of this play
 - name: Perform local file operations
   block:
+    - name: Display current operator
+      debug:
+        var: operator.name
+
     - name: Find template files
       find:
         paths: "{{ template_dir }}/"
@@ -24,7 +28,7 @@
         recurse: true
       register: files_j2
 
-    - name: Find regular files that need to templating
+    - name: Find regular files that need no templating
       find:
         paths: "{{ template_dir }}/"
         excludes: "*.j2"
@@ -33,6 +37,15 @@
         use_regex: false
         recurse: true
       register: files_normal
+
+    - name: Find GitHub Workflow files
+      find:
+        paths: "{{ template_dir }}/.github/workflows/"
+        file_type: file
+        hidden: true
+        use_regex: false
+        recurse: false
+      register: workflow_files
 
     - name: Ensure directories exist
       file:
@@ -67,11 +80,24 @@
 
     - name: Remove retired files and directories
       file:
-        path: "{{ work_dir }}/{{ operator.name }}/{{ item }}"
+        path: "{{ work_dir }}/{{ operator.name }}/{{ item | replace('[[product]]', operator.product_string) }}"
         state: absent
       with_items: "{{ retired_files }}"
       register: deletion_result
       when: retired_files is defined
+
+    - name: Regenerate charts to update version
+      command:
+        argv: [make, compile-chart, generate-manifests]
+        chdir: "{{ work_dir }}/{{ operator.name }}"
+
+    - name: Run 'git diff' to check for changes that would require creating a pr
+      command:
+        argv: [git, diff, --exit-code]
+        chdir: "{{ work_dir }}/{{ operator.name }}"
+      ignore_errors: true
+      register: git_change
+
   tags: local
 
 # Check if anything was changed, if yes commit changes and create a pull request, otherwise skip rest of this play
@@ -97,4 +123,4 @@
         argv: [gh, pr, create, --base, main, --title, "{{ pr_title }}", --body, "{{ pr_body }}", --reviewer, "@stackabletech/developers"]
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
-  when: directory_result.changed or template_result.changed or file_result.changed or deletion_result.changed
+  when: git_change.rc != 0
