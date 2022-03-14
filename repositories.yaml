@@ -54,6 +54,7 @@ repositories:
     url: stackabletech/secret-operator.git
     product_string: secret-operator
     pretty_string: Stackable Secret Operator
+    run_as: custom
     include_productconfig: no
 
 # Anything specified in the retired_files variable will be deleted.
