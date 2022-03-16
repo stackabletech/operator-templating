@@ -10,22 +10,22 @@
 
 TAG    := $(shell git rev-parse --short HEAD)
 
-VERSION := $(shell cargo metadata --format-version 1 | jq '.packages[] | select(.name=="stackable-{[ operator.product_string }]-operator") | .version')
+VERSION := $(shell cargo metadata --format-version 1 | jq '.packages[] | select(.name=="stackable-{[ operator.name }]") | .version')
 
 ## Docker related targets
 docker-build:
-	docker build --force-rm -t "docker.stackable.tech/stackable/{[ operator.product_string }]-operator:${VERSION}" -f docker/Dockerfile .
+	docker build --force-rm -t "docker.stackable.tech/stackable/{[ operator.name }]:${VERSION}" -f docker/Dockerfile .
 {[% if operator.product_string in ['opa'] %}]
 	docker build --force-rm -t "docker.stackable.tech/stackable/{[ operator.product_string }]-bundle-builder:${VERSION}" -f docker/Dockerfile.builder .
 {[% endif %}]
 
 docker-build-latest: docker-build
-	docker tag "docker.stackable.tech/stackable/{[ operator.product_string }]-operator:${VERSION}" \
-	           "docker.stackable.tech/stackable/{[ operator.product_string }]-operator:latest"
+	docker tag "docker.stackable.tech/stackable/{[ operator.name }]:${VERSION}" \
+	           "docker.stackable.tech/stackable/{[ operator.name }]:latest"
 
 docker-publish:
 	echo "${NEXUS_PASSWORD}" | docker login --username github --password-stdin docker.stackable.tech
-	docker push --all-tags docker.stackable.tech/stackable/{[ operator.product_string }]-operator
+	docker push --all-tags docker.stackable.tech/stackable/{[ operator.name }]
 {[% if operator.product_string in ['opa'] %}]
 	docker push --all-tags docker.stackable.tech/stackable/{[ operator.product_string }]-bundle-builder
 {[% endif %}]
@@ -38,21 +38,21 @@ docker-release: docker-build-latest docker-publish
 compile-chart: version crds config 
 
 chart-clean:
-	rm -rf deploy/helm/{[ operator.product_string }]-operator/configs
-	rm -rf deploy/helm/{[ operator.product_string }]-operator/crds
+	rm -rf deploy/helm/{[ operator.name }]/configs
+	rm -rf deploy/helm/{[ operator.name }]/crds
 
 version:
-	yq eval -i '.version = ${VERSION} | .appVersion = ${VERSION}' deploy/helm/{[ operator.product_string }]-operator/Chart.yaml
+	yq eval -i '.version = ${VERSION} | .appVersion = ${VERSION}' deploy/helm/{[ operator.name }]/Chart.yaml
 
 config:
 	if [ -d "deploy/config-spec/" ]; then\
-		mkdir -p deploy/helm/{[ operator.product_string }]-operator/configs;\
-		cp -r deploy/config-spec/* deploy/helm/{[ operator.product_string }]-operator/configs;\
+		mkdir -p deploy/helm/{[ operator.name }]/configs;\
+		cp -r deploy/config-spec/* deploy/helm/{[ operator.name }]/configs;\
 	fi
 
 crds:
-	mkdir -p deploy/helm/{[ operator.product_string }]-operator/crds
-	cat deploy/crd/*.yaml | yq eval '.metadata.annotations["helm.sh/resource-policy"]="keep"' - > deploy/helm/{[ operator.product_string }]-operator/crds/crds.yaml
+	mkdir -p deploy/helm/{[ operator.name }]/crds
+	cargo run crd | yq eval '.metadata.annotations["helm.sh/resource-policy"]="keep"' - > deploy/helm/{[ operator.name }]/crds/crds.yaml
 
 chart-lint: compile-chart
 	docker run -it -v $(shell pwd):/build/helm-charts -w /build/helm-charts quay.io/helmpack/chart-testing:v3.5.0  ct lint --config deploy/helm/ct.yaml
@@ -65,11 +65,4 @@ clean-manifests:
 generate-manifests: clean-manifests compile-chart
 	./scripts/generate-manifests.sh
 
-clean-crds:
-	rm -rf deploy/crd/*
-
-generate-crds:
-	touch rust/operator-binary/build.rs
-	cargo build
-
-regenerate-charts: clean-crds chart-clean clean-manifests generate-crds compile-chart generate-manifests
+regenerate-charts: chart-clean clean-manifests compile-chart generate-manifests
