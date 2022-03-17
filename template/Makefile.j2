@@ -42,7 +42,7 @@ chart-clean:
 	rm -rf deploy/helm/{[ operator.name }]/crds
 
 version:
-	yq eval -i '.version = ${VERSION} | .appVersion = ${VERSION}' deploy/helm/{[ operator.name }]/Chart.yaml
+	yq eval -i '.version = ${VERSION} | .appVersion = ${VERSION}' /dev/stdin < deploy/helm/{[ operator.name }]/Chart.yaml
 
 config:
 	if [ -d "deploy/config-spec/" ]; then\
