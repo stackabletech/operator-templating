@@ -12,6 +12,8 @@ TAG    := $(shell git rev-parse --short HEAD)
 
 VERSION := $(shell cargo metadata --format-version 1 | jq '.packages[] | select(.name=="stackable-{[ operator.name }]") | .version')
 
+SHELL=/bin/bash -euo pipefail
+
 ## Docker related targets
 docker-build:
 	docker build --force-rm -t "docker.stackable.tech/stackable/{[ operator.name }]:${VERSION}" -f docker/Dockerfile .
