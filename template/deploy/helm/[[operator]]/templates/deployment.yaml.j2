@@ -1,3 +1,4 @@
+{[% if operator.run_as is undefined or operator.run_as == "deployment" %}]
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -66,3 +67,6 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{[% else %}]
+# Templated Deployment disabled for this operator
+{[% endif %}]

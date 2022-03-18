@@ -11,16 +11,17 @@ LABEL maintainer="Stackable GmbH"
 RUN microdnf update --disablerepo=* --enablerepo=ubi-8-baseos --enablerepo=ubi-8-baseos -y \
   && rm -rf /var/cache/yum \
   && microdnf install --disablerepo=* --enablerepo=ubi-8-baseos shadow-utils -y \
+  && microdnf clean all \
   && rm -rf /var/cache/yum
 
-COPY --from=builder /app/stackable-{[ operator.product_string }]-operator /
+COPY --from=builder /app/stackable-{[ operator.name }] /
 {[% if operator.include_productconfig is undefined or operator.include_productconfig == true %}]
-COPY deploy/config-spec/properties.yaml /etc/stackable/{[ operator.product_string }]-operator/config-spec/properties.yaml
+COPY deploy/config-spec/properties.yaml /etc/stackable/{[ operator.name }]/config-spec/properties.yaml
 {[% endif %}]
 
 RUN groupadd -g 1000 stackable && adduser -u 1000 -g stackable -c 'Stackable Operator' stackable
 
 USER 1000:1000
 
-ENTRYPOINT ["/stackable-{[ operator.product_string }]-operator"]
+ENTRYPOINT ["/stackable-{[ operator.name }]"]
 CMD ["run"]
