@@ -50,6 +50,10 @@ repositories:
     url: stackabletech/druid-operator.git
     product_string: druid
     pretty_string: Apache Druid
+  - name: spark-k8s-operator
+    url: stackabletech/spark-k8s-operator.git
+    product_string: spark-k8s
+    pretty_string: Apache Spark-on-Kubernetes
   - name: secret-operator
     url: stackabletech/secret-operator.git
     product_string: secret-operator
