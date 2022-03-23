@@ -57,7 +57,7 @@ repositories:
   - name: commons-operator
     url: stackabletech/commons-operator.git
     product_string: commons
-    pretty_string: Stackable commons
+    pretty_string: Stackable Commons
     include_productconfig: false
   - name: secret-operator
     url: stackabletech/secret-operator.git
