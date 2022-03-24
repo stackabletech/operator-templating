@@ -54,6 +54,11 @@ repositories:
     url: stackabletech/spark-k8s-operator.git
     product_string: spark-k8s
     pretty_string: Apache Spark-on-Kubernetes
+  - name: commons-operator
+    url: stackabletech/commons-operator.git
+    product_string: commons
+    pretty_string: Stackable Commons
+    include_productconfig: false
   - name: secret-operator
     url: stackabletech/secret-operator.git
     product_string: secret-operator
