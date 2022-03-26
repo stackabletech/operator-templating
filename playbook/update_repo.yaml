@@ -98,6 +98,12 @@
       ignore_errors: true
       register: git_change
 
+    - name: Run 'git ls-remotes' to check if a branch for this source commit already exists
+      command:
+        argv: [git, ls-remote, --exit-code, --heads, https://{{ gh_access_token }}@github.com/{{ operator.url }}, {{ pr_branch_name }}]
+        chdir: "{{ work_dir }}/{{ operator.name }}"
+      ignore_errors: true
+      register: branch_exists
   tags: local
 
 # Check if anything was changed, if yes commit changes and create a pull request, otherwise skip rest of this play
@@ -123,4 +129,4 @@
         argv: [gh, pr, create, --base, main, --title, "{{ pr_title }}", --body, "{{ pr_body }}", --reviewer, "@stackabletech/developers"]
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
-  when: git_change.rc != 0
+  when: git_change.rc != 0 and branch_exists.rc == 2 # rc of 2 means the branch doesn't exist which is what we want
