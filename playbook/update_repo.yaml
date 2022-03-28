@@ -100,7 +100,7 @@
 
     - name: Run 'git ls-remotes' to check if a branch for this source commit already exists
       command:
-        argv: [git, ls-remote, --exit-code, --heads, https://{{ gh_access_token }}@github.com/{{ operator.url }}, {{ pr_branch_name }}]
+        argv: [git, ls-remote, --exit-code, --heads, "https://{{ gh_access_token }}@github.com/{{ operator.url }}", "{{ pr_branch_name }}"]
         chdir: "{{ work_dir }}/{{ operator.name }}"
       ignore_errors: true
       register: branch_exists
