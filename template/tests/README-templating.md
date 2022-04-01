@@ -1,7 +1,8 @@
 # Test Scenario Templating
-
+## Introduction
 The tests in this directory are designed to be expanded into multiple test scenarios based on test dimensions that can be defined in a dimensions file.
 
+## Defining Test Dimensions
 The dimensions file currently has to be named `test-definition.yaml` and reside in the same directory as the `kuttl-test.yaml.j2` file.
 
 An example of a minimal folder structure will be given further down in this file.
@@ -56,3 +57,18 @@ tests
 
 The `kuttl-test.yaml.j2` cannot currently be edited, as it comes from the operator templating and any changes would be overwritten again.
 This should be fairly easy to solve and we can look at this as soon as it becomes necessary.
+
+## Using
+### Requirements
+To run tests locally you need the following things installed:
+
+- python3
+  - pyyaml library installed
+- ansible
+- 
+### Running
+To run tests please execute the following command from the gitroot of the operator repository:
+
+`scripts/run_tests.sh`
+
+This will install the necessarry ansible role into `tests/ansible/roles`, expand the test templates into all defined test scenarios and execute kuttl to test these scenarios.
