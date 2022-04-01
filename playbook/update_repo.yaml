@@ -5,6 +5,7 @@
     repo: "https://{{ gh_access_token }}@github.com/{{ operator.url }}"
     dest: "{{ work_dir }}/{{ operator.name }}"
     update: false
+    version: "{{ operator.branch | default('main') }}"
 
 - name: Create new branch
   command:
