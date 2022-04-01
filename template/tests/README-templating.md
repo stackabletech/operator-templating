@@ -6,7 +6,7 @@ The tests in this directory are designed to be expanded into multiple test scena
 
 ## Defining Test Dimensions
 
-The dimensions file currently has to be named `test-definition.yaml` and reside in the same directory as the `kuttl-test.yaml.j2` file.
+The dimensions file currently has to be named `test-definition.yaml` and reside in the same directory as the `kuttl-test.yaml.jinja2` file.
 
 An example of a minimal folder structure will be given further down in this file.
 
@@ -60,7 +60,7 @@ tests
 └── test-definition.yaml
 ````
 
-The `kuttl-test.yaml.j2` cannot currently be edited, as it comes from the operator templating and any changes would be overwritten again.
+The `kuttl-test.yaml.jinja2` cannot currently be edited, as it comes from the operator templating and any changes would be overwritten again.
 This should be fairly easy to solve and we can look at this as soon as it becomes necessary.
 
 ## Using
