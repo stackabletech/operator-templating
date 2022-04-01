@@ -37,7 +37,7 @@ This file defines three dimensions for this test to be considered.
 It also defines one test case named _spark-pi-public-s3_ and the dimensions that this test case should use.
 In this example the test case uses only two of the three dimensions defined, so a run of this test case would be expanded into the following test structure:
 
-````
+````text
 └── spark-pi-public-s3
     ├── spark-3.2.1_hadoop-3.1.0
     ├── spark-3.2.1_hadoop-3.2.0
@@ -51,7 +51,7 @@ The name of a test case defined under `tests` in this file has to refer back to 
 
 Given the example of a test-definition.yaml shown above, the following folder structure would create the test scenarios shown above.
 
-````
+````text
 tests
 ├── kuttl-test.yaml.j2
 ├── templates
