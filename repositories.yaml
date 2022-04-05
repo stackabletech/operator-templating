@@ -65,6 +65,8 @@ repositories:
     pretty_string: Stackable Secret Operator
     run_as: custom
     include_productconfig: false
+    ignored_files:
+    - deploy/helm/[[operator]]/values.yaml.j2
 
 # Anything specified in the retired_files variable will be deleted.
 # This is uncommented as I had issues with everything being deleted when this was just present as an empty key.
@@ -79,4 +81,4 @@ retired_files:
   - .github/workflows/rust.yml
   - .github/dependabot.yml
   - python/cargo-version.py
-  - deploy/helm/[[product]]-operator/configs/config-spec
+  - deploy/helm/[[operator]]/configs/config-spec
