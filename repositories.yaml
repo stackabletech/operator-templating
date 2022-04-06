@@ -66,7 +66,7 @@ repositories:
     run_as: custom
     include_productconfig: false
     ignored_files:
-    - deploy/helm/[[operator]]/values.yaml.j2
+      - deploy/helm/[[operator]]/values.yaml.j2
 
 # Anything specified in the retired_files variable will be deleted.
 # This is uncommented as I had issues with everything being deleted when this was just present as an empty key.
