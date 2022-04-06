@@ -70,6 +70,7 @@
         block_end_string: "%}]"
       with_items: "{{ files_j2.files }}"
       register: template_result
+      when: item.path | replace(template_dir + '/', '') not in operator.ignored_files | default([])
 
     - name: Copy normal files to temp directory
       copy:
@@ -78,14 +79,14 @@
         dest: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) | replace('[[operator]]', operator.name)}}"
       with_items: "{{ files_normal.files }}"
       register: file_result
+      when: item.path | replace(template_dir + '/', '') not in operator.ignored_files | default([])
 
     - name: Remove retired files and directories
       file:
         path: "{{ work_dir }}/{{ operator.name }}/{{ item | replace('[[product]]', operator.product_string) }}"
         state: absent
-      with_items: "{{ retired_files }}"
+      with_items: "{{ retired_files | default([]) }}"
       register: deletion_result
-      when: retired_files is defined
 
     - name: Regenerate charts to update version
       command:
