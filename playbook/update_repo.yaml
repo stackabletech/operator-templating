@@ -132,3 +132,9 @@
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
   when: git_change.rc != 0 and branch_exists.rc == 2 # rc of 2 means the branch doesn't exist which is what we want
+
+- name: Clean
+  command:
+    argv: [cargo, clean]
+    chdir: "{{ work_dir }}/{{ operator.name }}"
+  tags: local
