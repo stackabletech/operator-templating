@@ -135,6 +135,6 @@
 
 - name: Clean
   command:
-    argv: [ cargo, clean ]
+    argv: [cargo, clean]
     chdir: "{{ work_dir }}/{{ operator.name }}"
   tags: local
