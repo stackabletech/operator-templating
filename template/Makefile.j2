@@ -16,9 +16,9 @@ SHELL=/bin/bash -euo pipefail
 
 ## Docker related targets
 docker-build:
-	docker build --force-rm -t "docker.stackable.tech/stackable/{[ operator.name }]:${VERSION}" -f docker/Dockerfile .
+	docker build --force-rm --build-arg VERSION=${VERSION} -t "docker.stackable.tech/stackable/{[ operator.name }]:${VERSION}" -f docker/Dockerfile .
 {[% if operator.product_string in ['opa'] %}]
-	docker build --force-rm -t "docker.stackable.tech/stackable/{[ operator.product_string }]-bundle-builder:${VERSION}" -f docker/Dockerfile.builder .
+	docker build --force-rm --build-arg VERSION=${VERSION} -t "docker.stackable.tech/stackable/{[ operator.product_string }]-bundle-builder:${VERSION}" -f docker/Dockerfile.builder .
 {[% endif %}]
 
 docker-build-latest: docker-build
