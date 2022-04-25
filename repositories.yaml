@@ -1,3 +1,4 @@
+---
 repositories:
   - name: airflow-operator
     pretty_string: Apache Airflow
