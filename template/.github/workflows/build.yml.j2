@@ -41,7 +41,7 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641 # renovate: tag=v1.3.0
+      - uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # tag=v1.4.0
         with:
           key: udeps
       - uses: actions-rs/cargo@844f36862e911db73fe0815f00a4a2602c279505 # renovate: tag=v1.0.3
@@ -147,7 +147,7 @@ jobs:
           toolchain: stable
           components: clippy
           override: true
-      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641 # renovate: tag=v1.3.0
+      - uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # tag=v1.4.0
         with:
           key: clippy
       - name: Run clippy action to produce annotations
@@ -177,7 +177,7 @@ jobs:
           toolchain: stable
           components: rustfmt
           override: true
-      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641 # renovate: tag=v1.3.0
+      - uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # tag=v1.4.0
         with:
           key: doc
       - uses: actions-rs/cargo@844f36862e911db73fe0815f00a4a2602c279505 # renovate: tag=v1.0.3
@@ -202,7 +202,7 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-      - uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641 # renovate: tag=v1.3.0
+      - uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # tag=v1.4.0
         with:
           key: test
       - uses: actions-rs/cargo@844f36862e911db73fe0815f00a4a2602c279505 # renovate: tag=v1.0.3
@@ -243,7 +243,7 @@ jobs:
           toolchain: stable
           override: true
       - name: Set up rust-cache
-        uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641 # renovate: tag=v1.3.0
+        uses: Swatinem/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # tag=v1.4.0
         with:
           key: charts
       - name: Regenerate charts
