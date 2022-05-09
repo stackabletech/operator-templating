@@ -77,6 +77,7 @@ To run tests locally you need the following things installed:
 
 To run tests please execute the following command from the gitroot of the operator repository:
 
-`scripts/run_tests.sh`
+`scripts/run_tests.sh --parallel 2`
 
-This will install the necessarry ansible role into `tests/ansible/roles`, expand the test templates into all defined test scenarios and execute kuttl to test these scenarios.
+This will install the necessarry ansible role into `tests/ansible/roles`, expand the test templates into all defined test scenarios and execute kuttl to test these scenarios. Any arguments are passed on to `kuttl`.
+
