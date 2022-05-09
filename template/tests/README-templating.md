@@ -69,7 +69,7 @@ This should be fairly easy to solve and we can look at this as soon as it become
 
 To run tests locally you need the following things installed:
 
-- python3 (version >=3.9)
+- python3 (version >= 3.9)
   - pyyaml library installed
 - ansible
 
