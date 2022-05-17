@@ -92,7 +92,7 @@ WARNING: The Helm Chart files that are rolled out by the templates in their curr
 == Structure
 **Github Actions**
 
-The definition files for github actions that in turn execute the playbooks doing the actual work are kept in `.github` 
+The definition files for github actions that in turn execute the playbooks doing the actual work are kept in `.github`
 
 **Playbook**
 
@@ -107,4 +107,3 @@ Everything under the top level folder `template`  is replicated to the target re
 All user-facing configuration is kept in `repositories.yaml`.
 
 Additional settings can be found in `playbook/group_vars/all`, but these are not intended to be freely changed and should be treated with care.
-
