@@ -5,20 +5,6 @@
 #
 # usage: cargo-version.py [-h] [-p PROJECT] [-r] [-n {major,minor,patch}] [-s SET] [-o] [-m PRERELEASE]
 #
-# Change versions of cargo projects.
-#
-# optional arguments:
-#   -h, --help      show this help message and exit
-#   -p PROJECT, --project PROJECT
-#             Project folder
-#   -r, --release     Version
-#   -n {major,minor,patch}, --next {major,minor,patch}
-#             Version
-#   -s SET, --set SET   Version
-#   -o, --show      Version
-#   -m PRERELEASE, --prerelease PRERELEASE
-#             Set pre-prelease string.
-#
 import argparse
 
 import toml
