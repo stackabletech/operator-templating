@@ -45,6 +45,7 @@ chart-clean:
 
 version:
 	yq eval -i '.version = ${VERSION} | .appVersion = ${VERSION}' /dev/stdin < deploy/helm/{[ operator.name }]/Chart.yaml
+	yq eval -i '.version = ${VERSION}' /dev/stdin < docs/antora.yml
 
 config:
 	if [ -d "deploy/config-spec/" ]; then\
