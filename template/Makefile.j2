@@ -10,10 +10,12 @@
 
 TAG    := $(shell git rev-parse --short HEAD)
 
-VERSION := $(shell cargo metadata --format-version 1 | jq '.packages[] | select(.name=="stackable-{[ operator.name }]") | .version')
+VERSION := $(shell cargo metadata --format-version 1 | jq -r '.packages[] | select(.name=="stackable-{[ operator.name }]") | .version')
+IS_NIGHTLY := $(shell echo "${VERSION}" | grep -- '-nightly$$')
 # When rendering docs we want to simplify the version number slightly, only rendering "nightly" for nightly branches
 # (since we only render nightlies for the active development trunk anyway) and chopping off the semver patch version otherwise
-DOCS_VERSION := $(if $(shell echo "${VERSION}" | grep -- '-nightly$$'),nightly,$(shell echo "${VERSION}" | sed 's/^\([0-9]\+\.[0-9]\+\)\..*$$/\1/'))
+DOCS_VERSION := $(if ${IS_NIGHTLY},nightly,$(shell echo "${VERSION}" | sed 's/^\([0-9]\+\.[0-9]\+\)\..*$$/\1/'))
+export VERSION IS_NIGHTLY DOCS_VERSION
 
 SHELL=/bin/bash -euo pipefail
 
@@ -47,8 +49,8 @@ chart-clean:
 	rm -rf deploy/helm/{[ operator.name }]/crds
 
 version:
-	yq eval -i '.version = ${VERSION} | .appVersion = ${VERSION}' /dev/stdin < deploy/helm/{[ operator.name }]/Chart.yaml
-	yq eval -i '.version = ${DOCS_VERSION}' /dev/stdin < docs/antora.yml
+	yq eval -i '.version = strenv(VERSION) | .appVersion = strenv(VERSION)' /dev/stdin < deploy/helm/{[ operator.name }]/Chart.yaml
+	yq eval -i '.version = strenv(DOCS_VERSION) | .prerelease = strenv(IS_NIGHTLY) != ""' /dev/stdin < docs/antora.yml
 
 config:
 	if [ -d "deploy/config-spec/" ]; then\
