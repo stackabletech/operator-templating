@@ -63,7 +63,6 @@ jobs:
           submodules: recursive
       - uses: actions/setup-python@98f2ad02fd48d057ee3b4d4f66525b231c3e52b6 # tag=v3
       - name: Install requirements for version tool
-        if: ${{ github.event_name == 'pull_request' }}
         run: pip install -r python/requirements.txt
       - id: prerelease
         name: Extract the pre-release string. Might be empty.
