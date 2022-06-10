@@ -67,7 +67,7 @@ jobs:
       - id: prerelease
         name: Extract the pre-release string. Might be empty.
         run: |
-          PRERELEASE=$(python/cargo_version.py -o | sed  "s/^[0-9]\+\.[0-9]\+\.[0-9]\+-\?//g"
+          PRERELEASE=$(python/cargo_version.py -o | sed  "s/^[0-9]\+\.[0-9]\+\.[0-9]\+-\?//g)"
           echo "::set-output name=str::$PRERELEASE"
 
   # This job evaluates the github environment to determine why this action is running and selects the appropriate
