@@ -51,10 +51,6 @@ repositories:
     pretty_string: Apache Spark-on-Kubernetes
     product_string: spark-k8s
     url: stackabletech/spark-k8s-operator.git
-  - name: spark-operator
-    pretty_string: Apache Spark
-    product_string: spark
-    url: stackabletech/spark-operator.git
   - name: superset-operator
     pretty_string: Apache Superset
     product_string: superset
