@@ -7,7 +7,7 @@ set -euo pipefail
 # dependencies
 # pip install jinja2-cli
 
-docs_dir="$(dirname $0)/../docs"
+docs_dir="$(dirname "$0")/../docs"
 templating_vars_file="$docs_dir/templating_vars.yaml"
 
 # Check if files need templating
