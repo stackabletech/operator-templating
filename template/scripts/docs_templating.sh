@@ -30,9 +30,10 @@ then
   echo "$templating_vars_file does not exist, cannot start templating."
 fi
 
-for file in $(find "$docs_dir" -name '*.j2')
+find "$docs_dir" -name '*.j2' |
+while read -r file
 do
-  new_file_name=$(echo "$file" | sed 's/.j2$//')  # cut of the '.j2'
+  new_file_name=${file//.j2/}
   echo "templating $new_file_name"
   jinja2 "$file" "$templating_vars_file" -o "$new_file_name"
 done
