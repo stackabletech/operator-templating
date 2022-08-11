@@ -27,11 +27,6 @@ docker-build:
 	docker build --force-rm --build-arg VERSION=${VERSION} -t "docker.stackable.tech/${ORG}/{[ operator.product_string }]-bundle-builder:${VERSION}" -f docker/Dockerfile.builder .
 {[% endif %}]
 
-## Not usefull anymore, got rid of :latest
-docker-build-latest: docker-build
-	docker tag "docker.stackable.tech/${ORG}/{[ operator.name }]:${VERSION}" \
-	           "docker.stackable.tech/${ORG}/{[ operator.name }]:latest"
-
 docker-build-multi-arch:
         docker buildx create --name builder --use
 		echo "${NEXUS_PASSWORD}" | docker login --username github --password-stdin docker.stackable.tech
@@ -51,8 +46,6 @@ docker-publish:
 {[% endif %}]
 
 docker: docker-build docker-publish
-
-docker-release: docker-build-latest docker-publish
 
 ## Chart related targets
 compile-chart: version crds config
