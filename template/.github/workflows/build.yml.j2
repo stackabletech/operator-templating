@@ -341,15 +341,30 @@ jobs:
         run: make chart-clean clean-manifests compile-chart generate-manifests
 
       # Package and publish charts
-      - name: Package Chart
+      -
+        name: Package Chart
         run: mkdir -p target/helm && helm package --destination target/helm deploy/helm/${{ env.OPERATOR_NAME }}
-      - name: Build Docker image
+
+      -
+        name: Build Docker image
         if: env.NEXUS_PASSWORD != null # pragma: allowlist secret
         run: make docker
-      - name: Build Docker image multi-arch
+
+      -
+        name: Set up QEMU for multiarch builds
+        uses: docker/setup-qemu-action@v2
+
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      -
+        name: Build Docker image multi-arch
         if: env.NEXUS_PASSWORD != null # pragma: allowlist secret
         run: make docker-build-multi-arch ORG=stackable-experimental
-      - name: Publish Chart
+
+      -
+        name: Publish Chart
         if: env.NEXUS_PASSWORD != null # pragma: allowlist secret
         run: >-
           /usr/bin/curl
