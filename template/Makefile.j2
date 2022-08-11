@@ -15,7 +15,7 @@ IS_NIGHTLY := $(shell echo "${VERSION}" | grep -- '-nightly$$')
 # When rendering docs we want to simplify the version number slightly, only rendering "nightly" for nightly branches
 # (since we only render nightlies for the active development trunk anyway) and chopping off the semver patch version otherwise
 DOCS_VERSION := $(if ${IS_NIGHTLY},nightly,$(shell echo "${VERSION}" | sed 's/^\([0-9]\+\.[0-9]\+\)\..*$$/\1/'))
-ORG = "stackable"
+ORG = stackable
 export VERSION IS_NIGHTLY DOCS_VERSION
 
 SHELL=/bin/bash -euo pipefail
@@ -27,16 +27,18 @@ docker-build:
 	docker build --force-rm --build-arg VERSION=${VERSION} -t "docker.stackable.tech/${ORG}/{[ operator.product_string }]-bundle-builder:${VERSION}" -f docker/Dockerfile.builder .
 {[% endif %}]
 
-docker-build-multi-arch:
-        docker buildx create --name builder --use
-		echo "${NEXUS_PASSWORD}" | docker login --username github --password-stdin docker.stackable.tech
-        docker buildx build --force-rm  --build-arg VERSION=${VERSION} -t "docker.stackable.tech/${ORG}/{[ operator.name }]:${VERSION}" -f docker/Dockerfile --platform linux/arm64,linux/amd64 --push .
+build-multi-arch:
+	echo "${NEXUS_PASSWORD}" | docker login --username github --password-stdin docker.stackable.tech
+    docker buildx build --force-rm  --build-arg VERSION=${VERSION} -t "docker.stackable.tech/${ORG}/{[ operator.name }]:${VERSION}" -f docker/Dockerfile --platform linux/arm64,linux/amd64 --push .
 {[% if operator.product_string in ['opa'] %}]
 		docker buildx build --force-rm  --build-arg VERSION=${VERSION} -t "docker.stackable.tech/${ORG}/{[ operator.product_string }]-bundle-builder:${VERSION}"" -f docker/Dockerfile --platform linux/arm64,linux/amd64 --push .
 {[% endif %}]
 
+create-builder:
+	docker buildx create --name builder --use
+
 clean-builder:
-		docker buildx rm builder
+	docker buildx rm builder
 
 docker-publish:
 	echo "${NEXUS_PASSWORD}" | docker login --username github --password-stdin docker.stackable.tech
@@ -46,6 +48,8 @@ docker-publish:
 {[% endif %}]
 
 docker: docker-build docker-publish
+
+docker-multi-arch: create-builder build-multi-arch clean-builder
 
 ## Chart related targets
 compile-chart: version crds config
