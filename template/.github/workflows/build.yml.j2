@@ -346,6 +346,9 @@ jobs:
       - name: Build Docker image
         if: env.NEXUS_PASSWORD != null # pragma: allowlist secret
         run: make docker
+      - name: Build Docker image multi-arch
+        if: env.NEXUS_PASSWORD != null # pragma: allowlist secret
+        run: make docker-build-multi-arch ORG=stackable-experimental
       - name: Publish Chart
         if: env.NEXUS_PASSWORD != null # pragma: allowlist secret
         run: >-
