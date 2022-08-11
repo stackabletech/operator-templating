@@ -15,26 +15,39 @@ IS_NIGHTLY := $(shell echo "${VERSION}" | grep -- '-nightly$$')
 # When rendering docs we want to simplify the version number slightly, only rendering "nightly" for nightly branches
 # (since we only render nightlies for the active development trunk anyway) and chopping off the semver patch version otherwise
 DOCS_VERSION := $(if ${IS_NIGHTLY},nightly,$(shell echo "${VERSION}" | sed 's/^\([0-9]\+\.[0-9]\+\)\..*$$/\1/'))
+ORG = "stackable"
 export VERSION IS_NIGHTLY DOCS_VERSION
 
 SHELL=/bin/bash -euo pipefail
 
 ## Docker related targets
 docker-build:
-	docker build --force-rm --build-arg VERSION=${VERSION} -t "docker.stackable.tech/stackable/{[ operator.name }]:${VERSION}" -f docker/Dockerfile .
+	docker build --force-rm --build-arg VERSION=${VERSION} -t "docker.stackable.tech/${ORG}/{[ operator.name }]:${VERSION}" -f docker/Dockerfile .
 {[% if operator.product_string in ['opa'] %}]
-	docker build --force-rm --build-arg VERSION=${VERSION} -t "docker.stackable.tech/stackable/{[ operator.product_string }]-bundle-builder:${VERSION}" -f docker/Dockerfile.builder .
+	docker build --force-rm --build-arg VERSION=${VERSION} -t "docker.stackable.tech/${ORG}/{[ operator.product_string }]-bundle-builder:${VERSION}" -f docker/Dockerfile.builder .
 {[% endif %}]
 
+## Not usefull anymore, got rid of :latest
 docker-build-latest: docker-build
-	docker tag "docker.stackable.tech/stackable/{[ operator.name }]:${VERSION}" \
-	           "docker.stackable.tech/stackable/{[ operator.name }]:latest"
+	docker tag "docker.stackable.tech/${ORG}/{[ operator.name }]:${VERSION}" \
+	           "docker.stackable.tech/${ORG}/{[ operator.name }]:latest"
+
+docker-build-multi-arch:
+        docker buildx create --name builder --use
+		echo "${NEXUS_PASSWORD}" | docker login --username github --password-stdin docker.stackable.tech
+        docker buildx build --force-rm  --build-arg VERSION=${VERSION} -t "docker.stackable.tech/${ORG}/{[ operator.name }]:${VERSION}" -f docker/Dockerfile --platform linux/arm64,linux/amd64 --push .
+{[% if operator.product_string in ['opa'] %}]
+		docker buildx build --force-rm  --build-arg VERSION=${VERSION} -t "docker.stackable.tech/${ORG}/{[ operator.product_string }]-bundle-builder:${VERSION}"" -f docker/Dockerfile --platform linux/arm64,linux/amd64 --push .
+{[% endif %}]
+
+clean-builder:
+		docker buildx rm builder
 
 docker-publish:
 	echo "${NEXUS_PASSWORD}" | docker login --username github --password-stdin docker.stackable.tech
-	docker push --all-tags docker.stackable.tech/stackable/{[ operator.name }]
+	docker push --all-tags docker.stackable.tech/${ORG}/{[ operator.name }]
 {[% if operator.product_string in ['opa'] %}]
-	docker push --all-tags docker.stackable.tech/stackable/{[ operator.product_string }]-bundle-builder
+	docker push --all-tags docker.stackable.tech/${ORG}/{[ operator.product_string }]-bundle-builder
 {[% endif %}]
 
 docker: docker-build docker-publish
