@@ -28,13 +28,13 @@ docker-build:
 {[% endif %}]
 
 build-multi-arch:
-    docker buildx build --force-rm --build-arg VERSION=${VERSION} -t "docker.stackable.tech/${ORG}/{[ operator.name }]:${VERSION}" -f docker/Dockerfile --platform linux/arm64,linux/amd64 --push .
+	 docker buildx build --force-rm --build-arg VERSION=${VERSION} -t "docker.stackable.tech/${ORG}/{[ operator.name }]:${VERSION}" -f docker/Dockerfile --platform linux/arm64,linux/amd64 --push .
 {[% if operator.product_string in ['opa'] %}]
 	docker buildx build --force-rm  --build-arg VERSION=${VERSION} -t "docker.stackable.tech/${ORG}/{[ operator.product_string }]-bundle-builder:${VERSION}"" -f docker/Dockerfile --platform linux/arm64,linux/amd64 --push .
 {[% endif %}]
 
 create-builder:
-    docker buildx create --name builder --use
+	docker buildx create --name builder --use
 
 clean-builder:
 	docker buildx rm builder
@@ -43,13 +43,12 @@ docker-login:
 	echo "${NEXUS_PASSWORD}" | docker login --username github --password-stdin docker.stackable.tech
 
 docker-publish:
-	echo "${NEXUS_PASSWORD}" | docker login --username github --password-stdin docker.stackable.tech
 	docker push --all-tags docker.stackable.tech/${ORG}/{[ operator.name }]
 {[% if operator.product_string in ['opa'] %}]
 	docker push --all-tags docker.stackable.tech/${ORG}/{[ operator.product_string }]-bundle-builder
 {[% endif %}]
 
-docker: docker-build docker-publish
+docker: docker-build docker-login docker-publish
 
 docker-multi-arch: create-builder docker-login build-multi-arch clean-builder
 
