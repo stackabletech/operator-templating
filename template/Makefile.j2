@@ -28,7 +28,7 @@ docker-build:
 {[% endif %}]
 
 build-multi-arch:
-    docker buildx build --force-rm  --build-arg VERSION=${VERSION} -t "docker.stackable.tech/${ORG}/{[ operator.name }]:${VERSION}" -f docker/Dockerfile --platform linux/arm64,linux/amd64 --push .
+    docker buildx build --force-rm --build-arg VERSION=${VERSION} -t "docker.stackable.tech/${ORG}/{[ operator.name }]:${VERSION}" -f docker/Dockerfile --platform linux/arm64,linux/amd64 --push .
 {[% if operator.product_string in ['opa'] %}]
 	docker buildx build --force-rm  --build-arg VERSION=${VERSION} -t "docker.stackable.tech/${ORG}/{[ operator.product_string }]-bundle-builder:${VERSION}"" -f docker/Dockerfile --platform linux/arm64,linux/amd64 --push .
 {[% endif %}]
@@ -51,7 +51,7 @@ docker-publish:
 
 docker: docker-build docker-publish
 
-docker-multi-arch: create-builder build-multi-arch clean-builder
+docker-multi-arch: create-builder docker-login build-multi-arch clean-builder
 
 ## Chart related targets
 compile-chart: version crds config
