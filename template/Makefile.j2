@@ -28,10 +28,10 @@ docker-build:
 {[% endif %}]
 
 build-multi-arch:
-	echo "${NEXUS_PASSWORD}" | docker login --username github --password-stdin docker.stackable.tech
+echo "${NEXUS_PASSWORD}" | docker login --username github --password-stdin docker.stackable.tech
     docker buildx build --force-rm  --build-arg VERSION=${VERSION} -t "docker.stackable.tech/${ORG}/{[ operator.name }]:${VERSION}" -f docker/Dockerfile --platform linux/arm64,linux/amd64 --push .
 {[% if operator.product_string in ['opa'] %}]
-		docker buildx build --force-rm  --build-arg VERSION=${VERSION} -t "docker.stackable.tech/${ORG}/{[ operator.product_string }]-bundle-builder:${VERSION}"" -f docker/Dockerfile --platform linux/arm64,linux/amd64 --push .
+	docker buildx build --force-rm  --build-arg VERSION=${VERSION} -t "docker.stackable.tech/${ORG}/{[ operator.product_string }]-bundle-builder:${VERSION}"" -f docker/Dockerfile --platform linux/arm64,linux/amd64 --push .
 {[% endif %}]
 
 create-builder:
