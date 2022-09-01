@@ -40,8 +40,6 @@ repositories:
     product_string: opa
     url: stackabletech/opa-operator.git
   - name: secret-operator
-    ignored_files:
-      - deploy/helm/[[operator]]/values.yaml.j2
     include_productconfig: false
     pretty_string: Stackable Secret Operator
     product_string: secret-operator
