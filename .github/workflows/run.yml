@@ -26,10 +26,9 @@ jobs:
 
       - name: Install Github CLI
         run: |
-            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg && \
-            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
-            sudo apt update && \
-            sudo apt install gh
+            sudo curl --output /opt/gh.deb https://repo.stackable.tech/repository/packages/gh/gh_2.14.7_linux_amd64.deb && \
+            sudo apt-get install /opt/gh.deb && \
+            sudo rm /opt/gh.deb
 
       # Create commit message depending on whether this is run manually or due to a scheduled run
       - name: Set commit message for manual dispatch
