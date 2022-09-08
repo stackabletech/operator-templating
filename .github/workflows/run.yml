@@ -30,6 +30,10 @@ jobs:
             sudo apt-get install /opt/gh.deb && \
             sudo rm /opt/gh.deb
 
+      - name: Install protoc
+        run: |
+          sudo apt-get install protobuf-compiler
+
       # Create commit message depending on whether this is run manually or due to a scheduled run
       - name: Set commit message for manual dispatch
         if: ${{ github.event_name == 'workflow_dispatch' }}
