@@ -40,8 +40,6 @@ repositories:
     product_string: opa
     url: stackabletech/opa-operator.git
   - name: secret-operator
-    ignored_files:
-      - deploy/helm/[[operator]]/values.yaml.j2
     include_productconfig: false
     pretty_string: Stackable Secret Operator
     product_string: secret-operator
@@ -63,6 +61,10 @@ repositories:
     pretty_string: Apache ZooKeeper
     product_string: zookeeper
     url: stackabletech/zookeeper-operator.git
+
+# Rust version that all operators should be built against.
+# Should be updated to the current stable for each Stackable platform release.
+rust_version: 1.63.0
 
 # Anything specified in the retired_files variable will be deleted.
 # This is uncommented as I had issues with everything being deleted when this was just present as an empty key.
