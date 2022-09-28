@@ -33,14 +33,7 @@ allow = [
     "Unicode-DFS-2016",
     "Zlib"
 ]
-
-exceptions = [
-    { name = "stackable-{[ operator.product_string }]-crd", allow = ["OSL-3.0"] },
-    { name = "stackable-{[ operator.name }]", allow = ["OSL-3.0"] },
-    { name = "stackable-{[ operator.name }]-binary", allow = ["OSL-3.0"] },
-    {[% if operator.extra_crates is not undefined %}]{[% for crate in operator.extra_crates %}]{ name = "{[crate}]", allow = ["OSL-3.0"] },
-    {[% endfor %}]{[% endif -%}]
-]
+private = { ignore = true }
 
 [[licenses.clarify]]
 name = "ring"
