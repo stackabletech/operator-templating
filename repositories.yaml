@@ -33,6 +33,12 @@ repositories:
     pretty_string: Apache NiFi
     product_string: nifi
     url: stackabletech/nifi-operator.git
+  - name: listener-operator
+    include_productconfig: false
+    pretty_string: Stackable Listener Operator
+    product_string: listener-operator
+    run_as: custom
+    url: stackabletech/listener-operator.git
   - name: opa-operator
     extra_crates:
       - stackable-opa-bundle-builder
