@@ -45,7 +45,7 @@ jobs:
           profile: minimal
           toolchain: "{[ rust_version }]"
           override: true
-      - uses: Swatinem/rust-cache@6720f05bc48b77f96918929a9019fb2203ff71f8 # tag=v2.0.0
+      - uses: Swatinem/rust-cache@b5ec9edd911d3bf82c74038b0a28791e0aa24d6f # tag=v2.0.2
         with:
           key: udeps
       - uses: actions-rs/cargo@844f36862e911db73fe0815f00a4a2602c279505 # renovate: tag=v1.0.3
@@ -175,7 +175,7 @@ jobs:
           toolchain: "{[ rust_version }]"
           components: clippy
           override: true
-      - uses: Swatinem/rust-cache@6720f05bc48b77f96918929a9019fb2203ff71f8 # tag=v2.0.0
+      - uses: Swatinem/rust-cache@b5ec9edd911d3bf82c74038b0a28791e0aa24d6f # tag=v2.0.2
         with:
           key: clippy
       - name: Run clippy action to produce annotations
@@ -209,7 +209,7 @@ jobs:
           toolchain: "{[ rust_version }]"
           components: rustfmt
           override: true
-      - uses: Swatinem/rust-cache@6720f05bc48b77f96918929a9019fb2203ff71f8 # tag=v2.0.0
+      - uses: Swatinem/rust-cache@b5ec9edd911d3bf82c74038b0a28791e0aa24d6f # tag=v2.0.2
         with:
           key: doc
       - uses: actions-rs/cargo@844f36862e911db73fe0815f00a4a2602c279505 # renovate: tag=v1.0.3
@@ -238,7 +238,7 @@ jobs:
           profile: minimal
           toolchain: "{[ rust_version }]"
           override: true
-      - uses: Swatinem/rust-cache@6720f05bc48b77f96918929a9019fb2203ff71f8 # tag=v2.0.0
+      - uses: Swatinem/rust-cache@b5ec9edd911d3bf82c74038b0a28791e0aa24d6f # tag=v2.0.2
         with:
           key: test
       - uses: actions-rs/cargo@844f36862e911db73fe0815f00a4a2602c279505 # renovate: tag=v1.0.3
@@ -310,7 +310,7 @@ jobs:
           toolchain: "{[ rust_version }]"
           override: true
       - name: Set up rust-cache
-        uses: Swatinem/rust-cache@6720f05bc48b77f96918929a9019fb2203ff71f8 # tag=v2.0.0
+        uses: Swatinem/rust-cache@b5ec9edd911d3bf82c74038b0a28791e0aa24d6f # tag=v2.0.2
         with:
           key: charts
       - name: Regenerate charts
