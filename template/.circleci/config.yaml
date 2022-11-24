@@ -100,14 +100,13 @@ jobs:
 workflows:
   version: 2
   build_multiarch:
-    #TODO: context, org-global for secrets so they don't need to be handled per project?
     jobs:
       - construct_version_string:
           # NOTE: this filter prevents everything else from running, due to 'requires' constraints
           filters:
             branches:
               only:
-                - arm-circleci
+                - main
       - build_and_push_amd:
           requires:
             - construct_version_string
