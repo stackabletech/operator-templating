@@ -93,6 +93,11 @@
         argv: [make, compile-chart, generate-manifests]
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
+    - name: Re-render README
+      command:
+        argv: [make, render-readme]
+        chdir: "{{ work_dir }}/{{ operator.name }}"
+
     - name: Run 'git diff' to check for changes that would require creating a pr
       command:
         argv: [git, diff, --exit-code]
