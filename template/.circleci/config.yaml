@@ -1,6 +1,6 @@
+---
 # NOTE: all the echoing to BASH_ENV is due to circleCI not being able to interpolate vars
 # https://circleci.com/docs/set-environment-variable/
-
 version: 2.1
 parameters:
   docker-registry-username:
