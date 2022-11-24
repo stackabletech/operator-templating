@@ -5,13 +5,13 @@ version: 2.1
 parameters:
   docker-registry-username:
     type: string
-    default: "vladislav.supalov"
+    default: "github"
   docker-registry-org:
     type: string
-    default: "vsupalov"
+    default: "stackable-experimental"
   operator-name:
     type: string
-    default: "druid-operator"
+    default: "{[ operator.name }]"
 orbs:
   jq: circleci/jq@2.2.0
 jobs:
