@@ -1,0 +1,126 @@
+# NOTE: all the echoing to BASH_ENV is due to circleCI not being able to interpolate vars
+# https://circleci.com/docs/set-environment-variable/
+
+version: 2.1
+parameters:
+  docker-registry-username:
+    type: string
+    default: "vladislav.supalov"
+  docker-registry-org:
+    type: string
+    default: "vsupalov"
+  operator-name:
+    type: string
+    default: "druid-operator"
+orbs:
+  jq: circleci/jq@2.2.0
+jobs:
+  construct_version_string:
+    docker:
+      # https://circleci.com/developer/images/image/cimg/rust
+      - image: cimg/rust:1.65.0
+    steps:
+      - checkout
+      - jq/install
+      - run: mkdir -p workspace
+      - run: cargo metadata --format-version 1 | jq -r '.packages[] | select(.name=="stackable-<<pipeline.parameters.operator-name>>") | .version' > workspace/version
+      # persist resulting file for future steps
+      # https://circleci.com/docs/workspaces/
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - version
+  build_and_push_amd:
+    machine:
+      image: ubuntu-2004:202010-01 # recommended linux image
+    resource_class: large
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Set environment variables
+          command: |
+            echo 'export VERSION=$(cat /tmp/workspace/version)' >> "$BASH_ENV"
+            echo 'export TAG=$(cat /tmp/workspace/version)-amd' >> "$BASH_ENV"
+            source "$BASH_ENV"
+      - run:
+          name: Build Docker image
+          command: |
+            docker build --force-rm --build-arg ORG_NAME=<<pipeline.parameters.docker-registry-org>> --build-arg VERSION=${VERSION} -t "docker.stackable.tech/<<pipeline.parameters.docker-registry-org>>/<<pipeline.parameters.operator-name>>:${TAG}" -f docker/Dockerfile .
+      - run:
+          name: Push Docker image
+          command: |
+            echo "${NEXUS_PASSWORD}" | docker login --username <<pipeline.parameters.docker-registry-username>> --password-stdin docker.stackable.tech
+            docker push docker.stackable.tech/<<pipeline.parameters.docker-registry-org>>/<<pipeline.parameters.operator-name>>:${TAG}
+  build_and_push_arm:
+    # https://circleci.com/docs/using-arm/
+    machine:
+      image: ubuntu-2004:202101-01 # https://circleci.com/docs/configuration-reference/#machine
+    resource_class: arm.large
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Set environment variables
+          command: |
+            echo 'export VERSION=$(cat /tmp/workspace/version)' >> "$BASH_ENV"
+            echo 'export TAG=$(cat /tmp/workspace/version)-arm' >> "$BASH_ENV"
+            source "$BASH_ENV"
+      - run:
+          name: Build Docker image
+          command: |
+            docker build --force-rm --build-arg ORG_NAME=<<pipeline.parameters.docker-registry-org>> --build-arg VERSION=${VERSION} -t "docker.stackable.tech/<<pipeline.parameters.docker-registry-org>>/<<pipeline.parameters.operator-name>>:${TAG}" -f docker/Dockerfile .
+      - run:
+          name: Push Docker image
+          command: |
+            echo "${NEXUS_PASSWORD}" | docker login --username <<pipeline.parameters.docker-registry-username>> --password-stdin docker.stackable.tech
+            docker push docker.stackable.tech/<<pipeline.parameters.docker-registry-org>>/<<pipeline.parameters.operator-name>>:${TAG}
+  create_multiarch_manifest:
+    docker:
+      - image: cimg/base:2022.06
+    steps:
+      - setup_remote_docker:
+          version: 20.10.14
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Set environment variables
+          command: |
+            echo 'export IMAGE_NAME=docker.stackable.tech/<<pipeline.parameters.docker-registry-org>>/<<pipeline.parameters.operator-name>>:$(cat /tmp/workspace/version)' >> "$BASH_ENV"
+            source "$BASH_ENV"
+      - run:
+          name: Create and push combined Docker manifest
+          command: |
+            echo "${NEXUS_PASSWORD}" | docker login --username <<pipeline.parameters.docker-registry-username>> --password-stdin docker.stackable.tech
+            export DOCKER_CLI_EXPERIMENTAL=enabled # needed, because handling manifests is an experimental feature
+            docker manifest create ${IMAGE_NAME} --amend ${IMAGE_NAME}-amd --amend ${IMAGE_NAME}-arm
+            docker manifest push ${IMAGE_NAME}
+workflows:
+  version: 2
+  build_multiarch:
+    #TODO: context, org-global for secrets so they don't need to be handled per project?
+    jobs:
+      - construct_version_string:
+          # NOTE: this filter prevents everything else from running, due to 'requires' constraints
+          filters:
+            branches:
+              only:
+                - arm-circleci
+      - build_and_push_amd:
+          requires:
+            - construct_version_string
+          context:
+            - org-global
+      - build_and_push_arm:
+          requires:
+            - construct_version_string
+          context:
+            - org-global
+      - create_multiarch_manifest:
+          requires:
+            - build_and_push_amd
+            - build_and_push_arm
+          context:
+            - org-global
