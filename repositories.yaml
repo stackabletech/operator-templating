@@ -70,7 +70,7 @@ repositories:
 
 # Rust version that all operators should be built against.
 # Should be updated to the current stable for each Stackable platform release.
-rust_version: 1.65.0
+rust_version: 1.63.0
 
 # Anything specified in the retired_files variable will be deleted.
 # This is uncommented as I had issues with everything being deleted when this was just present as an empty key.
