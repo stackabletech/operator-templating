@@ -90,7 +90,7 @@
 
     - name: Regenerate charts to update version
       command:
-        argv: [make, compile-chart, generate-manifests]
+        argv: [make, regenerate-charts]
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
     - name: Re-render README
