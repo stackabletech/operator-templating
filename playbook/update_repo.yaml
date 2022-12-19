@@ -1,5 +1,5 @@
 ---
-- name: Clone operator repository into working directory
+- name: "Operator [{{ operator.name }}] clone into working directory"
   tags: local
   ansible.builtin.git:
     repo: "https://{{ gh_access_token }}@github.com/{{ operator.url }}"
@@ -14,12 +14,13 @@
 
 # Check if anything was changed, if yes commit changes and create a pull request, otherwise skip rest of this play
 - name: Perform local file operations
+  tags: local
   block:
-    - name: Display current operator
+    - name: "Operator [{{ operator.name }}] current operator"
       debug:
         var: operator.name
 
-    - name: Find template files
+    - name: "Operator [{{ operator.name }}] find template files"
       find:
         paths: "{{ template_dir }}/"
         patterns: "*.j2"
@@ -29,7 +30,7 @@
         recurse: true
       register: files_j2
 
-    - name: Find regular files that need no templating
+    - name: "Operator [{{ operator.name }}] find regular files that need no templating"
       find:
         paths: "{{ template_dir }}/"
         excludes: "*.j2"
@@ -39,7 +40,7 @@
         recurse: true
       register: files_normal
 
-    - name: Find GitHub Workflow files
+    - name: "Operator [{{ operator.name }}] find GitHub Workflow files"
       find:
         paths: "{{ template_dir }}/.github/workflows/"
         file_type: file
@@ -48,7 +49,7 @@
         recurse: false
       register: workflow_files
 
-    - name: Ensure directories exist
+    - name: "Operator [{{ operator.name }}] ensure directories exist"
       file:
         path: "{{ item.path | replace(template_dir, work_dir + '/' + operator.name) |  replace('[[operator]]', operator.name) | dirname }}"
         state: directory
@@ -59,7 +60,7 @@
 
     # Since a few of our files contain github actions env vars which are delimited by ${{  }} we need to change
     # the variable_start/end_strings here to avoid collisions
-    - name: Copy templates files
+    - name: "Operator [{{ operator.name }}] copy templates files"
       template:
         src: "{{ item.path }}"
         mode: "preserve"
@@ -72,7 +73,7 @@
       register: template_result
       when: item.path | replace(template_dir + '/', '') not in operator.ignored_files | default([])
 
-    - name: Copy normal files to temp directory
+    - name: "Operator [{{ operator.name }}] copy normal files to temp directory"
       copy:
         src: "{{ item.path }}"
         mode: "preserve"
@@ -81,64 +82,63 @@
       register: file_result
       when: item.path | replace(template_dir + '/', '') not in operator.ignored_files | default([])
 
-    - name: Remove retired files and directories
+    - name: "Operator [{{ operator.name }}] remove retired files and directories"
       file:
         path: "{{ work_dir }}/{{ operator.name }}/{{ item | replace('[[product]]', operator.product_string) }}"
         state: absent
       with_items: "{{ retired_files | default([]) }}"
       register: deletion_result
 
-    - name: Regenerate charts to update version
+    - name: "Operator [{{ operator.name }}] regenerate charts to update version"
       command:
-        argv: [make, compile-chart, generate-manifests]
+        argv: [make, regenerate-charts]
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
-    - name: Re-render README
+    - name: "Operator [{{ operator.name }}] re-render README"
       command:
         argv: [make, render-readme]
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
-    - name: Run 'git diff' to check for changes that would require creating a pr
+    - name: "Operator [{{ operator.name }}] run 'git diff' to check that there are changes"
       command:
         argv: [git, diff, --exit-code]
         chdir: "{{ work_dir }}/{{ operator.name }}"
       ignore_errors: true
       register: git_change
 
-    - name: Run 'git ls-remotes' to check if a branch for this source commit already exists
+
+# Check if anything was changed, if yes commit changes and create a pull request, otherwise skip rest of this play
+- name: "Operator [{{ operator.name }}] create PR if changes were performed"
+  block:
+    - name: "Operator [{{ operator.name }}] run 'git ls-remotes' to ensure that the branch {{ pr_branch_name  }} doesn't exist"
       command:
         argv: [git, ls-remote, --exit-code, --heads, "https://{{ gh_access_token }}@github.com/{{ operator.url }}", "{{ pr_branch_name }}"]
         chdir: "{{ work_dir }}/{{ operator.name }}"
-      ignore_errors: true
       register: branch_exists
-  tags: local
 
-# Check if anything was changed, if yes commit changes and create a pull request, otherwise skip rest of this play
-- name: Create PR if changes were performed
-  block:
-    - name: Stage all changes
+    - name: "Operator [{{ operator.name }}] stage all changes"
       command:
         argv: [git, add, .]
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
-    - name: Commit changes
+    - name: "Operator [{{ operator.name }}] commit changes"
       command:
         argv: [git, commit, -a, -m, "{{ commit_message }}"]
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
-    - name: Push changes
+    - name: "Operator [{{ operator.name }}] push changes to branch {{ pr_branch_name }}"
       command:
         argv: [git, push, --set-upstream, origin, "{{ pr_branch_name }}"]
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
-    - name: Create PR
+    - name: "Operator [{{ operator.name }}] create PR"
       command:
         argv: [gh, pr, create, --base, main, --title, "{{ pr_title }}", --body, "{{ pr_body }}", --reviewer, "@stackabletech/developers"]
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
-  when: git_change.rc != 0 and branch_exists.rc == 2 # rc of 2 means the branch doesn't exist which is what we want
+  when: git_change.rc != 0 # only when there are changes
 
-- name: Clean
+- name: "Operator [{{ operator.name }}] clean"
   command:
     argv: [cargo, clean]
     chdir: "{{ work_dir }}/{{ operator.name }}"
