@@ -104,7 +104,7 @@
         argv: [git, diff, --exit-code]
         chdir: "{{ work_dir }}/{{ operator.name }}"
       register: git_change
-      failed_when: git_change.rc == 0 # fail when there are no chages
+      failed_when: git_change.rc == 0 # fail when there are no changes
 
 
 # Check if anything was changed, if yes commit changes and create a pull request, otherwise skip rest of this play
