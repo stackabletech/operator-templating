@@ -7,8 +7,8 @@ on:
       message:
         description: "Message to include in the generated commits:"
         required: true
-  schedule:
-    - cron: 5 4 * * * # run at 04:05 every morning
+        #  schedule:
+        #    - cron: 5 4 * * * # run at 04:05 every morning
 
 jobs:
   create-prs:
