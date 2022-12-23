@@ -20,7 +20,7 @@ ansible-galaxy role install -r requirements.yaml -p ./roles
 echo '{}' | jq '{work_dir: $WORKDIR, test_dir: $TESTDIR}' --arg WORKDIR "$WORKDIR" --arg TESTDIR "$TESTDIR" > "${WORKDIR}"/vars.json
 
 # Run playbook to generate test scenarios
-ansible-playbook playbook.yaml --extra-vars "@${WORKDIR}/vars.json"
+ansible-playbook --connection=local --inventory localhost, playbook.yaml --extra-vars "@${WORKDIR}/vars.json"
 popd
 
 # Run tests
