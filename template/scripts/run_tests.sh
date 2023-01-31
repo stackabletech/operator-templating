@@ -2,7 +2,7 @@
 
 # Check if the test expansion tool beku is installed
 set +e
-which beku 2>&1 >/dev/null
+which beku > /dev/null 2>&1
 beku_installed=$?
 set -e
 if [ $beku_installed -ne 0 ]; then
