@@ -10,6 +10,11 @@ if [ $beku_installed -ne 0 ]; then
   exit 1
 fi
 
+echo "Using beku version: $(beku --version)"
+
+# cleanup any old tests
+rm -rf tests/_work
+
 # Expand the tests
 beku
 
