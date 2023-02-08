@@ -71,7 +71,7 @@ repositories:
 # IMPORTANT
 # If you change the Rust toolchain version here, make sure to also change
 # Docker-images/ubi8-rust-builder/Dockerfile
-rust_version: 1.63.0
+rust_version: 1.65.0
 
 # Anything specified in the retired_files variable will be deleted.
 # This is uncommented as I had issues with everything being deleted when this was just present as an empty key.
