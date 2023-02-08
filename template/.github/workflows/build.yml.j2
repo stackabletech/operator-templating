@@ -114,7 +114,7 @@ jobs:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
         with:
           submodules: recursive
-      - uses: EmbarkStudios/cargo-deny-action@7257a18a9c2fe3f92b85d41ae473520dff953c97 # tag=v1.3.2
+      - uses: EmbarkStudios/cargo-deny-action@8a8607bd8e2b3a514d5a40174cc7c55b229d9ba7 # v1.4.0
         with:
           command: check ${{ matrix.checks }}
 
