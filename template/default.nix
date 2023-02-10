@@ -29,6 +29,7 @@ rec {
     tag = dockerTag;
     contents = [ pkgs.bashInteractive pkgs.coreutils pkgs.util-linuxMinimal ];
     config = {
+      Env = ["PRODUCT_CONFIG=${deploy/config-spec/properties.yaml}"];
       Entrypoint = [ entrypoint ];
       Cmd = [ "run" ];
     };
