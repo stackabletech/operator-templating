@@ -1,10 +1,12 @@
-default_registry("docker.stackable.tech/sandbox")
+settings = read_json('tilt_options.json', default={})
+registry = settings.get('default_registry', 'docker.stackable.tech/sandbox')
+default_registry(registry)
 
 meta = read_json('nix/meta.json')
 operator_name = meta['operator']['name']
 
 custom_build(
-    'docker.stackable.tech/sandbox/' + operator_name,
+    registry + '/' + operator_name,
     'nix shell -f . crate2nix -c crate2nix generate && nix-build . -A docker --argstr dockerName "${EXPECTED_REGISTRY}/' + operator_name + '" && ./result/load-image | docker load',
     deps=['rust', 'Cargo.toml', 'Cargo.lock', 'default.nix', "nix", 'build.rs', 'vendor'],
     # ignore=['result*', 'Cargo.nix', 'target', *.yaml],
@@ -22,7 +24,7 @@ helm_crds, helm_non_crds = filter_yaml(
       'deploy/helm/' + operator_name,
       name=operator_name,
       set=[
-         'image.repository=docker.stackable.tech/sandbox/' + operator_name,
+         registry + '/' + operator_name,
       ],
    ),
    api_version = "^apiextensions\\.k8s\\.io/.*$",
