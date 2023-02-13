@@ -75,4 +75,4 @@ build: regenerate-charts helm-package docker-build
 publish: build docker-publish helm-publish
 
 run-dev:
-	nix run -f. tilt -- up --port 543{[operator_index}]
+	nix run -f. tilt -- up --port {[5430 + operator_index}]
