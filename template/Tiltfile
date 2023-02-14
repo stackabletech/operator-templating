@@ -1,15 +1,28 @@
-default_registry("docker.stackable.tech/sandbox")
+# If tilt_options.json exists read it
+settings = read_json('tilt_options.json', default={})
+
+# Configure default registry either read from config file above, or with default value of "docker.stackable.tech/sandbox"
+registry = settings.get('default_registry', 'docker.stackable.tech/sandbox')
+default_registry(registry)
+
+# Configure which builder to use from config file, defaults to 'crate2nix'
+builder = settings.get('builder', 'crate2nix')
 
 meta = read_json('nix/meta.json')
 operator_name = meta['operator']['name']
 
-custom_build(
-    'docker.stackable.tech/sandbox/' + operator_name,
-    'nix shell -f . crate2nix -c crate2nix generate && nix-build . -A docker --argstr dockerName "${EXPECTED_REGISTRY}/' + operator_name + '" && ./result/load-image | docker load',
-    deps=['rust', 'Cargo.toml', 'Cargo.lock', 'default.nix', "nix", 'build.rs', 'vendor'],
-    # ignore=['result*', 'Cargo.nix', 'target', *.yaml],
-    outputs_image_ref_to='result/ref',
-)
+if builder == 'crate2nix':
+    custom_build(
+        registry + '/' + operator_name,
+        'nix shell -f . crate2nix -c crate2nix generate && nix-build . -A docker --argstr dockerName "${EXPECTED_REGISTRY}/' + operator_name + '" && ./result/load-image | docker load',
+        deps=['rust', 'Cargo.toml', 'Cargo.lock', 'default.nix', "nix", 'build.rs', 'vendor'],
+        # ignore=['result*', 'Cargo.nix', 'target', *.yaml],
+        outputs_image_ref_to='result/ref',
+    )
+else if builder == 'docker':
+    docker_build(registry + '/' + operator_name, '.', dockerfile='docker/Dockerfile')
+else:
+    fail('Unsupported builder specified: [' + builder + '] - currently supported builders are: [docker, crate2nix]')
 
 # Load the latest CRDs from Nix
 watch_file('result')
@@ -22,7 +35,7 @@ helm_crds, helm_non_crds = filter_yaml(
       'deploy/helm/' + operator_name,
       name=operator_name,
       set=[
-         'image.repository=docker.stackable.tech/sandbox/' + operator_name,
+         'image.repository=' + registry + '/' + operator_name,
       ],
    ),
    api_version = "^apiextensions\\.k8s\\.io/.*$",
