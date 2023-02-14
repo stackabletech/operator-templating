@@ -33,3 +33,4 @@
       with_items: "{{ repositories }}"
       loop_control:
         loop_var: operator
+        index_var: operator_index
