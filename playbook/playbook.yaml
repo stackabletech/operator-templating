@@ -30,7 +30,7 @@
 
     - name: Update repositories from templates
       include: "update_repo.yaml"
-      with_items: "{{ repositories }}"
+      with_items: "{{ repositories | intersect(limit_to | default(repositories)) }}"
       loop_control:
         loop_var: operator
         index_var: operator_index

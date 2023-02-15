@@ -9,6 +9,26 @@ on:
         required: true
         #  schedule:
         #    - cron: 5 4 * * * # run at 04:05 every morning
+      limit_to:
+        description: "Only create PR for this operator - defaults to all operators if not specified"
+        required: false
+        type: choice
+        options:
+          - airflow-operator
+          - commons-operator
+          - druid-operator
+          - hbase-operator
+          - hdfs-operator
+          - hive-operator
+          - kafka-operator
+          - nifi-operator
+          - listener-operator
+          - opa-operator
+          - secret-operator
+          - spark-k8s-operator
+          - superset-operator
+          - trino-operator
+          - zookeeper-operator
 
 jobs:
   create-prs:
@@ -45,7 +65,7 @@ jobs:
       - name: Run playbook
         run: |
           # Funnel via JSON to ensure that values are escaped properly
-          echo '{}' | jq '{commit_hash: $ENV.GITHUB_SHA, reason: $ENV.REASON, base_dir: $pwd,  gh_access_token: $ENV.GH_ACCESS_TOKEN}' --arg pwd "$(pwd)" > vars.json
+          echo '{}' | jq '{commit_hash: $ENV.GITHUB_SHA, reason: $ENV.REASON, base_dir: $pwd,  gh_access_token: $ENV.GH_ACCESS_TOKEN, limit_to= ${ github.event.inputs.limit_to }' --arg pwd "$(pwd)" > vars.json
           ansible-playbook playbook/playbook.yaml --extra-vars "@vars.json"
         env:
           GH_ACCESS_TOKEN: ${{ secrets.gh_access_token }}
