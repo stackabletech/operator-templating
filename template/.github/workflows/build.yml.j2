@@ -38,7 +38,7 @@ jobs:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
         with:
           submodules: recursive
-       - uses: dtolnay/rust-toolchain@{[ rust_version }]
+      - uses: dtolnay/rust-toolchain@{[ rust_version }]
       - uses: Swatinem/rust-cache@359a70e43a0bb8a13953b04a90f76428b4959bb6 # v2.2.0
         with:
           key: udeps
