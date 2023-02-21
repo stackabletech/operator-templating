@@ -7,11 +7,12 @@
 
 ## Definition of Done Checklist
 
-Not all of these items are applicable to all PRs.
-Please make sure all these things are done and tick the boxes.
-Either tick or remove items that are not applicable.
-Not all of these items have to be completed during review (e.g. feature tracker can also be updated during Acceptance).
+- Not all of these items are applicable to all PRs.
+- Please make sure all these things are done and tick the boxes.
+- Either tick or remove items that are not applicable.
+- Not all of these items have to be completed during review (e.g. feature tracker can also be updated during Acceptance).
 
+```[tasklist]
 - [ ] Code contains useful comments
 - [ ] CRD change approved (or not applicable)
 - [ ] (Integration-)Test cases added (or not applicable)
@@ -22,5 +23,6 @@ Not all of these items have to be completed during review (e.g. feature tracker 
 - [ ] Feature Tracker has been updated (or not applicable)
 - [ ] Changes are OpenShift compatible
 - [ ] Proper release label has been added (or not applicable)
+```
 
 Once the review is done, comment `bors r+` (or `bors merge`) to merge. [Further information](https://bors.tech/documentation/getting-started/#reviewing-pull-requests)
