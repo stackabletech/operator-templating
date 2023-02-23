@@ -335,5 +335,5 @@ jobs:
           chmod +x preflight-linux-amd64
       - name: Check container
         run: ./preflight-linux-amd64 check container "$IMAGE_TAG" > preflight.out
-      - name: Passed?
+      - name: "Passed?"
         run: '[ "$(./preflight-linux-amd64 check container "$IMAGE_TAG" | jq -r .passed)" == true ]'
