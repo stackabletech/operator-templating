@@ -36,7 +36,14 @@ rec {
   dockerImage = pkgs.dockerTools.streamLayeredImage {
     name = dockerName;
     tag = dockerTag;
-    contents = [ pkgs.bashInteractive pkgs.coreutils pkgs.util-linuxMinimal pkgs.krb5 build ];
+    contents = [
+      # Common debugging tools
+      pkgs.bashInteractive pkgs.coreutils pkgs.util-linuxMinimal
+      # Kerberos 5 must be installed globally to load plugins correctly
+      pkgs.krb5
+      # Make the whole cargo workspace available on $PATH
+      build
+    ];
     config = {
       Env =
         let
