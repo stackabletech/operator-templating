@@ -27,14 +27,14 @@ rec {
   dockerImage = pkgs.dockerTools.streamLayeredImage {
     name = dockerName;
     tag = dockerTag;
-    contents = [ pkgs.bashInteractive pkgs.coreutils pkgs.util-linuxMinimal ];
+    contents = [ pkgs.bashInteractive pkgs.coreutils pkgs.util-linuxMinimal build ];
     config = {
-    Env =
-      let
-        fileRefVars = {
-          PRODUCT_CONFIG = deploy/config-spec/properties.yaml;
-        };
-      in pkgs.lib.concatLists (pkgs.lib.mapAttrsToList (env: path: pkgs.lib.optional (pkgs.lib.pathExists path) "${env}=${path}") fileRefVars);
+      Env =
+        let
+          fileRefVars = {
+            PRODUCT_CONFIG = deploy/config-spec/properties.yaml;
+          };
+        in pkgs.lib.concatLists (pkgs.lib.mapAttrsToList (env: path: pkgs.lib.optional (pkgs.lib.pathExists path) "${env}=${path}") fileRefVars);
       Entrypoint = [ entrypoint ];
       Cmd = [ "run" ];
     };

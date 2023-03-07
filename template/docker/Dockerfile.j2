@@ -25,7 +25,7 @@ RUN microdnf install -y yum \
 
 COPY LICENSE /licenses/LICENSE
 
-COPY --from=builder /app/stackable-{[ operator.name }] /
+COPY --from=builder /app/* /usr/local/bin
 {[% if operator.include_productconfig is undefined or operator.include_productconfig == true %}]
 COPY deploy/config-spec/properties.yaml /etc/stackable/{[ operator.name }]/config-spec/properties.yaml
 {[% endif %}]
@@ -34,5 +34,5 @@ RUN groupadd -g 1000 stackable && adduser -u 1000 -g stackable -c 'Stackable Ope
 
 USER stackable:stackable
 
-ENTRYPOINT ["/stackable-{[ operator.name }]"]
+ENTRYPOINT ["stackable-{[ operator.name }]"]
 CMD ["run"]
