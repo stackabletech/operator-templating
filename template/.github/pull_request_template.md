@@ -15,6 +15,7 @@
 - [ ] Changes are OpenShift compatible
 - [ ] CRD changes approved
 - [ ] Helm chart can be installed and deployed operator works
+- [ ] Integration tests passed (for non trivial changes)
 ```
 
 ```[tasklist]
