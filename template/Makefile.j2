@@ -79,4 +79,5 @@ build: regenerate-charts helm-package docker-build
 publish: build docker-publish helm-publish
 
 run-dev:
-	nix run -f. tilt -- up --port {[5430 + operator_index}]
+	kubectl apply -f deploy/stackable-operators-ns.yaml
+	nix run -f. tilt -- up --port {[5430 + operator_index}] --namespace stackable-operators
