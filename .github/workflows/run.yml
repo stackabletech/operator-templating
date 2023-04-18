@@ -24,9 +24,17 @@ jobs:
             sudo apt-add-repository ppa:ansible/ansible -y && \
             sudo apt install -y ansible
 
-      - name: Install protoc
+      - name: Install deps for operators
         run: |
-          sudo apt-get install protobuf-compiler
+          sudo apt-get install \
+          protobuf-compiler \
+          krb5-user \
+          libclang-dev \
+          libkrb5-dev \
+          liblzma-dev \
+          libssl-dev \
+          pkg-config
+
 
       - name: Install jinja2
         run: pip install -r requirements.txt
