@@ -211,7 +211,7 @@ jobs:
         run: git diff --exit-code
       - name: Git Diff showed uncommitted changes
         if: ${{ failure() }}
-        uses: actions/github-script@d556feaca394842dc55e4734bf3bb9f685482fa0 # v6
+        uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6
         with:
           script: |
             core.setFailed('Committed README are not up to date, please make sure to apply them to the templated partials, and re-commit!')
@@ -254,7 +254,7 @@ jobs:
         run: git diff --exit-code
       - name: Git Diff showed uncommitted changes
         if: ${{ failure() }}
-        uses: actions/github-script@d556feaca394842dc55e4734bf3bb9f685482fa0 # v6
+        uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6
         with:
           script: |
             core.setFailed('Committed charts were not up to date, please regenerate and re-commit!')
