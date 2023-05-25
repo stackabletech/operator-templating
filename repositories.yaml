@@ -21,6 +21,10 @@ repositories:
     pretty_string: Apache HDFS
     product_string: hdfs
     url: stackabletech/hdfs-operator.git
+  - name: hello-world-operator
+    pretty_string: Hello World
+    product_string: hello
+    url: stackabletech/hello-world-operator.git
   - name: hive-operator
     pretty_string: Apache Hive
     product_string: hive
