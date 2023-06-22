@@ -73,6 +73,12 @@ clean: chart-clean
 	cargo clean
 	docker rmi --force "${DOCKER_REPO}/${ORGANIZATION}/${OPERATOR_NAME}:${VERSION}"
 
+push-manifest:
+	docker manifest create "${DOCKER_REPO}/${ORGANIZATION}/${OPERATOR_NAME}:${VERSION} \
+        "${DOCKER_REPO}/${ORGANIZATION}/${OPERATOR_NAME}:${VERSION}-amd64 \
+        "${DOCKER_REPO}/${ORGANIZATION}/${OPERATOR_NAME}:${VERSION}-arm64
+	docker manifest push "${DOCKER_REPO}/${ORGANIZATION}/${OPERATOR_NAME}:${VERSION}
+
 regenerate-charts: chart-clean compile-chart
 
 build: regenerate-charts helm-package docker-build
