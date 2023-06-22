@@ -9,6 +9,7 @@
 
 .PHONY: build publish
 
+ARCH := ""
 TAG    := $(shell git rev-parse --short HEAD)
 OPERATOR_NAME := {[ operator.name }]
 VERSION := $(shell cargo metadata --format-version 1 | jq -r '.packages[] | select(.name=="stackable-${OPERATOR_NAME}") | .version')
@@ -26,7 +27,7 @@ render-readme:
 
 ## Docker related targets
 docker-build:
-	docker build --force-rm --build-arg VERSION=${VERSION} -t "${DOCKER_REPO}/${ORGANIZATION}/${OPERATOR_NAME}:${VERSION}" -f docker/Dockerfile .
+	docker build --force-rm --build-arg VERSION=${VERSION} -t "${DOCKER_REPO}/${ORGANIZATION}/${OPERATOR_NAME}:${VERSION}${ARCH}" -f docker/Dockerfile .
 
 docker-publish:
 	echo "${NEXUS_PASSWORD}" | docker login --username github --password-stdin "${DOCKER_REPO}"
