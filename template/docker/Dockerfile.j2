@@ -4,7 +4,7 @@
 # =============
 FROM docker.stackable.tech/stackable/ubi8-rust-builder AS builder
 
-FROM registry.access.redhat.com/ubi8/ubi-minimal AS operator
+FROM registry.access.redhat.com/ubi8/ubi-minimal@sha256:987ae81ce046652ee4a2c3df54dad5e82faa1b078dab5d09f7cfaae11784ed30 AS operator
 
 ARG VERSION
 ARG RELEASE="1"
