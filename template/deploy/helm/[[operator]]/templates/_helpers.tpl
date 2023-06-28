@@ -96,7 +96,7 @@ Similar to operator.resources, but meant to be used for setting resources on dae
 As some operators have both, we wanted to be able to define different values.
 See comment on `operator.resources` for more details.
 */}}
-{{- define "controller.resources" -}}
+{{- define "operator.controller.resources" -}}
 {{- if .Values.controller.resources }}
 {{- .Values.controller.resources | toYaml }}
 {{- else }}
@@ -110,7 +110,7 @@ run per node.
 As some operators have both, we wanted to be able to define different values.
 See comment on `operator.resources` for more details.
 */}}
-{{- define "node.resources" -}}
+{{- define "operator.node.resources" -}}
 {{- if .Values.node.resources }}
 {{- .Values.node.resources | toYaml }}
 {{- else }}
