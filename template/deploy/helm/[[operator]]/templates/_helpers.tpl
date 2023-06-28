@@ -96,10 +96,24 @@ Similar to operator.resources, but meant to be used for setting resources on dae
 As some operators have both, we wanted to be able to define different values.
 See comment on `operator.resources` for more details.
 */}}
-{{- define "daemonset.resources" -}}
-{{- if .Values.daemonsetResources }}
-{{- .Values.daemonsetResources | toYaml }}
+{{- define "controller.resources" -}}
+{{- if .Values.controller.resources }}
+{{- .Values.controller.resources | toYaml }}
 {{- else }}
-{{- .Files.Get "resources/default_daemonset_resources.yaml" }}
+{{- .Files.Get "resources/default_resources.yaml" }}
+{{- end }}
+{{- end }}
+
+{{/*
+Similar to operator.resources, but meant to be used for setting resources on daemonsets, anything that is
+run per node.
+As some operators have both, we wanted to be able to define different values.
+See comment on `operator.resources` for more details.
+*/}}
+{{- define "node.resources" -}}
+{{- if .Values.node.resources }}
+{{- .Values.node.resources | toYaml }}
+{{- else }}
+{{- .Files.Get "resources/default_node_resources.yaml" }}
 {{- end }}
 {{- end }}
