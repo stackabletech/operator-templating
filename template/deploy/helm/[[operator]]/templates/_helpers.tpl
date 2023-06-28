@@ -98,7 +98,7 @@ See comment on `operator.resources` for more details.
 */}}
 {{- define "daemonset.resources" -}}
 {{- if .Values.daemonsetResources }}
-{{- .Values.resources | toYaml }}
+{{- .Values.daemonsetResources | toYaml }}
 {{- else }}
 {{- .Files.Get "resources/default_daemonset_resources.yaml" }}
 {{- end }}
