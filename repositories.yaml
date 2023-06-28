@@ -1,4 +1,10 @@
 ---
+resource_defaults:
+  cpu_limit: 100m
+  memory_limit: 128Mi
+  cpu_request: 100m
+  memory_request: 128Mi
+
 repositories:
   - name: airflow-operator
     pretty_string: Apache Airflow
@@ -9,6 +15,11 @@ repositories:
     pretty_string: Stackable Commons
     product_string: commons
     url: stackabletech/commons-operator.git
+    resources:
+      cpu_limit: 200m
+      memory_limit: 1024Gi
+      cpu_request: 200m
+      memory_request: 1024Gi
   - name: druid-operator
     pretty_string: Apache Druid
     product_string: druid

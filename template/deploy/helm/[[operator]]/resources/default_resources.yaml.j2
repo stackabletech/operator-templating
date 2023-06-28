@@ -1,0 +1,6 @@
+limits:
+  cpu: {[ operator.resources.cpu_limit | default(resource_defaults.cpu_limit) }]
+  memory: {[ operator.resources.memory_limit | default(resource_defaults.memory_limit) }]
+requests:
+  cpu: {[ operator.resources.cpu_request | default(resource_defaults.cpu_request) }]
+  memory: {[ operator.resources.memory_request | default(resource_defaults.memory_request) }]

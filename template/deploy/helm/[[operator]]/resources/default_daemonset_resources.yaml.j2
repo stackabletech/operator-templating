@@ -1,0 +1,6 @@
+limits:
+  cpu: {[ operator.daemonset_resources.cpu_limit  | default(resource_defaults.cpu_limit) }]
+  memory: {[ operator.daemonset_resources.memory_limit | default(resource_defaults.memory_limit) }]
+requests:
+  cpu: {[ operator.daemonset_resources.cpu_request | default(resource_defaults.cpu_request) }]
+  memory: {[ operator.daemonset_resources.memory_request | default(resource_defaults.memory_request)}]
