@@ -90,3 +90,16 @@ then (toYaml .Values.resources) never is undefined, so the default value is effe
 {{- .Files.Get "resources/default_resources.yaml" }}
 {{- end }}
 {{- end }}
+
+{{/*
+Similar to operator.resources, but meant to be used for setting resources on daemonsets.
+As some operators have both, we wanted to be able to define different values.
+See comment on `operator.resources` for more details.
+*/}}
+{{- define "daemonset.resources" -}}
+{{- if .Values.daemonsetResources }}
+{{- .Values.resources | toYaml }}
+{{- else }}
+{{- .Files.Get "resources/default_daemonset_resources.yaml" }}
+{{- end }}
+{{- end }}
