@@ -1,4 +1,21 @@
 ---
+# The following default values are passed through to the individual helm charts as default values to
+# use with resources that are deployed by those helm charts.
+#
+# The can be overriden per operator if needed:
+#
+#  Deployment Resources
+# operator.resources.cpu_limit -> resource_defaults.cpu_limit
+# operator.resources.memory_limit -> resource_defaults.memory_limit
+# operator.resources.cpu_request -> resource_defaults.cpu_request
+# operator.resources.memory_request -> resource_defaults.memory_request
+#
+# Daemonset Resources
+# operator.daemonset_resources.cpu_limit -> resource_defaults.cpu_limit
+# operator.daemonset_resources.memory_limit -> resource_defaults.memory_limit
+# operator.daemonset_resources.cpu_request -> resource_defaults.cpu_request
+# operator.daemonset_resources.memory_request -> resource_defaults.memory_request
+
 resource_defaults:
   cpu_limit: 100m
   memory_limit: 128Mi
@@ -20,6 +37,7 @@ repositories:
       memory_limit: 1024Gi
       cpu_request: 200m
       memory_request: 1024Gi
+
   - name: druid-operator
     pretty_string: Apache Druid
     product_string: druid
