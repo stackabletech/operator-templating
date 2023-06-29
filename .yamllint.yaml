@@ -3,6 +3,7 @@ extends: default
 
 ignore: |
   template/deploy/helm/**/templates
+  template/deploy/helm/**/resources
 
 rules:
   line-length: disable

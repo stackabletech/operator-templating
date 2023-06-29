@@ -94,10 +94,10 @@
         argv: [make, regenerate-charts]
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
-    - name: "Operator [{{ operator.name }}] re-render README"
-      command:
-        argv: [make, render-readme]
-        chdir: "{{ work_dir }}/{{ operator.name }}"
+#    - name: "Operator [{{ operator.name }}] re-render README"
+#      command:
+#        argv: [make, render-readme]
+#        chdir: "{{ work_dir }}/{{ operator.name }}"
 
     - name: "Operator [{{ operator.name }}] run 'git diff' to check that there are changes"
       command:
