@@ -34,11 +34,11 @@ repos:
     hooks:
       - id: flake8
 
-    - repo: local
-      hooks:
-        - id: regenerate-charts
-          name: regenerate-charts
-          language: system
-          entry: make regenerate-charts
-          stages: [commit, merge-commit, manual]
-          pass_filenames: false
+  - repo: local
+    hooks:
+      - id: regenerate-charts
+        name: regenerate-charts
+        language: system
+        entry: make regenerate-charts
+        stages: [commit, merge-commit, manual]
+        pass_filenames: false
