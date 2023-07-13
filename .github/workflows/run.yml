@@ -35,7 +35,6 @@ jobs:
           libssl-dev \
           pkg-config
 
-
       - name: Install jinja2
         run: pip install -r requirements.txt
 
