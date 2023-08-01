@@ -7,14 +7,12 @@ on:
       message:
         description: "Message to include in the generated commits:"
         required: true
-        #  schedule:
-        #    - cron: 5 4 * * * # run at 04:05 every morning
 
 jobs:
   create-prs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
       - name: Install Ansible
         env:
           DEBIAN_FRONTEND: noninteractive
