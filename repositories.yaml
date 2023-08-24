@@ -17,6 +17,10 @@ repositories:
     pretty_string: Apache HBase
     product_string: hbase
     url: stackabletech/hbase-operator.git
+  - name: edc-operator
+    pretty_string: EDC
+    product_string: edc
+    url: stackabletech/edc-operator.git
   - name: hdfs-operator
     pretty_string: Apache HDFS
     product_string: hdfs
