@@ -30,7 +30,7 @@
       # FIXME: Remove when https://github.com/NixOS/nixpkgs/pull/266787 is merged.
       # See https://github.com/stackabletech/operator-templating/pull/289 for details.
       ring = attrs: {
-        CARGO_MANIFEST_LINKS = "ring_core_0_17_5";
+        CARGO_MANIFEST_LINKS = attrs.links;
       };
     };
   }
