@@ -15,12 +15,11 @@ spec:
       {{- include "operator.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      {{- with .Values.podAnnotations }}
       annotations:
-        internal.stackable.tech/image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-        {{- with .Values.podAnnotations }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- toYaml . | nindent 8 }}
-        {{- end }}
+      {{- end }}
       labels:
         {{- include "operator.selectorLabels" . | nindent 8 }}
     spec:
@@ -42,17 +41,13 @@ spec:
           volumeMounts:
             - mountPath: /etc/stackable/{{ include "operator.appname" . }}/config-spec
               name: config-spec
-          env:
-            - name: OPERATOR_IMAGE
-              # Tilt can use annotations as image paths, but not env variables
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.annotations['internal.stackable.tech/image']
 {[% if operator.product_string in ['kafka'] %}]
+          env:
             - name: KAFKA_BROKER_CLUSTERROLE
               value: {{ include "operator.fullname" . }}-kafka-broker-clusterrole
 {[% endif %}]
 {[% if operator.product_string in ['opa'] %}]
+          env:
             - name: OPA_BUNDLE_BUILDER_CLUSTERROLE
               value: {{ include "operator.fullname" . }}-opa-bundle-builder-clusterrole
 {[% endif %}]
