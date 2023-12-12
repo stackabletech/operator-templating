@@ -29,8 +29,9 @@
       ignore_errors: true
 
     - name: Update repositories from templates
-      include: "update_repo.yaml"
+      include_tasks: "update_repo.yaml"
       with_items: "{{ repositories }}"
       loop_control:
         loop_var: operator
         index_var: operator_index
+      tags: local
