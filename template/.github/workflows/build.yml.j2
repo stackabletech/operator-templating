@@ -44,7 +44,7 @@ jobs:
         with:
           submodules: recursive
       - uses: dtolnay/rust-toolchain@{[ rust_version }]
-      - uses: Swatinem/rust-cache@a95ba195448af2da9b00fb742d14ffaaf3c21f43 # v2.7.0
+      - uses: Swatinem/rust-cache@3cf7f8cc28d1b4e7d01e3783be10a97d55d483c8 # v2.7.1
         with:
           key: udeps
           cache-all-crates: "true"
@@ -110,7 +110,7 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           submodules: recursive
-      - uses: EmbarkStudios/cargo-deny-action@a50c7d5f86370e02fae8472c398f15a36e517bb8 # v1.5.4
+      - uses: EmbarkStudios/cargo-deny-action@1e59595bed8fc55c969333d08d7817b36888f0c5 # v1.5.5
         with:
           command: check ${{ matrix.checks }}
 
@@ -140,7 +140,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@{[ rust_version }]
         with:
           components: clippy
-      - uses: Swatinem/rust-cache@a95ba195448af2da9b00fb742d14ffaaf3c21f43 # v2.7.0
+      - uses: Swatinem/rust-cache@3cf7f8cc28d1b4e7d01e3783be10a97d55d483c8 # v2.7.1
         with:
           key: clippy
           cache-all-crates: "true"
@@ -173,7 +173,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@{[ rust_version }]
         with:
           components: rustfmt
-      - uses: Swatinem/rust-cache@a95ba195448af2da9b00fb742d14ffaaf3c21f43 # v2.7.0
+      - uses: Swatinem/rust-cache@3cf7f8cc28d1b4e7d01e3783be10a97d55d483c8 # v2.7.1
         with:
           key: doc
           cache-all-crates: "true"
@@ -191,7 +191,7 @@ jobs:
         with:
           submodules: recursive
       - uses: dtolnay/rust-toolchain@{[ rust_version }]
-      - uses: Swatinem/rust-cache@a95ba195448af2da9b00fb742d14ffaaf3c21f43 # v2.7.0
+      - uses: Swatinem/rust-cache@3cf7f8cc28d1b4e7d01e3783be10a97d55d483c8 # v2.7.1
         with:
           key: test
           cache-all-crates: "true"
@@ -254,7 +254,7 @@ jobs:
       - name: Set up cargo
         uses: dtolnay/rust-toolchain@{[ rust_version }]
       - name: Set up rust-cache
-        uses: Swatinem/rust-cache@a95ba195448af2da9b00fb742d14ffaaf3c21f43 # v2.7.0
+        uses: Swatinem/rust-cache@3cf7f8cc28d1b4e7d01e3783be10a97d55d483c8 # v2.7.1
         with:
           key: charts
           cache-all-crates: "true"
