@@ -6,6 +6,7 @@ repositories:
     url: stackabletech/airflow-operator.git
   - name: commons-operator
     include_productconfig: false
+    has_product: false
     pretty_string: Stackable Commons
     product_string: commons
     url: stackabletech/commons-operator.git
@@ -43,6 +44,7 @@ repositories:
     url: stackabletech/nifi-operator.git
   - name: listener-operator
     include_productconfig: false
+    has_product: false
     pretty_string: Stackable Listener Operator
     product_string: listener-operator
     run_as: custom
@@ -55,6 +57,7 @@ repositories:
     url: stackabletech/opa-operator.git
   - name: secret-operator
     include_productconfig: false
+    has_product: false
     pretty_string: Stackable Secret Operator
     product_string: secret-operator
     run_as: custom
