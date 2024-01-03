@@ -24,6 +24,7 @@
 - [ ] (Integration-)Test cases added
 - [ ] Documentation added or updated. Follows the [style guide](https://docs.stackable.tech/home/nightly/contributor/style-guide).
 - [ ] Changelog updated
+- [ ] Cargo.toml version updated
 - [ ] Cargo.toml only contains references to git tags (not specific commits or branches)
 ```
 
