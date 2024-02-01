@@ -21,6 +21,7 @@
 ```[tasklist]
 # Reviewer
 - [ ] Code contains useful comments
+- [ ] Code contains useful logging statements
 - [ ] (Integration-)Test cases added
 - [ ] Documentation added or updated. Follows the [style guide](https://docs.stackable.tech/home/nightly/contributor/docs-style-guide).
 - [ ] Changelog updated
