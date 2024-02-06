@@ -21,7 +21,6 @@ env:
   CARGO_TERM_COLOR: always
   CARGO_INCREMENTAL: '0'
   CARGO_PROFILE_DEV_DEBUG: '0'
-  RUST_TOOLCHAIN_VERSION: "{[ rust_version }]"
   RUSTFLAGS: "-D warnings"
   RUSTDOCFLAGS: "-D warnings"
   RUST_LOG: "info"
@@ -45,7 +44,7 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           submodules: recursive
-      - uses: dtolnay/rust-toolchain@${{ env.RUST_TOOLCHAIN_VERSION }}
+      - uses: dtolnay/rust-toolchain@{[ rust_version }]
       - uses: Swatinem/rust-cache@3cf7f8cc28d1b4e7d01e3783be10a97d55d483c8 # v2.7.1
         with:
           key: udeps
@@ -123,7 +122,7 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           submodules: recursive
-      - uses: dtolnay/rust-toolchain@${{ env.RUST_TOOLCHAIN_VERSION }}
+      - uses: dtolnay/rust-toolchain@{[ rust_version }]
         with:
           components: rustfmt
       - run: cargo fmt --all -- --check
@@ -140,7 +139,7 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           submodules: recursive
-      - uses: dtolnay/rust-toolchain@${{ env.RUST_TOOLCHAIN_VERSION }}
+      - uses: dtolnay/rust-toolchain@{[ rust_version }]
         with:
           components: clippy
       - uses: Swatinem/rust-cache@3cf7f8cc28d1b4e7d01e3783be10a97d55d483c8 # v2.7.1
@@ -175,7 +174,7 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           submodules: recursive
-      - uses: dtolnay/rust-toolchain@${{ env.RUST_TOOLCHAIN_VERSION }}
+      - uses: dtolnay/rust-toolchain@{[ rust_version }]
         with:
           components: rustfmt
       - uses: Swatinem/rust-cache@3cf7f8cc28d1b4e7d01e3783be10a97d55d483c8 # v2.7.1
@@ -196,7 +195,7 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           submodules: recursive
-      - uses: dtolnay/rust-toolchain@${{ env.RUST_TOOLCHAIN_VERSION }}
+      - uses: dtolnay/rust-toolchain@{[ rust_version }]
       - uses: Swatinem/rust-cache@3cf7f8cc28d1b4e7d01e3783be10a97d55d483c8 # v2.7.1
         with:
           key: test
@@ -259,7 +258,7 @@ jobs:
         with:
           version: v3.13.3
       - name: Set up cargo
-        uses: dtolnay/rust-toolchain@${{ env.RUST_TOOLCHAIN_VERSION }}
+        uses: dtolnay/rust-toolchain@{[ rust_version }]
       - uses: Swatinem/rust-cache@3cf7f8cc28d1b4e7d01e3783be10a97d55d483c8 # v2.7.1
         with:
           key: charts
@@ -319,7 +318,7 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           submodules: recursive
-      - uses: dtolnay/rust-toolchain@${{ env.RUST_TOOLCHAIN_VERSION }}
+      - uses: dtolnay/rust-toolchain@{[ rust_version }]
         with:
           components: rustfmt
         # This step checks if the current run was triggered by a push to a pr (or a pr being created).
