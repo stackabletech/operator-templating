@@ -24,20 +24,19 @@ in pkgs.mkShell rec {
   
   # build time dependencies
   nativeBuildInputs = pkgs.lib.concatMap (crate: crate.nativeBuildInputs) cargoDependencySet ++ (with pkgs; [
-    git
-    yq-go
-    jq
-    kubectl
-    nix # this is impled, but needed in the pure env
-    kubernetes-helm
-    # tilt already defined in default.nix
-    docker
-    kind
-
-    kuttl
     beku
-    which
+    docker
     gettext # for the proper envsubst
+    git
+    jq
+    kind
+    kubectl
+    kubernetes-helm
+    kuttl
+    nix # this is implied, but needed in the pure env
+    # tilt already defined in default.nix
+    which
+    yq-go
   ]);
 
   LIBCLANG_PATH = "${pkgs.libclang.lib}/lib";
