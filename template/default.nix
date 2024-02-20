@@ -96,4 +96,11 @@ rec {
   # need to use vendored crate2nix because of https://github.com/kolloch/crate2nix/issues/264
   crate2nix = import sources.crate2nix {};
   tilt = pkgs.tilt;
+
+  regenerateNixLockfiles = pkgs.writeScriptBin "regenerate-nix-lockfiles"
+  ''
+    set -euo pipefail
+    echo Running crate2nix
+    ${crate2nix}/bin/crate2nix generate
+  ''; 
 }
