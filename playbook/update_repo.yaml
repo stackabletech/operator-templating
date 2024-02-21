@@ -94,6 +94,11 @@
         argv: [make, regenerate-charts]
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
+    - name: "Operator [{{ operator.name }}] regenerate crate2nix"
+      command:
+        argv: [make, regenerate-nix]
+        chdir: "{{ work_dir }}/{{ operator.name }}"
+
     - name: "Operator [{{ operator.name }}] re-render README"
       command:
         argv: [make, render-readme]
