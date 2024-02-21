@@ -40,7 +40,7 @@
 , dockerTag ? null
 }:
 rec {
-  inherit cargo sources pkgs;
+  inherit cargo sources pkgs meta;
   build = cargo.allWorkspaceMembers;
   entrypoint = build+"/bin/stackable-${meta.operator.name}";
   crds = pkgs.runCommand "${meta.operator.name}-crds.yaml" {}
