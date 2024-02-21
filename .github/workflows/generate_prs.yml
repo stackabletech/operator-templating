@@ -27,7 +27,7 @@ jobs:
             sudo apt-add-repository ppa:ansible/ansible -y && \
             sudo apt install -y ansible
 
-      # NOTE (@NickLarsenNZ): This could be removed in favour of nix-shell and rrbutani/use-nix-shell-action
+      # NOTE (@NickLarsenNZ): This could be removed in favor of nix-shell and rrbutani/use-nix-shell-action
       - name: Install deps for operators
         run: |
           sudo apt-get install \
