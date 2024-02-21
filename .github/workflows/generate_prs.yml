@@ -8,7 +8,7 @@ on:
         description: "Message to include in the generated commits:"
         required: true
       dry-run:
-        description: ""
+        description: "Dry Run (PRs are not generated)"
         type: boolean
         default: true
 
