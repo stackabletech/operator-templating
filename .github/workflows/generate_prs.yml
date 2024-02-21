@@ -65,6 +65,6 @@ jobs:
       # Do Not Generate PRs
       - name: Run playbook (dry-run)
         if: ${{ inputs.dry-run }}
-        run: ./test
+        run: ./test.sh
         env:
           GH_ACCESS_TOKEN: ""
