@@ -23,7 +23,7 @@
 
 set +e
 
-REPO_ROOT=$(dirname $(dirname $0))
+REPO_ROOT=$(dirname $(dirname "$0"))
 TEST_ROOT="$REPO_ROOT/tests/_work"
 RELEASE_FILE="$REPO_ROOT/tests/release.yaml"
 BEKU_TEST_SUITE="$1"
@@ -64,7 +64,7 @@ expand_test_suite() {
 run_tests() {
 	echo "Running kuttl version: $(kubectl kuttl --version)"
 
-	cd $TEST_ROOT
+	cd "$TEST_ROOT" || exit
 
 	if [ -z "$BEKU_TEST_SUITE" ]; then
 		echo "No test specified, running all tests"
@@ -74,7 +74,7 @@ run_tests() {
 		kubectl kuttl test --test "$KUTTL_TEST"
 	fi
 
-	cd -
+	cd - || exit
 }
 
 main() {
