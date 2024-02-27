@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 #
 # Run the integration test suite for this operator.
 #
@@ -23,7 +23,8 @@
 
 set +e
 
-REPO_ROOT=$(dirname $(dirname "$0"))
+DIR_NAME=$(dirname "$0")
+REPO_ROOT=$(dirname "$DIR_NAME")
 TEST_ROOT="$REPO_ROOT/tests/_work"
 RELEASE_FILE="$REPO_ROOT/tests/release.yaml"
 BEKU_TEST_SUITE="$1"
@@ -33,8 +34,7 @@ is_installed() {
 	local command="$1"
 	local install_url="$2"
 
-	which "$command" >/dev/null 2>&1
-	if [ $? -ne 0 ]; then
+	if ! which "$command" >/dev/null 2>&1; then
 		echo "Command [$command] not found. To install it, please see $install_url"
 		exit 1
 	fi
@@ -64,7 +64,7 @@ expand_test_suite() {
 run_tests() {
 	echo "Running kuttl version: $(kubectl kuttl --version)"
 
-	cd "$TEST_ROOT" || exit
+	pushd "$TEST_ROOT" || exit
 
 	if [ -z "$BEKU_TEST_SUITE" ]; then
 		echo "No test specified, running all tests"
@@ -74,7 +74,7 @@ run_tests() {
 		kubectl kuttl test --test "$KUTTL_TEST"
 	fi
 
-	cd - || exit
+	popd || exit
 }
 
 main() {
