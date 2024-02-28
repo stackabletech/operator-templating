@@ -12,13 +12,14 @@
 #
 # Example 1 - run all tests of the openshift suite.
 #
-# ./scripts/run_tests.sh openshift
+# ./scripts/run_tests.sh --test-suite openshift --parallel 2
 #
-# Example 2 - run a specific smoke test of the openshift suite.
+# Example 2 - run a specific smoke test of the openshift suite and skip resource deletion.
 #
 # ./scripts/run_tests.sh \
-#   openshift \
-#   smoke_trino-439_hive-3.1.3_opa-0.61.0_hdfs-3.3.6_zookeeper-3.8.3_s3-use-tls-true_openshift-true
+#   --test-suite openshift \
+#   --test smoke_trino-439_hive-3.1.3_opa-0.61.0_hdfs-3.3.6_zookeeper-3.8.3_s3-use-tls-true_openshift-true \
+#   --skip-delete
 #
 
 set +e
@@ -27,8 +28,10 @@ DIR_NAME=$(dirname "$0")
 REPO_ROOT=$(dirname "$DIR_NAME")
 TEST_ROOT="$REPO_ROOT/tests/_work"
 RELEASE_FILE="$REPO_ROOT/tests/release.yaml"
-BEKU_TEST_SUITE="$1"
-KUTTL_TEST="$2"
+BEKU_TEST_SUITE=""
+KUTTL_TEST=""
+KUTTL_SKIP_DELETE=""
+KUTTL_PARALLEL=""
 
 is_installed() {
 	local command="$1"
@@ -64,20 +67,60 @@ expand_test_suite() {
 run_tests() {
 	echo "Running kuttl version: $(kubectl-kuttl --version)"
 
-	pushd "$TEST_ROOT" || exit
+	local OPTS=("test")
 
-	if [ -z "$BEKU_TEST_SUITE" ]; then
-		echo "No test specified, running all tests"
-		kubectl-kuttl test --parallel 2
-	else
-		echo "Running test: $KUTTL_TEST"
-		kubectl-kuttl test --parellel 2 --test "$KUTTL_TEST"
+	if [ -n "$KUTTL_SKIP_DELETE" ]; then
+		OPTS+=("--skip-delete")
 	fi
 
+	if [ -n "$KUTTL_PARALLEL" ]; then
+		OPTS+=("--parallel $KUTTL_PARALLEL")
+	fi
+
+	if [ -n "$KUTTL_TEST" ]; then
+		OPTS+=("--test=$KUTTL_TEST")
+	fi
+
+	pushd "$TEST_ROOT" || exit
+	kubectl-kuttl ${OPTS[*]}
 	popd || exit
 }
 
+usage() {
+	echo "Usage: $0 [--test-suite <test-suite>] [--test <test-name>] [--skip-delete] [--parallel <number>]"
+}
+
+parse_args() {
+	while [[ "$#" -gt 0 ]]; do
+		case $1 in
+		--skip-delete)
+			KUTTL_SKIP_DELETE="true"
+			;;
+		--parallel)
+			KUTTL_PARALLEL="$2"
+			shift
+			;;
+		--test-suite)
+			BEKU_TEST_SUITE="$2"
+			shift
+			;;
+		--test)
+			KUTTL_TEST="$2"
+			shift
+			;;
+		*)
+			echo "Unknown parameter : $1"
+			usage
+			exit 1
+			;;
+		esac
+		shift
+	done
+}
+
 main() {
+	parse_args "$@"
+
 	is_installed beku "https://github.com/stackabletech/beku.py"
 	is_installed stackablectl "https://github.com/stackabletech/stackable-cockpit/blob/main/rust/stackablectl/README.md"
 	is_installed kubectl "https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/"
@@ -88,4 +131,4 @@ main() {
 	run_tests
 }
 
-main
+main $@
