@@ -62,16 +62,16 @@ expand_test_suite() {
 }
 
 run_tests() {
-	echo "Running kuttl version: $(kubectl kuttl --version)"
+	echo "Running kuttl version: $(kubectl-kuttl --version)"
 
 	pushd "$TEST_ROOT" || exit
 
 	if [ -z "$BEKU_TEST_SUITE" ]; then
 		echo "No test specified, running all tests"
-		kubectl kuttl test
+		kubectl-kuttl test --parallel 2
 	else
 		echo "Running test: $KUTTL_TEST"
-		kubectl kuttl test --test "$KUTTL_TEST"
+		kubectl-kuttl test --parellel 2 --test "$KUTTL_TEST"
 	fi
 
 	popd || exit
