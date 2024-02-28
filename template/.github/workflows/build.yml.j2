@@ -364,6 +364,7 @@ jobs:
 
   openshift_preflight:
     name: Run the OpenShift Preflight check on the published images
+    if: ${{ github.event_name == 'pull_request' && !github.event.pull_request.head.repo.fork }}
     needs:
       - package_and_publish
     runs-on: ubuntu-latest
