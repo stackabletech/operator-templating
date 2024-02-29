@@ -14,11 +14,11 @@
 #
 # ./scripts/run_tests.sh --test-suite openshift --parallel 2
 #
-# Example 2 - run a specific smoke test of the openshift suite and skip resource deletion.
+# Example 2 - run all tests that start with "smoke" in the name of the openshift suite and skip resource deletion.
 #
 # ./scripts/run_tests.sh \
 #   --test-suite openshift \
-#   --test smoke_trino-439_hive-3.1.3_opa-0.61.0_hdfs-3.3.6_zookeeper-3.8.3_s3-use-tls-true_openshift-true \
+#   --test smoke \
 #   --skip-delete
 #
 
@@ -93,7 +93,16 @@ run_tests() {
 }
 
 usage() {
-	echo "Usage: $0 [--test-suite <test-suite>] [--test <test-name>] [--skip-delete] [--parallel <number>] [--skip-release]"
+	cat <<USAGE
+  Usage:
+     run_tests.sh [options]"
+  Options:
+    --test-suite <test-suite>  Run a test suite from the test_definition.yaml file. Default is all tests.
+    --test <test-name>         Run a specific test or a set of tests.
+    --skip-delete              Skip resource deletion after the test run.
+    --parallel <number>        Run tests in parallel. Default is to run all tests in parallel.
+    --skip-release             Skip the operator installation.
+USAGE
 }
 
 parse_args() {
