@@ -95,7 +95,7 @@ run_tests() {
 usage() {
 	cat <<USAGE
   Usage:
-     run_tests.sh [options]"
+     run_tests.sh [options]
   Options:
     --test-suite <test-suite>  Run a test suite from the test_definition.yaml file. Default is all tests.
     --test <test-name>         Run a specific test or a set of tests.
