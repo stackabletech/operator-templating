@@ -149,4 +149,4 @@ main() {
 	run_tests
 }
 
-main $@
+main "$@"
