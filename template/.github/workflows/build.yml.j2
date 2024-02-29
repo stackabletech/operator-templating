@@ -380,11 +380,14 @@ jobs:
       - name: "Passed?"
         run: '[ "$(./preflight-linux-amd64 check container "$IMAGE_TAG" | jq -r .passed)" == true ]'
 
-  openshift_tests:
+  integration_tests:
     name: Run integration tests
     if: ${{ !github.event.pull_request.head.repo.fork }}
     needs:
       - package_and_publish
+    env:
+      STACKABLECT_VERSION: "23.11.3"
+      KUTTL_VERSION: "0.15.0"
     strategy:
       fail-fast: false
       matrix:
@@ -409,13 +412,13 @@ jobs:
           # Install requirements for the run_tests.sh script.
           PATH=/usr/bin:$PATH
 
-          wget --no-verbose https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-23.11.3/stackablectl-x86_64-unknown-linux-gnu
+          wget --no-verbose https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-"$STACKABLECT_VERSION"/stackablectl-x86_64-unknown-linux-gnu
           chmod +x stackablectl-x86_64-unknown-linux-gnu
           sudo mv stackablectl-x86_64-unknown-linux-gnu /usr/bin/stackablectl
 
-          wget --no-verbose https://github.com/kudobuilder/kuttl/releases/download/v0.15.0/kubectl-kuttl_0.15.0_linux_x86_64
-          chmod +x kubectl-kuttl_0.15.0_linux_x86_64
-          sudo mv kubectl-kuttl_0.15.0_linux_x86_64 /usr/bin/kubectl-kuttl
+          wget --no-verbose https://github.com/kudobuilder/kuttl/releases/download/v"$KUTTL_VERSION"/kubectl-kuttl_"$KUTTL_VERSION"_linux_x86_64
+          chmod +x kubectl-kuttl_"$KUTTL_VERSION"_linux_x86_64
+          sudo mv kubectl-kuttl_"$KUTTL_VERSION"_linux_x86_64 /usr/bin/kubectl-kuttl
           kubectl-kuttl version
 
       - name: Create Cluster
