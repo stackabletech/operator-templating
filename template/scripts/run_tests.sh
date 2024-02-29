@@ -14,7 +14,7 @@
 #
 # ./scripts/run_tests.sh --test-suite openshift --parallel 2
 #
-# Example 2 - run all tests that start with "smoke" in the name of the openshift suite and skip resource deletion.
+# Example 2 - run all tests that contain "smoke" in the name of the openshift suite and skip resource deletion.
 #
 # ./scripts/run_tests.sh \
 #   --test-suite openshift \
