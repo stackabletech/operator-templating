@@ -28,6 +28,7 @@ DIR_NAME=$(dirname "$0")
 REPO_ROOT=$(dirname "$DIR_NAME")
 TEST_ROOT="$REPO_ROOT/tests/_work"
 RELEASE_FILE="$REPO_ROOT/tests/release.yaml"
+STACKABLECTL_SKIP_RELEASE=""
 BEKU_TEST_SUITE=""
 KUTTL_TEST=""
 KUTTL_SKIP_DELETE=""
@@ -44,6 +45,11 @@ is_installed() {
 }
 
 install_operators() {
+	if [ -n "$STACKABLECTL_SKIP_RELEASE" ]; then
+		echo "Skipping operator installation"
+		return
+	fi
+
 	if [ -f "$RELEASE_FILE" ]; then
 		echo "Installing operators with stackablectl version: $(stackablectl --version)"
 		stackablectl release install --release-file "$RELEASE_FILE" tests
@@ -87,12 +93,15 @@ run_tests() {
 }
 
 usage() {
-	echo "Usage: $0 [--test-suite <test-suite>] [--test <test-name>] [--skip-delete] [--parallel <number>]"
+	echo "Usage: $0 [--test-suite <test-suite>] [--test <test-name>] [--skip-delete] [--parallel <number>] [--skip-release]"
 }
 
 parse_args() {
 	while [[ "$#" -gt 0 ]]; do
 		case $1 in
+		--skip-release)
+			STACKABLECTL_SKIP_RELEASE="true"
+			;;
 		--skip-delete)
 			KUTTL_SKIP_DELETE="true"
 			;;

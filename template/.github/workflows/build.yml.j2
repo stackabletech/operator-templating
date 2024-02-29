@@ -393,7 +393,7 @@ jobs:
             distribution: openshift,
             version: 4.14.0-okd,
             nodes: 3,
-            instances: r1.2xlarge
+            instances: r1.large
           }]
     runs-on: ubuntu-22.04
     steps:
@@ -436,7 +436,7 @@ jobs:
         run: |
           PATH=/usr/bin:$PATH
 
-          scripts/run_tests.sh openshift
+          scripts/run_tests.sh --test-suite openshift --parallel 2
 
       - name: Remove Cluster
         if: always()
@@ -446,3 +446,4 @@ jobs:
         with:
           api-token: ${{ secrets.REPLICATED_API_TOKEN }}
           cluster-id: ${{ steps.create-cluster.outputs.cluster-id }}
+
