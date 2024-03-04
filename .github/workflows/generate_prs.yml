@@ -15,6 +15,90 @@ on:
 jobs:
   create-prs:
     runs-on: ubuntu-latest
+    strategy:
+      # fail-fast: true
+      # This setting can be changed to throttle the build load
+      # max-parallel: 1
+      matrix:
+        repositories:
+          - name: airflow-operator
+            pretty_string: Apache Airflow
+            product_string: airflow
+            url: stackabletech/airflow-operator.git
+          - name: commons-operator
+            include_productconfig: false
+            has_product: false
+            pretty_string: Stackable Commons
+            product_string: commons
+            url: stackabletech/commons-operator.git
+          - name: druid-operator
+            pretty_string: Apache Druid
+            product_string: druid
+            url: stackabletech/druid-operator.git
+          - name: hbase-operator
+            pretty_string: Apache HBase
+            product_string: hbase
+            url: stackabletech/hbase-operator.git
+          - name: edc-operator
+            pretty_string: EDC
+            product_string: edc
+            url: stackabletech/edc-operator.git
+          - name: hdfs-operator
+            pretty_string: Apache HDFS
+            product_string: hdfs
+            url: stackabletech/hdfs-operator.git
+          - name: hello-world-operator
+            pretty_string: Hello World
+            product_string: hello
+            url: stackabletech/hello-world-operator.git
+          - name: hive-operator
+            pretty_string: Apache Hive
+            product_string: hive
+            url: stackabletech/hive-operator.git
+          - name: kafka-operator
+            pretty_string: Apache Kafka
+            product_string: kafka
+            url: stackabletech/kafka-operator.git
+          - name: nifi-operator
+            pretty_string: Apache NiFi
+            product_string: nifi
+            url: stackabletech/nifi-operator.git
+          - name: listener-operator
+            include_productconfig: false
+            has_product: false
+            pretty_string: Stackable Listener Operator
+            product_string: listener-operator
+            run_as: custom
+            url: stackabletech/listener-operator.git
+          - name: opa-operator
+            extra_crates:
+              - stackable-opa-bundle-builder
+            pretty_string: OpenPolicyAgent
+            product_string: opa
+            url: stackabletech/opa-operator.git
+          - name: secret-operator
+            include_productconfig: false
+            has_product: false
+            pretty_string: Stackable Secret Operator
+            product_string: secret-operator
+            run_as: custom
+            url: stackabletech/secret-operator.git
+          - name: spark-k8s-operator
+            pretty_string: Apache Spark-on-Kubernetes
+            product_string: spark-k8s
+            url: stackabletech/spark-k8s-operator.git
+          - name: superset-operator
+            pretty_string: Apache Superset
+            product_string: superset
+            url: stackabletech/superset-operator.git
+          - name: trino-operator
+            pretty_string: Trino
+            product_string: trino
+            url: stackabletech/trino-operator.git
+          - name: zookeeper-operator
+            pretty_string: Apache ZooKeeper
+            product_string: zookeeper
+            url: stackabletech/zookeeper-operator.git
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # tag=v4.1.1
       - uses: cachix/install-nix-action@6004951b182f8860210c8d6f0d808ec5b1a33d28 # tag=v25
@@ -51,6 +135,17 @@ jobs:
         if: ${{ github.event_name == 'schedule' }}
         run: |
           echo "REASON=Daily run triggered" >> "$GITHUB_ENV"
+
+      - name: Overwrite repositories.yaml for ${{ matrix.repositories.name }}
+        run: |
+          cat >config/repositories.yaml <<CONFIG
+          ---
+          repositories:
+          - ${{ matrix.repositories }}
+          CONFIG
+
+          # For debugging
+          cat config/repositories.yaml
 
       # Generate PRs
       - name: Run playbook
