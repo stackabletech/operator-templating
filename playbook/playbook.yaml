@@ -5,8 +5,10 @@
 
   tasks:
     - name: Include data which repositories to check
-      include_vars: ../repositories.yaml
+      include_vars: "{{ item }}"
       tags: local
+      with_fileglob:
+        - "../config/*.yaml"
 
     - name: Ensure work directory exists
       file:

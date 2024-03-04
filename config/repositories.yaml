@@ -79,14 +79,4 @@ repositories:
     product_string: zookeeper
     url: stackabletech/zookeeper-operator.git
 
-# IMPORTANT
-# If you change the Rust toolchain version here, make sure to also change
-# Docker-images/ubi8-rust-builder/Dockerfile
-rust_version: 1.76.0
 
-# Anything specified in the retired_files variable will be deleted.
-# This is uncommented as I had issues with everything being deleted when this was just present as an empty key.
-# May be something to investigate.
-retired_files:
-  - python/cargo_version.py
-  - python/requirements.txt

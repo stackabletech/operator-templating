@@ -1,0 +1,7 @@
+---
+# IMPORTANT
+# If you change the Rust toolchain version here, make sure to also change
+# Docker-images/ubi8-rust-builder/Dockerfile
+rust_version: 1.76.0
+
+
