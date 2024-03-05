@@ -20,7 +20,7 @@ jobs:
       # This setting can be changed to throttle the build load
       # max-parallel: 1
       matrix:
-        repositories:
+        repository:
           - name: airflow-operator
             pretty_string: Apache Airflow
             product_string: airflow
@@ -136,12 +136,12 @@ jobs:
         run: |
           echo "REASON=Daily run triggered" >> "$GITHUB_ENV"
 
-      - name: Overwrite repositories.yaml for ${{ matrix.repositories.name }}
+      - name: Overwrite repositories.yaml for ${{ matrix.repository.name }}
         run: |
           cat >config/repositories.yaml <<CONFIG
           ---
           repositories:
-          - ${{ matrix.repositories }}
+          - ${{ toJSON(matrix.repository) }}
           CONFIG
 
           # For debugging
