@@ -16,9 +16,7 @@ jobs:
   create-prs:
     runs-on: ubuntu-latest
     strategy:
-      # fail-fast: true
-      # This setting can be changed to throttle the build load
-      # max-parallel: 1
+      # If you add a new repository here, also add it to config/repositories.yaml
       matrix:
         repository:
           - name: airflow-operator

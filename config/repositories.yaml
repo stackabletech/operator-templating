@@ -1,3 +1,7 @@
+# This file exists just for the purpose of running test.sh locally.
+# The GH workflow generate_prs.yml will overwrite it with the contents if the
+# matrix run.
+# If you add a new repository here, you also need to add it to that workflow file.
 ---
 repositories:
   - name: airflow-operator
