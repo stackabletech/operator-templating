@@ -1,3 +1,7 @@
+# This file exists just for the purpose of running test.sh locally.
+# The GH workflow generate_prs.yml will overwrite it with the contents if the
+# matrix run.
+# If you add a new repository here, you also need to add it to that workflow file.
 ---
 repositories:
   - name: airflow-operator
@@ -79,14 +83,4 @@ repositories:
     product_string: zookeeper
     url: stackabletech/zookeeper-operator.git
 
-# IMPORTANT
-# If you change the Rust toolchain version here, make sure to also change
-# Docker-images/ubi8-rust-builder/Dockerfile
-rust_version: 1.75.0
 
-# Anything specified in the retired_files variable will be deleted.
-# This is uncommented as I had issues with everything being deleted when this was just present as an empty key.
-# May be something to investigate.
-retired_files:
-  - python/cargo_version.py
-  - python/requirements.txt
