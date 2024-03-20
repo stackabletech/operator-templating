@@ -203,7 +203,6 @@ def release_file(
         with tempfile.NamedTemporaryFile(
             mode="w",
             delete=False,
-            delete_on_close=False,
             prefix="patched",
         ) as f:
             pcontents = "".join(patched_release)
