@@ -118,7 +118,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 
     parser.add_argument(
         "--namespace",
-        help="Namespace to run the tests in. It will be created if doesn't already exist.",
+        help="Namespace to run the tests in. It will be created if it doesn't already exist.",
         type=str,
         required=False,
     )
