@@ -8,9 +8,9 @@ This repository is intended to help with these changes by keeping common files a
 
 == Structure of this repository
 
-=== Github Actions
+=== GitHub Actions
 
-The definition files for github actions that in turn execute the playbooks doing the actual work are kept in `.github`
+The definition files for GitHub actions that in turn execute the playbooks doing the actual work are kept in `.github`
 
 === Playbook
 
