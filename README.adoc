@@ -7,19 +7,36 @@ The high level structure of the repository is consistent across all repositories
 
 This repository is intended to help with these changes by keeping common files as templates and offering tooling to roll these out to all repositories that are under management by this tool.
 
-== Using
-=== Via Github Actions
-==== Authentication
-Since this tool needs to authenticate itself in order to push commits it needs credentials of a user.
-This is currently solved via a personal access token that needs to be provided as a repository (or org) secret with the name `GH_ACCESS_TOKEN`.
+== Structure of this repository
 
-The personal access token needs to have the following permissions for this to work:
+=== Github Actions
 
-- repo
-- org:read
-- workflow
+The definition files for github actions that in turn execute the playbooks doing the actual work are kept in `.github`
 
-==== Configuring repositories
+=== Playbook
+
+`playbook` contains the ansible playbook which is executed to perform the needed changes.
+
+=== Templates
+
+Everything under the top level folder `template`  is replicated to the target repositories.
+The folder and file structure under `template` is considered as source structure which will be synchronized across all repositories in the following manner:
+
+* Regular files and folders are simply copied
+* Files with an extension of `.j2` will be processed as jinja2 templates and copied to the target repositories with the `.j2` extension removed. The default jinja2 variable delimiter has been replaced with `{[ }]` since a lot of the template files contain `{{  }}` and caused issues.
+* File and directory names which contain `\[[product]]` will have this substituted for the value of the `product_string` variable. For example: "stackable-\[[product]]-operator.service" would become `stackable-kafka-operator.service`.
+
+To remove files or directories that already exist in the target repositories these need to be configured in `repositories.yaml` under the `retired_files` key.
+
+Anything that is listed here will be deleted from the target repositories.
+
+NOTE: Deletion is the last step that is performed, so if there is an overlap between files existing in the template folder and this setting, the files would not be rolled out, since they'd get deleted before creting the pull request.
+
+
+=== Configuration
+
+All user-facing configuration is kept in `repositories.yaml`.
+
 The actions in this repository are set up so that the playbooks are automatically executed whenever a commit is made to the `main` branch of this repository.
 
 So in principle it is as simple as pushing any commit to `main` which will trigger a sync of everything under `template` to all target repositories.
@@ -55,32 +72,37 @@ Target repositories are configured in `repositories.yaml` in the following form:
 |===
 
 
-
 These are the only variables currently being used on the playbooks, but can be extended easily as more are needed.
 
 NOTE: If a new variable is introduced, it needs to be added to all repository objects!
 
-==== Templating
-The folder and file structure under `template` is considered as source structure which will be synchronized across all repositories in the following manner:
+Additional settings can be found in `playbook/group_vars/all`, but these are not intended to be freely changed and should be treated with care.
 
-* Regular files and folders are simply copied
-* Files with an extension of `.j2` will be processed as jinja2 templates and copied to the target repositories with the `.j2` extension removed. The default jinja2 variable delimiter has been replaced with `{[ }]` since a lot of the template files contain `{{  }}` and caused issues.
-* File and directory names which contain `\[[product]]` will have this substituted for the value of the `product_string` variable. For example: "stackable-\[[product]]-operator.service" would become `stackable-kafka-operator.service`.
 
-To remove files or directories that already exist in the target repositories these need to be configured in `repositories.yaml` under the `retired_files` key.
+== Making changes to the template
 
-Anything that is listed here will be deleted from the target repositories.
+If you want to make a change that should be rolled out to all operators, make the change in the `template directory.
+Consult the section above to learn more about the structure of the template.
 
-NOTE: Deletion is the last step that is performed, so if there is an overlap between files existing in the template folder and this setting, the files would not be rolled out, since they'd get deleted before creting the pull request.
+=== Test changes locally
 
-=== Local
-While this can in theory also be used locally this has not yet been tested and may or may not be documented and supported here in the future.
-
-What is supported is locally testing that all templates are rendered correctly.
-
-The process here is to manually check out all operators that should be tested into the `work` subdirectory and then running `test.sh`.
+Manually check out all operators that should be tested into the `work` subdirectory and then running `test.sh`.
 
 This will perform templating into the subdirectories, which can then be checked via `git status` or similar methods.
+
+== Deploying changes
+
+Changes are rolled out via GitHub actions.
+
+=== Authentication
+Since this tool needs to authenticate itself in order to push commits it needs credentials of a user.
+This is currently solved via a personal access token that needs to be provided as a repository (or org) secret with the name `GH_ACCESS_TOKEN`.
+
+The personal access token needs to have the following permissions for this to work:
+
+- repo
+- org:read
+- workflow
 
 == Limitations
 There is currently no synchronization with existing PRs on the target repositories whatsoever. A new pull request will be created for every commit made to this repository.
@@ -88,22 +110,3 @@ There is currently no synchronization with existing PRs on the target repositori
 To update a PR that was created via this tool, it will have to be closed and necessary changes pushed here, which will result in a new PR.
 
 WARNING: The Helm Chart files that are rolled out by the templates in their current form do not include a ClusterRole object which may be needed for this to work with RBAC.
-
-== Structure
-**Github Actions**
-
-The definition files for github actions that in turn execute the playbooks doing the actual work are kept in `.github`
-
-**Playbook**
-
-`playbook` contains the ansible playbook which is executed to perform the needed changes.
-
-**Templates**
-
-Everything under the top level folder `template`  is replicated to the target repositories.
-
-**Configuration**
-
-All user-facing configuration is kept in `repositories.yaml`.
-
-Additional settings can be found in `playbook/group_vars/all`, but these are not intended to be freely changed and should be treated with care.
