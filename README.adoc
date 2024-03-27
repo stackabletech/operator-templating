@@ -1,6 +1,5 @@
 = Templates for Common Files in Operator Repositories
 
-== Purpose
 Stackable develops and maintains a growing number of operators for open source software.
 
 The high level structure of the repository is consistent across all repositories, which in the past has led to repetitive maintenance tasks in many repositories even for small changes.
@@ -81,14 +80,17 @@ Additional settings can be found in `playbook/group_vars/all`, but these are not
 
 == Making changes to the template
 
-If you want to make a change that should be rolled out to all operators, make the change in the `template directory.
+If you want to make a change that should be rolled out to all operators, make the change in the `template` directory.
 Consult the section above to learn more about the structure of the template.
 
 === Test changes locally
 
-Manually check out all operators that should be tested into the `work` subdirectory and then running `test.sh`.
-
-This will perform templating into the subdirectories, which can then be checked via `git status` or similar methods.
+1. Create the directory `work`, clone all (or some) operators into this directory, and run the `test.sh` script.
+2. The changes can be examined with `git status`.
+   When the pull request is later merged into the `main` branch then pull requests with these changes will be created automatically.
+3. Depending on the change, it makes sense to run the integration tests for all changed operators.
+   If the tests are not run in this stage and if there is even just one integration test failing in the subsequential generated pull requests then the operator-templating must be adapted which creates again pull requests for all operators.
+   Changes in the GitHub workflow actions cannot be tested until finally merged.
 
 == Deploying changes
 
