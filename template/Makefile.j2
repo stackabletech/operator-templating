@@ -160,5 +160,5 @@ run-dev: check-nix check-kubernetes
 	kubectl apply -f deploy/stackable-operators-ns.yaml
 	nix run -f. tilt -- up --port {[5430 + operator_index}] --namespace stackable-operators
 
-stop-dev: check-nix
+stop-dev: check-nix check-kubernetes
 	nix run -f. tilt -- down
