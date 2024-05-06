@@ -17,14 +17,13 @@ LABEL name="Stackable Operator for {[ operator.pretty_string }]" \
   summary="Deploy and manage {[ operator.pretty_string }] clusters." \
   description="Deploy and manage {[ operator.pretty_string }] clusters."
 
-# Update image
-RUN microdnf install -y yum \
-  && yum -y update-minimal --security --sec-severity=Important --sec-severity=Critical \
-  && yum clean all \
-  && microdnf clean all
-
-# Install kerberos client libraries
-RUN microdnf install -y krb5-libs libkadm5 && microdnf clean all
+# Update image and install kerberos client libraries
+RUN microdnf update -y --setopt=install_weak_deps=False \
+    && microdnf install -y --setopt=install_weak_deps=False \
+      krb5-libs \
+      libkadm5 \
+    && microdnf clean all \
+    && rm -rf /var/cache/yum
 
 COPY LICENSE /licenses/LICENSE
 
