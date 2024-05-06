@@ -1,6 +1,7 @@
 {
   "extends": [
-    "helpers:pinGitHubActionDigests"
+    "helpers:pinGitHubActionDigests",
+    "docker:pinDigests"
   ],
   "labels": [
     "dependencies"
@@ -27,6 +28,9 @@
     "schedule": [
       "after 5:00 and before 6:00 every weekday"
     ]
+  },
+  "dockerfile": {
+    "fileMatch":["Dockerfile.j2"]
   },
   "github-actions": {
     "fileMatch": ["(^template\\/\\.github\\/workflows)\\/[^/]+\\.ya?ml(.j2)?$"]
