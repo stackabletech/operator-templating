@@ -18,8 +18,10 @@ LABEL name="Stackable Operator for {[ operator.pretty_string }]" \
   description="Deploy and manage {[ operator.pretty_string }] clusters."
 
 # Update image and install kerberos client libraries
-RUN microdnf update -y --setopt=install_weak_deps=False \
-    && microdnf install -y --setopt=install_weak_deps=False \
+# install_weak_deps in microdnf does not support the literal "False" as dnf does
+# https://github.com/rpm-software-management/microdnf/blob/a600c62f29262d71a6259b70dc220df65a2ab9b5/dnf/dnf-main.c#L176-L189
+RUN microdnf update -y --setopt=install_weak_deps=0 \
+    && microdnf install -y --setopt=install_weak_deps=0 \
       krb5-libs \
       libkadm5 \
     && microdnf clean all \
