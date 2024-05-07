@@ -76,7 +76,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
-      - uses: reviewdog/action-languagetool@0d1f05459d9d88744c06c58d389f0997bab95b59 # v1.13.2
+      - uses: reviewdog/action-languagetool@73e4df96aa7b1b741a32ee2e1fff3405d3461583 # v1.14.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           level: info
