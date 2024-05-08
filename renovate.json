@@ -1,27 +1,8 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "helpers:pinGitHubActionDigests"
+    "local>stackabletech/.github:renovate-config"
   ],
-  "labels": [
-    "dependencies"
-  ],
-  "prCreation": "not-pending",
-  "reviewers": [
-    "team:developers"
-  ],
-  "rollbackPrs": true,
-  "timezone": "Europe/Berlin",
-  "packageRules": [
-    {
-      "matchUpdateTypes": [
-        "patch"
-      ],
-      "groupName": "All dependencies (patch only)"
-    }
-  ],
-  "lockFileMaintenance": {
-    "enabled": true
-  },
   "github-actions": {
     "fileMatch": ["(^template\\/\\.github\\/workflows)\\/[^/]+\\.ya?ml(.j2)?$"]
   }
