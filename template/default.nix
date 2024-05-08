@@ -111,5 +111,5 @@ rec {
     # So, remove the trailing newline already here to avoid that an
     # unnecessary change is shown in Git.
     sed -i '$d' Cargo.nix
-  ''; 
+  '';
 }

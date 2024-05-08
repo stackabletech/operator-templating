@@ -82,5 +82,3 @@ repositories:
     pretty_string: Apache ZooKeeper
     product_string: zookeeper
     url: stackabletech/zookeeper-operator.git
-
-
