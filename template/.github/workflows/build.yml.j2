@@ -348,7 +348,7 @@ jobs:
       - name: Install syft
         uses: anchore/sbom-action/download-syft@7ccf588e3cf3cc2611714c2eeae48550fbc17552 # v0.15.11
       - name: Build Docker image and Helm chart
-        run: make -e build
+        run: make -e build-ci
       - name: Publish Docker image and Helm chart
         if: ${{ !github.event.pull_request.head.repo.fork }}
         run: make -e publish
