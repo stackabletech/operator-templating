@@ -217,8 +217,7 @@ jobs:
     name: Check if committed README is the one we would render from the available parts
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
         with:
           submodules: recursive
       - uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # tag=v5.1.0
@@ -256,8 +255,7 @@ jobs:
         with:
           packages: protobuf-compiler krb5-user libkrb5-dev libclang-dev liblzma-dev libssl-dev pkg-config
           version: 1.0
-      - name: Checkout
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
         with:
           submodules: recursive
       - name: Set up Helm
@@ -323,8 +321,7 @@ jobs:
         with:
           packages: protobuf-compiler krb5-user libkrb5-dev libclang-dev liblzma-dev libssl-dev pkg-config
           version: 1.0
-      - name: Checkout
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
         with:
           submodules: recursive
       - uses: cachix/install-nix-action@8887e596b4ee1134dae06b98d573bd674693f47c # tag=v26
