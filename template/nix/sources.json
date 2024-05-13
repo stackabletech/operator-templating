@@ -5,10 +5,10 @@
         "homepage": null,
         "owner": "stackabletech",
         "repo": "beku.py",
-        "rev": "215bc8b90989d6819ee65c99c6f64e9312fbb8eb",
-        "sha256": "14idkbfvx4y2aq4gyzib2m2kparhcf5r9c6zd2wv9f9wf6xyzhdx",
+        "rev": "f5ef0199b0c3c8aa277a275a9d3c624eb5804f27",
+        "sha256": "1yx3ypn312p27d6zfnqcfnkarj9hirmm6gij9345kgnx5p2xfb1d",
         "type": "tarball",
-        "url": "https://github.com/stackabletech/beku.py/archive/215bc8b90989d6819ee65c99c6f64e9312fbb8eb.tar.gz",
+        "url": "https://github.com/stackabletech/beku.py/archive/f5ef0199b0c3c8aa277a275a9d3c624eb5804f27.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "crate2nix": {
