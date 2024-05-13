@@ -360,6 +360,7 @@ jobs:
             sudo apt-get -y update
             sudo apt-get -y install helm
           fi
+
           make -e build
       - name: Publish Docker image and Helm chart
         if: ${{ !github.event.pull_request.head.repo.fork }}
