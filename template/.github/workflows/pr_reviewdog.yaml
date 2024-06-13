@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-      - uses: reviewdog/action-markdownlint@5bc6ad5ba9e1250878f351bafcc7ac0a11dc050f # v0.18.0
+      - uses: reviewdog/action-markdownlint@8a1ef8f946e74c4d7119ec2489069a870b2a4e8f # v0.20.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           markdownlint_flags: '**/*(*.md|*.md.j2)'
