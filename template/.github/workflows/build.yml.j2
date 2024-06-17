@@ -88,12 +88,12 @@ jobs:
           TRIGGER: ${{ github.event_name }}
           GITHUB_REF: ${{ github.ref }}
         run: |
-          if [[ ( $TRIGGER == "push" || $TRIGGER == "schedule" || $TRIGGER == "workflow_dispatch" ) && $GITHUB_REF == "refs/heads/main" ]]; then
-            echo "exporting dev as target helm repo: ${{ env.DEV_REPO_HELM_URL }}"
-            echo "helm_repo=${{ env.DEV_REPO_HELM_URL }}" >> $GITHUB_OUTPUT
-          elif [[ $TRIGGER == "pull_request" || ( $TRIGGER == "workflow_dispatch" && $GITHUB_REF == refs/heads/* )]]; then
+          if [[ $TRIGGER == "pull_request" || ( $TRIGGER == "workflow_dispatch" && $GITHUB_REF != refs/heads/main )]]; then
             echo "exporting test as target helm repo: ${{ env.TEST_REPO_HELM_URL }}"
             echo "helm_repo=${{ env.TEST_REPO_HELM_URL }}" >> $GITHUB_OUTPUT
+          elif [[ ( $TRIGGER == "push" || $TRIGGER == "schedule" || $TRIGGER == "workflow_dispatch" ) && $GITHUB_REF == "refs/heads/main" ]]; then
+            echo "exporting dev as target helm repo: ${{ env.DEV_REPO_HELM_URL }}"
+            echo "helm_repo=${{ env.DEV_REPO_HELM_URL }}" >> $GITHUB_OUTPUT
           elif [[ ( $TRIGGER == "push" ) && $GITHUB_REF == refs/tags/* ]]; then
             echo "exporting stable as target helm repo: ${{ env.STABLE_REPO_HELM_URL }}"
             echo "helm_repo=${{ env.STABLE_REPO_HELM_URL }}" >> $GITHUB_OUTPUT
