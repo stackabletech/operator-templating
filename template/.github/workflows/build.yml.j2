@@ -16,8 +16,8 @@ on:
       - '[0-9][0-9].[0-9]+.[0-9]+'
   pull_request:
   merge_group:
-  # rebuild of main branch runs every saturday night
   schedule:
+    # Run every Saturday morning: https://crontab.guru/#15_3_*_*_6
     - cron: '15 3 * * 6'
   workflow_dispatch:
 
