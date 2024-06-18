@@ -88,13 +88,13 @@ jobs:
           TRIGGER: ${{ github.event_name }}
           GITHUB_REF: ${{ github.ref }}
         run: |
-          if [[ $TRIGGER == "pull_request" || ( $TRIGGER == "workflow_dispatch" && $GITHUB_REF != refs/heads/main )]]; then
+          if [[ $TRIGGER == "pull_request" ]]; then
             echo "exporting test as target helm repo: ${{ env.TEST_REPO_HELM_URL }}"
             echo "helm_repo=${{ env.TEST_REPO_HELM_URL }}" >> $GITHUB_OUTPUT
           elif [[ ( $TRIGGER == "push" || $TRIGGER == "schedule" || $TRIGGER == "workflow_dispatch" ) && $GITHUB_REF == "refs/heads/main" ]]; then
             echo "exporting dev as target helm repo: ${{ env.DEV_REPO_HELM_URL }}"
             echo "helm_repo=${{ env.DEV_REPO_HELM_URL }}" >> $GITHUB_OUTPUT
-          elif [[ ( $TRIGGER == "push" ) && $GITHUB_REF == refs/tags/* ]]; then
+          elif [[ $TRIGGER == "push" && $GITHUB_REF == refs/tags/* ]]; then
             echo "exporting stable as target helm repo: ${{ env.STABLE_REPO_HELM_URL }}"
             echo "helm_repo=${{ env.STABLE_REPO_HELM_URL }}" >> $GITHUB_OUTPUT
           else
@@ -346,9 +346,6 @@ jobs:
       - name: Update version if PR
         if: ${{ github.event_name == 'pull_request' }}
         run: cargo set-version --offline --workspace 0.0.0-pr${{ github.event.pull_request.number }}
-      - name: Update version if manual trigger on non-main branch
-        if: ${{ github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main' }}
-        run: cargo set-version --offline --workspace branch-${{ github.ref_name }}
 
       # Recreate charts and publish charts and docker image. The "-e" is needed as we want to override the
       # default value in the makefile if called from this action, but not otherwise (i.e. when called locally).
