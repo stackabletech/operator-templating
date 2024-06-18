@@ -68,11 +68,11 @@ jobs:
   #        repository: test
   #
   #    - all tagged releases land in stable:
-  #         condition: github.event_name == 'create' & github.ref.startswith('refs/tags/')
+  #         condition: github.event_name == 'push' & github.ref.startswith('refs/tags/')
   #         repository: stable
   #
-  #    - all pushes to main (i.e. PR-merges) land in dev:
-  #         condition: github.event_name == 'push' & github.ref == 'refs/heads/main'
+  #    - all pushes to main (i.e. PR-merges) and all scheduled/manual workflow runs on main land in dev:
+  #         condition: ( github.event_name == 'push' | github.event_name == 'schedule' | github.event_name == 'workflow_dispatch' ) & github.ref == 'refs/heads/main'
   #         repository: dev
   #
   # Any other scenarios (e.g. when a branch is created/pushed) will cause the publish step to be skipped, most commonly this is expected to happen for the
