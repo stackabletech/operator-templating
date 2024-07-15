@@ -14,8 +14,20 @@ Part of <https://github.com/stackabletech/issues/TRACKING_ISSUE>
 
 ```[tasklist]
 ### Tasks
+- [ ] Bump Rust Dependencies, see below for more details.
+- [ ] Add changelog entry stating which important crates were bumped (including the version).
+```
+
+> [!NOTE]
+> The bumping / updating of Rust dependencies is done in multiple steps:
+>
+> 1. Update the minimum Version in the root `Cargo.toml` manifest.
+> 2. Run the `cargo update` command, which also updates the `Cargo.lock` file.
+> 3. Lastly, run `make regenerate-nix` to update the `Cargo.nix` file.
+
+```[tasklist]
+### Bump Rust Dependencies
 - [ ] Bump `stackable-operator` and friends.
 - [ ] Bump `product-version`.
 - [ ] Bump all other dependencies.
-- [ ] Add changelog entry stating which important crates were bumped (including the version).
 ```
