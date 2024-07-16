@@ -1,10 +1,15 @@
 ## Bump Rust Dependencies for Stackable Release XX.(X)X
 
 <!--
+    Make sure to update the link in 'issues/.github/ISSUE_TEMPLATE/pre-release-operator-rust-deps.md'
+    when you rename this file.
+-->
+
+<!--
     Replace 'TRACKING_ISSUE' with the applicable release tracking issue number.
 -->
 
-Part of <https://github.com/stackabletech/issues/TRACKING_ISSUE>
+Part of <https://github.com/stackabletech/issues/issues/TRACKING_ISSUE>
 
 > [!NOTE]
 > During a Stackable release we need to update various Rust dependencies before
