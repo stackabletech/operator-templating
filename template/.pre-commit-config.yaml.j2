@@ -29,6 +29,8 @@ repos:
     rev: v0.40.0
     hooks:
       - id: markdownlint
+        types: [text]
+        files: \.md(\.j2)*$
 
   - repo: https://github.com/PyCQA/flake8
     rev: 7.0.0
