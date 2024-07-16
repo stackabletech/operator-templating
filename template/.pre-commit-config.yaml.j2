@@ -1,4 +1,6 @@
 ---
+exclude: ^(Cargo\.nix|crate-hashes\.json|nix/.*)$
+
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
@@ -7,7 +9,6 @@ repos:
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
-        exclude: ^crate-hashes\.json$
       - id: detect-aws-credentials
         args: ["--allow-missing-credentials"]
       - id: detect-private-key
