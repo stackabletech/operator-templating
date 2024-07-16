@@ -1,4 +1,4 @@
-## Bump Rust Dependencies for Stackable Release XX.(X)X
+# Bump Rust Dependencies for Stackable Release XX.(X)X
 
 <!--
     Make sure to update the link in 'issues/.github/ISSUE_TEMPLATE/pre-release-operator-rust-deps.md'
