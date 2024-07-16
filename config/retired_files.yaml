@@ -5,3 +5,4 @@
 retired_files:
   - python/cargo_version.py
   - python/requirements.txt
+  - flake8 # replaced by ruff
