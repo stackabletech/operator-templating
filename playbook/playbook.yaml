@@ -5,7 +5,6 @@
 
   tasks:
     - name: Ensure work directory exists
-      tags: local
       file:
         path: "{{ work_dir }}"
         state: directory
@@ -32,5 +31,5 @@
 
         loop_var: operator
         index_var: operator_index1
-      when: operator.name == only_operator or only_operator is undefined
+      when: only_operator is undefined or operator.name == only_operator
       tags: local
