@@ -4,13 +4,8 @@
   connection: local
 
   tasks:
-    - name: Include data which repositories to check
-      include_vars: "{{ item }}"
-      tags: local
-      with_fileglob:
-        - "../config/*.yaml"
-
     - name: Ensure work directory exists
+      tags: local
       file:
         path: "{{ work_dir }}"
         state: directory
@@ -32,8 +27,10 @@
 
     - name: Update repositories from templates
       include_tasks: "update_repo.yaml"
-      with_items: "{{ repositories }}"
+      loop: "{{ repository }}"
       loop_control:
+
         loop_var: operator
-        index_var: operator_index
+        index_var: operator_index1
+      when: operator.name == only_operator or only_operator is undefined
       tags: local

@@ -134,26 +134,16 @@ jobs:
         run: |
           echo "REASON=Daily run triggered" >> "$GITHUB_ENV"
 
-      - name: Overwrite repositories.yaml for ${{ matrix.repository.name }}
-        run: |
-          cat >config/repositories.yaml <<CONFIG
-          ---
-          repositories:
-          - ${{ toJSON(matrix.repository) }}
-          CONFIG
-
-          # For debugging
-          cat config/repositories.yaml
-
       # Generate PRs
       - name: Run playbook
         if: ${{ !inputs.dry-run }}
         run: |
           # Funnel via JSON to ensure that values are escaped properly
           echo '{}' | jq '{commit_hash: $ENV.GITHUB_SHA, reason: $ENV.REASON, base_dir: $pwd,  gh_access_token: $ENV.GH_ACCESS_TOKEN}' --arg pwd "$(pwd)" > vars.json
-          ansible-playbook playbook/playbook.yaml --extra-vars "@vars.json"
+          ansible-playbook playbook/playbook.yaml --extra-vars "@vars.json" --extra-vars "only_operator=${{ matrix.repository.name }}
         env:
           GH_ACCESS_TOKEN: ${{ secrets.gh_access_token }}
+          ANSIBLE_VARS_ENABLED: repositories
 
       # Do Not Generate PRs
       - name: Run playbook (dry-run)
