@@ -370,7 +370,7 @@ jobs:
         if: ${{ !github.event.pull_request.head.repo.fork }}
         run: |
           # We want to publish helmcharts only once as they have a common name, while still publishing both images with architecture specific tags
-          if ["$(uname -m)" = "x86_64"]; then
+          if [ "$(uname -m)" = "x86_64" ]; then
             make -e publish
           else
             make -e docker-publish
