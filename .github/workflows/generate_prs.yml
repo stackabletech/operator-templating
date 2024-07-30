@@ -128,7 +128,7 @@ jobs:
       - name: Set commit message for manual dispatch
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
-          echo "REASON=Manual run triggered by: ${{ github.event.sender.login }} with message [${{ github.event.inputs.message }}]" >> "$GITHUB_ENV"
+          echo "REASON=@${{ github.event.sender.login }}: ${{ github.event.inputs.message }}" >> "$GITHUB_ENV"
       - name: Set commit message for schedule
         if: ${{ github.event_name == 'schedule' }}
         run: |
