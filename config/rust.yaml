@@ -3,3 +3,4 @@
 # If you change the Rust toolchain version here, make sure to also change
 # docker-images/ubi8-rust-builder/Dockerfile & docker-images/ubi9-rust-builder/Dockerfile
 rust_version: 1.80.0
+hadolint_version: v1.17.6
