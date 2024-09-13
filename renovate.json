@@ -5,5 +5,8 @@
   ],
   "github-actions": {
     "fileMatch": ["(^template\\/\\.github\\/workflows)\\/[^/]+\\.ya?ml(.j2)?$"]
+  },
+  "pre-commit": {
+    "fileMatch": ["(^|/)\\.pre-commit-config\\.ya?ml(.j2)$"]
   }
 }
