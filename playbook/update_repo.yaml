@@ -139,7 +139,7 @@
 
     - name: "Operator [{{ operator.name }}] create PR"
       command:
-        argv: [gh, pr, create, --base, main, --title, "{{ pr_title }}", --body, "{{ pr_body }}", --reviewer, "@stackabletech/developers"]
+        argv: [gh, pr, create, --base, main, --title, "{{ pr_title }}", --body, "{{ pr_body }}", --reviewer, "{{ author }}"]
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
 - name: "Operator [{{ operator.name }}] clean"
