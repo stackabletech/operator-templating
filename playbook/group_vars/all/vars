@@ -26,7 +26,7 @@ pr_body: |
     >
     > | **Trigger-message** |
     > | - |
-    > | {{ author }}: {{ reason }} |
+    > | @{{ author }}: {{ reason }} |
 
     > [!TIP]
     > Please update the change type as appropriate.
