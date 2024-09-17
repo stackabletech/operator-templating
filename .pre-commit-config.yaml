@@ -56,3 +56,4 @@ repos:
     rev: b3555ba9c2bfd9401e79f2f0da68dd1ae38e10c7 # 2.12.0
     hooks:
       - id: hadolint
+        exclude: \.j2$
