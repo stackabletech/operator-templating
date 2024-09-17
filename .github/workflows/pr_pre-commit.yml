@@ -5,7 +5,7 @@ on:
   pull_request:
 
 env:
-  HADOLINT_VERSION: "v1.17.6"
+  HADOLINT_VERSION: "v2.12.0"
 
 jobs:
   pre-commit:
@@ -18,6 +18,8 @@ jobs:
         with:
           python-version: '3.12'
       - name: Setup Hadolint
+        # We need to download this here due to a bug in the pre-commit/hadolint setup
+        # https://github.com/hadolint/hadolint/issues/886
         shell: bash
         run: |
           set -euo pipefail
