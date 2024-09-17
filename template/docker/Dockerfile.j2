@@ -101,9 +101,10 @@ EOF
 COPY LICENSE /licenses/LICENSE
 
 COPY --from=builder /app/* /usr/local/bin/
-# {[% if operator.include_productconfig is undefined or operator.include_productconfig == true %}]
+
+{[% if operator.include_productconfig is undefined or operator.include_productconfig == true %}]
 COPY deploy/config-spec/properties.yaml /etc/stackable/{[operator.name}]/config-spec/properties.yaml
-# {[% endif %}]
+{[% endif %}]
 
 USER ${STACKABLE_USER_UID}
 
