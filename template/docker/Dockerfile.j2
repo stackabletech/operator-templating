@@ -143,11 +143,25 @@ echo -e "if [ -f ~/.bashrc ]; then\n\tsource ~/.bashrc\nfi" >> /stackable/.profi
 
 chown ${STACKABLE_USER_UID}:0 /stackable/.bashrc
 chown ${STACKABLE_USER_UID}:0 /stackable/.profile
+
+# All files and folders owned by root to support running as arbitrary users
+# This is best practice as all container users will belong to the root group (0)
+# This is not very relevant for the operator images but this makes it consistent with `docker-images`
+chown -R ${STACKABLE_USER_UID}:0 /stackable
+chmod -R g=u /stackable
+EOF
+
+COPY <<EOF /README.md
+# Stackable Operator for {[ operator.pretty_string }]
+
+* This image contains version ${VERSION} of the operator.
+* The operator binary can be found in `/usr/local/bin`
+* It is licensed under the OSL-3.0 - the full text can be found in `/licenses/LICENSE`
 EOF
 
 COPY LICENSE /licenses/LICENSE
 
-COPY --from=builder /app/* /usr/local/bin/
+COPY --from=builder --chown=${STACKABLE_USER_UID}:0 /app/* /usr/local/bin/
 
 {[% if operator.include_productconfig is undefined or operator.include_productconfig == true %}]
 COPY deploy/config-spec/properties.yaml /etc/stackable/{[ operator.name }]/config-spec/properties.yaml
