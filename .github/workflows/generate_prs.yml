@@ -85,6 +85,12 @@ jobs:
             pretty_string: Apache Spark-on-Kubernetes
             product_string: spark-k8s
             url: stackabletech/spark-k8s-operator.git
+          - name: stackable-cockpit
+            include_productconfig: false
+            has_product: false
+            pretty_string: Stackable Cockpit
+            product_string: stackable-cockpit
+            url: stackabletech/stackable-cockpit.git
           - name: superset-operator
             pretty_string: Apache Superset
             product_string: superset
