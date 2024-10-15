@@ -48,8 +48,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.annotations['internal.stackable.tech/image']
-            - name: CLUSTER_DNS_DOMAIN
-              value: {{ .Values.clusterDnsDomain | default "cluster.local" | quote }}
+            - name: KUBERNETES_SERVICE_DNS_DOMAIN
+              value: {{ .Values.kubernetesServiceDnsDomain | default "cluster.local" | quote }}
 {[% if operator.product_string in ['kafka'] %}]
             - name: KAFKA_BROKER_CLUSTERROLE
               value: {{ include "operator.fullname" . }}-kafka-broker-clusterrole
