@@ -101,6 +101,13 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     )
 
     parser.add_argument(
+        "--skip-operator",
+        help="Skip given operator(s) when installing a release.",
+        nargs="*",
+        default=[],
+    )
+
+    parser.add_argument(
         "--test",
         help="Kuttl test to run.",
         type=str,
@@ -180,6 +187,7 @@ def have_requirements() -> None:
 @contextlib.contextmanager
 def release_file(
     operators: list[tuple[str, str]] = [],
+    skip_ops: list[str] = [],
 ) -> collections.abc.Generator[str, None, None]:
     """Patch release.yaml with operator versions if needed.
 
@@ -209,7 +217,22 @@ def release_file(
                             patch_version = version
                             ops_copy.remove((op, version))  # found an operator to patch
                             break
-                patched_release.append(line)
+                patched_release.append(line.rstrip('\n'))
+
+        # Filter out skip operators
+        skipped_release = []
+        for line in patched_release:
+            skip = False
+            if skip:
+                skip = False
+            else:
+                if any((op in line for op in skip_ops)):
+                    skip = True
+                    break
+                else:
+                    skipped_release.append(line)
+        patched_release = skipped_release
+
         if ops_copy:
             # Some --operator args were not found in the release file. This is
             # most likely a typo and CI pipelines should terminate early in such
@@ -223,7 +246,7 @@ def release_file(
             delete=False,
             prefix="patched",
         ) as f:
-            pcontents = "".join(patched_release)
+            pcontents = "\n".join(patched_release)
             logging.debug(f"Writing patched release to {f.name}: {pcontents}\n")
             f.write(pcontents)
             return f.name
@@ -353,7 +376,7 @@ def main(argv) -> int:
         logging.basicConfig(encoding="utf-8", level=opts.log_level)
         have_requirements()
         gen_tests(opts.test_suite)
-        with release_file(opts.operator) as f:
+        with release_file(opts.operator, opts.skip_operator) as f:
             maybe_install_release(opts.skip_release, f)
         if opts.skip_tests:
             logging.info("Skip running tests.")
