@@ -189,7 +189,7 @@ check-kubernetes:
 	@kubectl cluster-info > /dev/null 2>&1 || (echo "Error: Kubernetes is not running or kubectl is not properly configured."; exit 1)
 
 run-dev: check-nix check-kubernetes
-  # Install ops in release.yaml except the one that is installed by Tilt
+	# Install ops in release.yaml except the one that is installed by Tilt
 	SHORT_OP_NAME=$$(echo ${OPERATOR_NAME} | sed 's/-operator//');\
 	./scripts/run-tests --log-level debug --skip-tests --skip-operator ${SHORT_OP_NAME}
 	# Build and install the operator
