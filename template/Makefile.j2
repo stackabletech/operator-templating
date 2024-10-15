@@ -190,9 +190,9 @@ check-kubernetes:
 
 run-dev: check-nix check-kubernetes
   # Install ops in release.yaml except the one that is installed by Tilt
-  SHORT_OP_NAME=$$(echo ${OPERATOR_NAME} | sed 's/-operator//');\
-  ./scripts/run-tests --log-level debug --skip-tests --skip-operator ${SHORT_OP_NAME}
-  # Build and install the operator
+	SHORT_OP_NAME=$$(echo ${OPERATOR_NAME} | sed 's/-operator//');\
+	./scripts/run-tests --log-level debug --skip-tests --skip-operator ${SHORT_OP_NAME}
+	# Build and install the operator
 	nix run --extra-experimental-features "nix-command flakes" -f. tilt -- up --port {[5430 + operator_index}] --namespace stackable-operators
 
 stop-dev: check-nix check-kubernetes
