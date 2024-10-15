@@ -217,7 +217,7 @@ def release_file(
                             patch_version = version
                             ops_copy.remove((op, version))  # found an operator to patch
                             break
-                patched_release.append(line.rstrip('\n'))
+                patched_release.append(line.rstrip("\n"))
 
         # Filter out skip operators
         skipped_release = []
