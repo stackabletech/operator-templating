@@ -5,4 +5,5 @@
 retired_files:
   - python/cargo_version.py
   - python/requirements.txt
-  - flake8 # replaced by ruff
+  - .flake8 # replaced by ruff
+  - .github/workflows/pr_reviewdog.yaml # replaced by pr_pre-commit.yaml
