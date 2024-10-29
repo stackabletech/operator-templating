@@ -15,14 +15,6 @@
         path: "{{ work_dir }}"
         state: directory
 
-    - name: Configure git author mail
-      command:
-        argv: [git, config, --global, user.email, "{{ author_mail }}"]
-
-    - name: Configure git author name
-      command:
-        argv: [git, config, --global, user.name, "{{ author_name }}"]
-
     - name: Login to github
       command:
         argv: [gh, auth, login, --with-token]

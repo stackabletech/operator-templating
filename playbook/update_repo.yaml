@@ -111,6 +111,16 @@
       register: git_change
       failed_when: git_change.rc == 0 # fail when there are no changes
 
+    - name: Configure git author mail
+      command:
+        argv: [git, config, user.email, "{{ author_mail }}"]
+        chdir: "{{ work_dir }}/{{ operator.name }}"
+
+    - name: Configure git author name
+      command:
+        argv: [git, config, user.name, "{{ author_name }}"]
+        chdir: "{{ work_dir }}/{{ operator.name }}"
+
     - name: "Operator [{{ operator.name }}] stage all changes"
       command:
         argv: [git, add, .]
