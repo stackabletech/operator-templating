@@ -47,7 +47,7 @@ Part of <https://github.com/stackabletech/issues/TRACKING_ISSUE>
 ### Tasks in this Repository
 - [ ] Update Rust toolchain in the `config/versions.yaml` file.
 - [ ] Generate downstream PRs using the ["Generate Downstream PRs"](https://github.com/stackabletech/operator-templating/actions/workflows/generate_prs.yml) action.
-- [Search for PRs](https://github.com/search?q=org%3Astackabletech%20sort%3Aupdated-desc%20is%3Apr%20is%3Aopen%20Update%20templated%20files&type=pullrequests) and add them to the task list below
+- [Search for PRs](https://github.com/search?q=org%3Astackabletech%20sort%3Aupdated-desc%20is%3Apr%20is%3Aopen%20Update%20templated%20files&type=pullrequests) and add them to the task list below.
 - [ ] Merge downstream PRs, see below for more details.
 ```
 
