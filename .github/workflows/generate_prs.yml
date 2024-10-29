@@ -1,6 +1,8 @@
 ---
 name: Generate Downstream PRs
 
+run-name: "Generate Downstream PRs (dry-run: ${{ inputs.dry-run }})"
+
 on:
   workflow_dispatch:
     inputs:
