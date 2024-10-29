@@ -111,16 +111,15 @@
       register: git_change
       failed_when: git_change.rc == 0 # fail when there are no changes
 
-
-# Check if anything was changed, if yes commit changes and create a pull request, otherwise skip rest of this play
-- name: "Operator [{{ operator.name }}] create PR if changes were performed"
-  block:
-    - name: "Operator [{{ operator.name }}] run 'git ls-remotes' to ensure that the branch {{ pr_branch_name  }} doesn't exist"
+    - name: Configure git author mail
       command:
-        argv: [git, ls-remote, --exit-code, --heads, "https://{{ gh_access_token }}@github.com/{{ operator.url }}", "{{ pr_branch_name }}"]
+        argv: [git, config, user.email, "{{ author_mail }}"]
         chdir: "{{ work_dir }}/{{ operator.name }}"
-      register: branch_exists
-      failed_when: branch_exists.rc != 2 # fail when branch exists
+
+    - name: Configure git author name
+      command:
+        argv: [git, config, user.name, "{{ author_name }}"]
+        chdir: "{{ work_dir }}/{{ operator.name }}"
 
     - name: "Operator [{{ operator.name }}] stage all changes"
       command:
@@ -129,8 +128,18 @@
 
     - name: "Operator [{{ operator.name }}] commit changes"
       command:
-        argv: [git, commit, -a, -m, "{{ commit_message }}"]
+        argv: [git, commit, -m, "{{ commit_message }}"]
         chdir: "{{ work_dir }}/{{ operator.name }}"
+
+# Fail if the remote branch exists, otherwise push changes and create a pull request
+- name: "Operator [{{ operator.name }}] create PR if changes were performed"
+  block:
+    - name: "Operator [{{ operator.name }}] run 'git ls-remotes' to ensure that the branch {{ pr_branch_name  }} doesn't exist"
+      command:
+        argv: [git, ls-remote, --exit-code, --heads, "https://{{ gh_access_token }}@github.com/{{ operator.url }}", "{{ pr_branch_name }}"]
+        chdir: "{{ work_dir }}/{{ operator.name }}"
+      register: branch_exists
+      failed_when: branch_exists.rc != 2 # fail when branch exists
 
     - name: "Operator [{{ operator.name }}] push changes to branch {{ pr_branch_name }}"
       command:
