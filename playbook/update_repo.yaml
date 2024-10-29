@@ -111,11 +111,6 @@
       register: git_change
       failed_when: git_change.rc == 0 # fail when there are no changes
 
-
-# Commit changes
-- name: "Operator [{{ operator.name }}] create PR if changes were performed"
-  tags: local
-  block:
     - name: "Operator [{{ operator.name }}] stage all changes"
       command:
         argv: [git, add, .]
@@ -127,7 +122,7 @@
         chdir: "{{ work_dir }}/{{ operator.name }}"
 
 # Fail if the remote branch exists, otherwise push changes and create a pull request
-- name: Remote Steps
+- name: "Operator [{{ operator.name }}] create PR if changes were performed"
   block:
     - name: "Operator [{{ operator.name }}] run 'git ls-remotes' to ensure that the branch {{ pr_branch_name  }} doesn't exist"
       command:
