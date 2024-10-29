@@ -47,6 +47,7 @@ Part of <https://github.com/stackabletech/issues/TRACKING_ISSUE>
 ### Tasks in this Repository
 - [ ] Update Rust toolchain in the `config/versions.yaml` file.
 - [ ] Generate downstream PRs using the ["Generate Downstream PRs"](https://github.com/stackabletech/operator-templating/actions/workflows/generate_prs.yml) action.
+- [Search for PRs](https://github.com/search?q=org%3Astackabletech%20sort%3Aupdated-desc%20is%3Apr%20is%3Aopen%20Update%20templated%20files&type=pullrequests) and add them to the task list below.
 - [ ] Merge downstream PRs, see below for more details.
 ```
 
@@ -57,27 +58,26 @@ Replace the items in the task lists below with the applicable Pull Requests
 
     yq '.repositories[].name' config/repositories.yaml \
     | sort \
-    | xargs -I {} echo "- [ ] https://github.com/stackabletech/{}/pulls?q=sort:updated-desc+is:pr+is:open+Update+templated+files"
+    | xargs -I {} echo "- [ ] _PR for {}_"
 -->
 
 ```[tasklist]
 ### Tasks in Downstream Operator Repositories
-- [ ] https://github.com/stackabletech/airflow-operator/pulls?q=sort:updated-desc+is:pr+is:open+Update+templated+files
-- [ ] https://github.com/stackabletech/commons-operator/pulls?q=sort:updated-desc+is:pr+is:open+Update+templated+files
-- [ ] https://github.com/stackabletech/druid-operator/pulls?q=sort:updated-desc+is:pr+is:open+Update+templated+files
-- [ ] https://github.com/stackabletech/edc-operator/pulls?q=sort:updated-desc+is:pr+is:open+Update+templated+files
-- [ ] https://github.com/stackabletech/hbase-operator/pulls?q=sort:updated-desc+is:pr+is:open+Update+templated+files
-- [ ] https://github.com/stackabletech/hdfs-operator/pulls?q=sort:updated-desc+is:pr+is:open+Update+templated+files
-- [ ] https://github.com/stackabletech/hello-world-operator/pulls?q=sort:updated-desc+is:pr+is:open+Update+templated+files
-- [ ] https://github.com/stackabletech/hive-operator/pulls?q=sort:updated-desc+is:pr+is:open+Update+templated+files
-- [ ] https://github.com/stackabletech/kafka-operator/pulls?q=sort:updated-desc+is:pr+is:open+Update+templated+files
-- [ ] https://github.com/stackabletech/listener-operator/pulls?q=sort:updated-desc+is:pr+is:open+Update+templated+files
-- [ ] https://github.com/stackabletech/nifi-operator/pulls?q=sort:updated-desc+is:pr+is:open+Update+templated+files
-- [ ] https://github.com/stackabletech/opa-operator/pulls?q=sort:updated-desc+is:pr+is:open+Update+templated+files
-- [ ] https://github.com/stackabletech/secret-operator/pulls?q=sort:updated-desc+is:pr+is:open+Update+templated+files
-- [ ] https://github.com/stackabletech/spark-k8s-operator/pulls?q=sort:updated-desc+is:pr+is:open+Update+templated+files
-- [ ] https://github.com/stackabletech/superset-operator/pulls?q=sort:updated-desc+is:pr+is:open+Update+templated+files
-- [ ] https://github.com/stackabletech/trino-operator/pulls?q=sort:updated-desc+is:pr+is:open+Update+templated+files
-- [ ] https://github.com/stackabletech/zookeeper-operator/pulls?q=sort:updated-desc+is:pr+is:open+Update+templated+files
-
+- [ ] _PR for airflow-operator_
+- [ ] _PR for commons-operator_
+- [ ] _PR for druid-operator_
+- [ ] _PR for edc-operator_
+- [ ] _PR for hbase-operator_
+- [ ] _PR for hdfs-operator_
+- [ ] _PR for hello-world-operator_
+- [ ] _PR for hive-operator_
+- [ ] _PR for kafka-operator_
+- [ ] _PR for listener-operator_
+- [ ] _PR for nifi-operator_
+- [ ] _PR for opa-operator_
+- [ ] _PR for secret-operator_
+- [ ] _PR for spark-k8s-operator_
+- [ ] _PR for superset-operator_
+- [ ] _PR for trino-operator_
+- [ ] _PR for zookeeper-operator_
 ```
