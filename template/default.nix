@@ -1,6 +1,6 @@
 { sources ? import ./nix/sources.nix # managed by https://github.com/nmattia/niv
 , nixpkgs ? sources.nixpkgs
-, pkgs ? import nixpkgs {}
+, pkgs ? import nixpkgs { }
 , cargo ? import ./Cargo.nix {
     inherit nixpkgs pkgs; release = false;
     defaultCrateOverrides = pkgs.defaultCrateOverrides // {
@@ -15,6 +15,10 @@
       };
       stackable-secret-operator = attrs: {
         buildInputs = [ pkgs.protobuf pkgs.rustfmt ];
+      };
+      stackable-opa-user-info-fetcher = attrs: {
+        # TODO: why is this not pulled in via libgssapi-sys?
+        buildInputs = [ pkgs.krb5 ];
       };
       krb5-sys = attrs: {
         nativeBuildInputs = [ pkgs.pkg-config ];
@@ -42,18 +46,20 @@
 rec {
   inherit cargo sources pkgs meta;
   build = cargo.allWorkspaceMembers;
-  entrypoint = build+"/bin/stackable-${meta.operator.name}";
-  crds = pkgs.runCommand "${meta.operator.name}-crds.yaml" {}
-  ''
-    ${entrypoint} crd > $out
-  '';
+  entrypoint = build + "/bin/stackable-${meta.operator.name}";
+  crds = pkgs.runCommand "${meta.operator.name}-crds.yaml" { }
+    ''
+      ${entrypoint} crd > $out
+    '';
 
   dockerImage = pkgs.dockerTools.streamLayeredImage {
     name = dockerName;
     tag = dockerTag;
     contents = [
       # Common debugging tools
-      pkgs.bashInteractive pkgs.coreutils pkgs.util-linuxMinimal
+      pkgs.bashInteractive
+      pkgs.coreutils
+      pkgs.util-linuxMinimal
       # Kerberos 5 must be installed globally to load plugins correctly
       pkgs.krb5
       # Make the whole cargo workspace available on $PATH
@@ -65,7 +71,8 @@ rec {
           fileRefVars = {
             PRODUCT_CONFIG = deploy/config-spec/properties.yaml;
           };
-        in pkgs.lib.concatLists (pkgs.lib.mapAttrsToList (env: path: pkgs.lib.optional (pkgs.lib.pathExists path) "${env}=${path}") fileRefVars);
+        in
+        pkgs.lib.concatLists (pkgs.lib.mapAttrsToList (env: path: pkgs.lib.optional (pkgs.lib.pathExists path) "${env}=${path}") fileRefVars);
       Entrypoint = [ entrypoint ];
       Cmd = [ "run" ];
     };
@@ -94,22 +101,22 @@ rec {
   ];
 
   # need to use vendored crate2nix because of https://github.com/kolloch/crate2nix/issues/264
-  crate2nix = import sources.crate2nix {};
+  crate2nix = import sources.crate2nix { };
   tilt = pkgs.tilt;
 
   regenerateNixLockfiles = pkgs.writeScriptBin "regenerate-nix-lockfiles"
-  ''
-    #!/usr/bin/env bash
-    set -euo pipefail
-    echo Running crate2nix
-    ${crate2nix}/bin/crate2nix generate
+    ''
+      #!/usr/bin/env bash
+      set -euo pipefail
+      echo Running crate2nix
+      ${crate2nix}/bin/crate2nix generate
 
-    # crate2nix adds a trailing newline (see
-    # https://github.com/nix-community/crate2nix/commit/5dd04e6de2fbdbeb067ab701de8ec29bc228c389).
-    # The pre-commit hook trailing-whitespace wants to remove it again
-    # (see https://github.com/pre-commit/pre-commit-hooks?tab=readme-ov-file#trailing-whitespace).
-    # So, remove the trailing newline already here to avoid that an
-    # unnecessary change is shown in Git.
-    sed -i '$d' Cargo.nix
-  '';
+      # crate2nix adds a trailing newline (see
+      # https://github.com/nix-community/crate2nix/commit/5dd04e6de2fbdbeb067ab701de8ec29bc228c389).
+      # The pre-commit hook trailing-whitespace wants to remove it again
+      # (see https://github.com/pre-commit/pre-commit-hooks?tab=readme-ov-file#trailing-whitespace).
+      # So, remove the trailing newline already here to avoid that an
+      # unnecessary change is shown in Git.
+      sed -i '$d' Cargo.nix
+    '';
 }
