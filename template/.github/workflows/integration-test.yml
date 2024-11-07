@@ -60,7 +60,7 @@ jobs:
 
       - name: Run Integration Test
         id: test
-        uses: stackabletech/actions/run-integration-test@run-integration-test
+        uses: stackabletech/actions/run-integration-test@5b66858af3597c4ea34f9b33664b8034a1d28427 # v0.3.0
         with:
           test-platform: ${{ inputs.test-platform }}-${{ inputs.test-architecture }}
           test-run: ${{ inputs.test-run }}
