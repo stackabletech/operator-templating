@@ -45,8 +45,8 @@ on:
           - okd-4.13
       test-architecture:
         description: |
-          The architecture the tests will run on. Consult the run-integration-test README for more
-          details on supported architectures for each distribution
+          The architecture the tests will run on. Consult the run-integration-test action README for
+          more details on supported architectures for each distribution
         required: true
         type: choice
         options:
