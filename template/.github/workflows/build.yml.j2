@@ -14,7 +14,13 @@ on:
       - "renovate/**"
     tags:
       - '[0-9][0-9].[0-9]+.[0-9]+'
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
   pull_request:
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
   merge_group:
   schedule:
     # Run every Saturday morning: https://crontab.guru/#15_3_*_*_6
