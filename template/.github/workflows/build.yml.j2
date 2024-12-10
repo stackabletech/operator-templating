@@ -347,7 +347,9 @@ jobs:
           bin: cargo-set-version
       - name: Update version if PR against main branch
         if: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' }}
-        run: cargo set-version --offline --workspace 0.0.0-pr${{ github.event.pull_request.number }}
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: cargo set-version --offline --workspace 0.0.0-pr${PR_NUMBER}
       - name: Update version if PR against non-main branch
         # For PRs to be merged against a release branch, use the version that has already been set in the calling script.
         if: ${{ github.event_name == 'pull_request' && startsWith(github.event.pull_request.base.ref, 'release-') }}
@@ -422,7 +424,9 @@ jobs:
           bin: cargo-set-version
       - name: Update version if PR against main branch
         if: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' }}
-        run: cargo set-version --offline --workspace 0.0.0-pr${{ github.event.pull_request.number }}
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: cargo set-version --offline --workspace 0.0.0-pr${PR_NUMBER}
       - name: Update version if PR against non-main branch
         # For PRs to be merged against a release branch, use the version that has already been set in the calling script.
         if: ${{ github.event_name == 'pull_request' && startsWith(github.event.pull_request.base.ref, 'release-') }}
