@@ -18,7 +18,7 @@ repos:
     rev: eeee35a89e69d5772bdee97db1a6a898467b686e # 1.0
     hooks:
       - id: fmt
-        entry: cargo +nightly fmt
+        entry: RUSTUP_TOOLCHAIN=nightly-2025-01-15 cargo fmt
         args: ["--all", "--", "--check"]
       - id: clippy
         args: ["--all-targets", "--", "-D", "warnings"]
