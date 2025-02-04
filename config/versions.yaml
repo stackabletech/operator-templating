@@ -4,6 +4,11 @@
 # docker-images/ubi8-rust-builder/Dockerfile & docker-images/ubi9-rust-builder/Dockerfile
 rust_version: 1.82.0
 
+# This nightly version is only used for cargo fmt invocations, because we use nightly-only
+# rustfmt config options in rustfmt.toml. The version should be kept in line with the version
+# used in the operator-rs repository.
+rust_nightly_version: nightly-2025-01-15
+
 # IMPORTANT
 # If you change the Hadolint version here, make sure to also change the hook
 # refs in the local and templated .pre-commit-config.yaml files.
