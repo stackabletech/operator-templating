@@ -5,7 +5,8 @@
 rust_version: 1.82.0
 
 # This nightly version is only used for cargo fmt invocations, because we use nightly-only
-# rustfmt config options in rustfmt.toml.
+# rustfmt config options in rustfmt.toml. The version should be kept in line with the version
+# used in the operator-rs repository.
 rust_nightly_version: nightly-2025-01-15
 
 # IMPORTANT
