@@ -27,6 +27,7 @@ env:
   CARGO_INCREMENTAL: '0'
   CARGO_PROFILE_DEV_DEBUG: '0'
   RUST_TOOLCHAIN_VERSION: "{[ rust_version }]"
+  PYTHON_VERSION: "{[ python_version }]"
   RUSTFLAGS: "-D warnings"
   RUSTDOCFLAGS: "-D warnings"
   RUST_LOG: "info"
@@ -233,7 +234,7 @@ jobs:
           submodules: recursive
       - uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
         with:
-          python-version: '3.12'
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: Install jinja2-cli
         run: pip install jinja2-cli==0.8.2
       - name: Regenerate charts
