@@ -23,7 +23,7 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
-      - uses: stackabletech/actions/run-pre-commit@5b66858af3597c4ea34f9b33664b8034a1d28427 # v0.3.0
+      - uses: stackabletech/actions/run-pre-commit@2d3d7ddad981ae09901d45a0f6bf30c2658b1b78 # v0.7.0
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           rust: ${{ env.RUST_TOOLCHAIN_VERSION }}
