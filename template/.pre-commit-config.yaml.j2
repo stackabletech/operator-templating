@@ -14,12 +14,6 @@ repos:
         args: ["--allow-missing-credentials"]
       - id: detect-private-key
 
-  - repo: https://github.com/doublify/pre-commit-rust
-    rev: eeee35a89e69d5772bdee97db1a6a898467b686e # 1.0
-    hooks:
-      - id: clippy
-        args: ["--all-targets", "--", "-D", "warnings"]
-
   - repo: https://github.com/adrienverge/yamllint
     rev: 81e9f98ffd059efe8aa9c1b1a42e5cce61b640c6 # 1.35.1
     hooks:
@@ -74,6 +68,7 @@ repos:
         entry: cargo test
         stages: [pre-commit, pre-merge-commit, manual]
         pass_filenames: false
+        files: \.rs$|Cargo\.(toml|lock)
 
       - id: cargo-rustfmt
         name: cargo-rustfmt
@@ -81,3 +76,12 @@ repos:
         entry: cargo +{[rust_nightly_version}] fmt --all -- --check
         stages: [pre-commit]
         pass_filenames: false
+        files: \.rs$
+
+      - id: cargo-clippy
+        name: cargo-clippy
+        language: system
+        entry: cargo clippy --all-targets -- -D warnings
+        stages: [pre-commit]
+        pass_filenames: false
+        files: \.rs$
