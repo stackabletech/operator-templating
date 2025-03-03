@@ -101,7 +101,7 @@ jobs:
             url: stackabletech/zookeeper-operator.git
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: cachix/install-nix-action@8887e596b4ee1134dae06b98d573bd674693f47c # tag=v26
+      - uses: cachix/install-nix-action@08dcb3a5e62fa31e2da3d490afc4176ef55ecd72 # v30
       - name: Install Ansible
         env:
           DEBIAN_FRONTEND: noninteractive
