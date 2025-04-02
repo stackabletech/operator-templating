@@ -27,6 +27,7 @@ env:
   CARGO_INCREMENTAL: '0'
   CARGO_PROFILE_DEV_DEBUG: '0'
   RUST_TOOLCHAIN_VERSION: "{[ rust_version }]"
+  RUST_NIGHTLY_TOOLCHAIN_VERSION: "{[ rust_nightly_version }]"
   PYTHON_VERSION: "{[ python_version }]"
   RUSTFLAGS: "-D warnings"
   RUSTDOCFLAGS: "-D warnings"
@@ -136,9 +137,11 @@ jobs:
           submodules: recursive
       - uses: dtolnay/rust-toolchain@c5a29ddb4d9d194e7c84ec8c3fba61b1c31fee8c
         with:
-          toolchain: ${{ env.RUST_TOOLCHAIN_VERSION }}
+          toolchain: ${{ env.RUST_NIGHTLY_TOOLCHAIN_VERSION }}
           components: rustfmt
-      - run: cargo fmt --all -- --check
+      - env:
+          RUST_TOOLCHAIN_VERSION: ${{ env.RUST_NIGHTLY_TOOLCHAIN_VERSION }}
+        run: cargo "+$RUST_TOOLCHAIN_VERSION" fmt --all -- --check
 
   run_clippy:
     name: Run Clippy
