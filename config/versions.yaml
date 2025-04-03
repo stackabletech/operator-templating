@@ -9,6 +9,10 @@ rust_version: 1.85.0
 # used in the operator-rs repository.
 rust_nightly_version: nightly-2025-01-15
 
+# This edition is mostly used for rustfmt commands and the rustfmt config file. The edition should
+# be kept in line with the edition in the operator-rs repository.
+rust_edition: 2024
+
 # IMPORTANT
 # If you change the Hadolint version here, make sure to also change the hook
 # refs in the local and templated .pre-commit-config.yaml files.
