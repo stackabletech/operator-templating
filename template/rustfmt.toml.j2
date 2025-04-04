@@ -2,7 +2,7 @@
 # It's also ok to use the stable toolchain by simple running "cargo fmt", but using the nigthly formatter is prefered.
 
 # https://doc.rust-lang.org/nightly/edition-guide/rust-2024/rustfmt-style-edition.html
-style_edition = "2024"
+style_edition = "{[rust_edition}]"
 imports_granularity = "Crate"
 group_imports = "StdExternalCrate"
 reorder_impl_items = true
