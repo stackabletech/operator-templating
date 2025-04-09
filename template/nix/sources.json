@@ -1,14 +1,14 @@
 {
     "beku.py": {
-        "branch": "main",
+        "branch": "0.0.10",
         "description": "Test suite expander for Stackable Kuttl tests.",
         "homepage": null,
         "owner": "stackabletech",
         "repo": "beku.py",
-        "rev": "1ebc9e7b70fb8ee11dfb569ae45b3bcd63666d0e",
-        "sha256": "1zg24h5wdis7cysa08r8vvbw2rpyx6fgv148i1lg54dwd3sa0h0d",
+        "rev": "fc75202a38529a4ac6776dd8a5dfee278d927f58",
+        "sha256": "152yary0p11h87yabv74jnwkghsal7lx16az0qlzrzdrs6n5v8id",
         "type": "tarball",
-        "url": "https://github.com/stackabletech/beku.py/archive/1ebc9e7b70fb8ee11dfb569ae45b3bcd63666d0e.tar.gz",
+        "url": "https://github.com/stackabletech/beku.py/archive/fc75202a38529a4ac6776dd8a5dfee278d927f58.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "crate2nix": {
