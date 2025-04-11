@@ -27,6 +27,10 @@ Create a list of telemetry related env vars.
 - name: FILE_LOG_ROTATION_PERIOD
   value: {{ .fileLog.rotationPeriod }}
 {{- end }}
+{{- if .fileLog.maxFiles }}
+- name: FILE_LOG_MAX_FILES
+  value: {{ .fileLog.maxFiles }}
+{{- end }}
 {{- if .otelLogExporter.enabled }}
 - name: OTEL_LOG_EXPORTER_ENABLED
   value: "true"
