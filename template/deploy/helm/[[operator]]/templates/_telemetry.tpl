@@ -17,7 +17,7 @@ Create a list of telemetry related env vars.
 {{- end }}
 {{- if .fileLog.level }}
 - name: FILE_LOG_LEVEL
-  value: info
+  value: {{ .fileLog.level }}
 {{- end }}
 {{- if .fileLog.rotationPeriod }}
 - name: FILE_LOG_ROTATION_PERIOD
