@@ -3,49 +3,49 @@ Create a list of telemetry related env vars.
 */}}
 {{- define "telemetry.envVars" -}}
 {{- with .Values.telemetry }}
-{{- if not .consoleLogs.enabled }}
-- name: NO_CONSOLE_OUTPUT
+{{- if not .consoleLog.enabled }}
+- name: CONSOLE_LOG_DISABLED
   value: "true"
 {{- end }}
-{{- if .consoleLogs.level }}
-- name: CONSOLE_LOG
-  value: {{ .consoleLogs.level }}
+{{- if .consoleLog.level }}
+- name: CONSOLE_LOG_LEVEL
+  value: {{ .consoleLog.level }}
 {{ end }}
-{{- if .rollingFileLogs.enabled }}
-- name: ROLLING_LOGS_DIR
+{{- if .fileLog.enabled }}
+- name: FILE_LOG_DIRECTORY
   value: /stackable/logs/{{ include "operator.appname" $ }}
 {{- end }}
-{{- if .rollingFileLogs.level }}
-- name: FILE_LOG
+{{- if .fileLog.level }}
+- name: FILE_LOG_LEVEL
   value: info
 {{- end }}
-{{- if .rollingFileLogs.period }}
-- name: ROLLING_LOGS_PERIOD
-  value: {{ .rollingFileLogs.period }}
+{{- if .fileLog.rotationPeriod }}
+- name: FILE_LOG_ROTATION_PERIOD
+  value: {{ .fileLog.rotationPeriod }}
 {{- end }}
-{{- if .otlpLogs.enabled }}
-- name: OTLP_LOGS
+{{- if .otelLogExporter.enabled }}
+- name: OTEL_LOG_EXPORTER_ENABLED
   value: "true"
 {{- end }}
-{{- if .otlpLogs.level }}
-- name: OTLP_LOG
-  value: {{ .otlpLogs.level }}
+{{- if .otelLogExporter.level }}
+- name: OTEL_LOG_EXPORTER_LEVEL
+  value: {{ .otelLogExporter.level }}
 {{- end }}
-{{- if .otlpLogs.endpoint }}
+{{- if .otelLogExporter.endpoint }}
 - name: OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
-  value: {{ .otlpLogs.endpoint }}
+  value: {{ .otelLogExporter.endpoint }}
 {{- end }}
-{{- if .otlpTraces.enabled }}
-- name: OTLP_TRACES
+{{- if .otelTraceExporter.enabled }}
+- name: OTEL_TRACE_EXPORTER_ENABLED
   value: "true"
 {{- end }}
-{{- if .otlpTraces.level }}
-- name: OTLP_TRACE
-  value: {{ .otlpTraces.level }}
+{{- if .otelTraceExporter.level }}
+- name: OTEL_TRACE_EXPORTER_LEVEL
+  value: {{ .otelTraceExporter.level }}
 {{- end }}
-{{- if .otlpTraces.endpoint }}
+{{- if .otelTraceExporter.endpoint }}
 - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-  value: {{ .otlpTraces.endpoint }}
+  value: {{ .otelTraceExporter.endpoint }}
 {{- end }}
 {{- end }}
 {{- end }}
