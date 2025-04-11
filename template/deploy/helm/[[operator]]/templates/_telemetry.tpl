@@ -11,6 +11,10 @@ Create a list of telemetry related env vars.
 - name: CONSOLE_LOG_LEVEL
   value: {{ .consoleLog.level }}
 {{ end }}
+{{- if .consoleLog.format }}
+- name: CONSOLE_LOG_FORMAT
+  value: {{ .consoleLog.format }}
+{{ end }}
 {{- if .fileLog.enabled }}
 - name: FILE_LOG_DIRECTORY
   value: /stackable/logs/{{ include "operator.appname" $ }}
