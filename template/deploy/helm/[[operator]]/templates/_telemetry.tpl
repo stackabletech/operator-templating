@@ -29,7 +29,7 @@ Create a list of telemetry related env vars.
 {{- end }}
 {{- if and .fileLog.enabled .fileLog.maxFiles }}
 - name: FILE_LOG_MAX_FILES
-  value: {{ .fileLog.maxFiles }}
+  value: {{ quote .fileLog.maxFiles }}
 {{- end }}
 {{- if .otelLogExporter.enabled }}
 - name: OTEL_LOG_EXPORTER_ENABLED
