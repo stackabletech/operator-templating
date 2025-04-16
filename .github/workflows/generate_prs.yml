@@ -15,6 +15,10 @@ on:
         description: "Dry Run (PRs are not generated)"
         type: boolean
         default: true
+      fail-fast:
+        description: "Fail fast (if one job fails, all other are cancelled)"
+        type: boolean
+        default: true
 
 permissions: {}
 
@@ -22,6 +26,7 @@ jobs:
   create-prs:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: ${{ inputs.fail-fast }}
       # If you add a new repository here, also add it to config/repositories.yaml
       matrix:
         repository:
