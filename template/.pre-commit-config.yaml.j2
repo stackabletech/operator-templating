@@ -59,7 +59,7 @@ repos:
         name: regenerate-charts
         language: system
         entry: make regenerate-charts
-        stages: [pre-commit, pre-merge-commit, manual]
+        stages: [pre-commit, pre-merge-commit]
         pass_filenames: false
         files: \.rs$|Cargo\.(toml|lock)
 
@@ -75,7 +75,7 @@ repos:
         name: cargo-test
         language: system
         entry: cargo test
-        stages: [pre-commit, pre-merge-commit, manual]
+        stages: [pre-commit, pre-merge-commit]
         pass_filenames: false
         files: \.rs$|Cargo\.(toml|lock)
 
@@ -83,7 +83,7 @@ repos:
         name: cargo-rustfmt
         language: system
         entry: cargo +{[rust_nightly_version}] fmt --all -- --check
-        stages: [pre-commit]
+        stages: [pre-commit, pre-merge-commit]
         pass_filenames: false
         files: \.rs$
 
@@ -91,6 +91,6 @@ repos:
         name: cargo-clippy
         language: system
         entry: cargo clippy --all-targets -- -D warnings
-        stages: [pre-commit]
+        stages: [pre-commit, pre-merge-commit]
         pass_filenames: false
         files: \.rs$
