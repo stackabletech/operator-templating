@@ -61,6 +61,7 @@ repos:
         entry: make regenerate-charts
         stages: [pre-commit, pre-merge-commit, manual]
         pass_filenames: false
+        files: \.rs$|Cargo\.(toml|lock)
 
       - id: regenerate-nix
         name: regenerate-nix
