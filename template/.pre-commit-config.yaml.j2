@@ -62,6 +62,14 @@ repos:
         stages: [pre-commit, pre-merge-commit, manual]
         pass_filenames: false
 
+      - id: regenerate-nix
+        name: regenerate-nix
+        language: system
+        entry: make regenerate-nix
+        stages: [pre-commit, pre-merge-commit]
+        pass_filename: false
+        files: Cargo\.lock
+
       - id: cargo-test
         name: cargo-test
         language: system
