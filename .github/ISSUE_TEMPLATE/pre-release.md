@@ -40,6 +40,7 @@ Part of <https://github.com/stackabletech/issues/TRACKING_ISSUE>
 
 ### Tasks in this Repository
 
+- [ ] Run `niv update` and test via `make run-dev`
 - [ ] Update Rust toolchain in the `config/versions.yaml` file.
 - [ ] Update Rust toolchain in UBI8, UBI9, and stackable-base images
 - [ ] Generate downstream PRs using the ["Generate Downstream PRs"](https://github.com/stackabletech/operator-templating/actions/workflows/generate_prs.yml) action.
