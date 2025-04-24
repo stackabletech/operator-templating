@@ -155,6 +155,7 @@ jobs:
         with:
           key: clippy
           cache-all-crates: "true"
+        # TODO (@Techassi): Remove this step (unmaintained action, kinda useless step anyway)
       - name: Run clippy action to produce annotations
         uses: giraffate/clippy-action@13b9d32482f25d29ead141b79e7e04e7900281e0 # v1.0.1
         env:
@@ -164,12 +165,14 @@ jobs:
           clippy_flags: --all-targets -- -D warnings
           reporter: 'github-pr-review'
           github_token: ${{ secrets.GITHUB_TOKEN }}
+        # TODO (@Techassi): Remove, done by pre-commit
       - name: Run clippy manually without annotations
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: env.GITHUB_TOKEN == null
         run: cargo clippy --color never -q --all-targets -- -D warnings
 
+  # TODO (@Techassi): Can be done by pre-commit
   run_rustdoc:
     name: Run RustDoc
     runs-on: ubuntu-latest
@@ -192,6 +195,7 @@ jobs:
           cache-all-crates: "true"
       - run: cargo doc --document-private-items
 
+  # TODO (@Techassi): Remove, done by pre-commit
   run_tests:
     name: Run Cargo Tests
     runs-on: ubuntu-latest
@@ -304,6 +308,8 @@ jobs:
       - name: log
         run: echo All tests have passed!
 
+  # TODO (@Techassi): Most of these publishing and signing tasks can be done by our own actions.
+  # Make use of them just like we do in docker-images.
   package_and_publish:
     name: Package Charts, Build Docker Image and publish them - ${{ matrix.runner }}
     needs:
