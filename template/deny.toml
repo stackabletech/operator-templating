@@ -1,7 +1,7 @@
 # This file is the source of truth for all our repos!
 # This includes repos not templated by operator-templating, please copy/paste the file for this repos.
 
-# TIPP: Use "cargo deny check" to check if everything is fine
+# TIP: Use "cargo deny check" to check if everything is fine
 
 [graph]
 targets = [
