@@ -23,3 +23,10 @@ hadolint_version: v2.12.0
 # If you change the Python version here, make sure to also change it in
 # .github/workflows/pr_pre-commit.yml
 python_version: 3.12
+
+# This Nix version is used in the operators pre-commit workflow as they require
+# Nix to run some checks. Check for new versions here:
+# https://github.com/NixOS/nix/tags
+# Usually the latest version should just work and as such the version here can
+# be bumped without any constraints.
+nix_pkg_manager_version: 2.28.3
