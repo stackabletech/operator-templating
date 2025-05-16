@@ -4,3 +4,4 @@
 # May be something to investigate.
 retired_files:
   - .readme/static/sdp_overview.png
+  - bors.toml

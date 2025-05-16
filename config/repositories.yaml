@@ -26,10 +26,6 @@ repositories:
     pretty_string: Apache HDFS
     product_string: hdfs
     url: stackabletech/hdfs-operator.git
-  - name: hello-world-operator
-    pretty_string: Hello World
-    product_string: hello
-    url: stackabletech/hello-world-operator.git
   - name: hive-operator
     pretty_string: Apache Hive
     product_string: hive
@@ -55,6 +51,10 @@ repositories:
     pretty_string: OpenPolicyAgent
     product_string: opa
     url: stackabletech/opa-operator.git
+  - name: opensearch-operator
+    pretty_string: OpenSearch
+    product_string: opensearch
+    url: stackabletech/opensearch-operator.git
   - name: secret-operator
     include_productconfig: false
     has_product: false
