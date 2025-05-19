@@ -28,6 +28,7 @@ env:
   CARGO_PROFILE_DEV_DEBUG: '0'
   RUST_TOOLCHAIN_VERSION: "{[ rust_version }]"
   RUST_NIGHTLY_TOOLCHAIN_VERSION: "{[ rust_nightly_version }]"
+  RUSTUP_VERSION: "{[ rustup_version }]"
   PYTHON_VERSION: "{[ python_version }]"
   RUSTFLAGS: "-D warnings"
   RUSTDOCFLAGS: "-D warnings"
@@ -53,6 +54,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@56f84321dbccf38fb67ce29ab63e4754056677e0
         with:
           toolchain: ${{ env.RUST_TOOLCHAIN_VERSION }}
+          rustup-version: ${{ env.RUSTUP_VERSION }}
       - uses: Swatinem/rust-cache@9d47c6ad4b02e050fd481d890b2ea34778fd09d6 # v2.7.8
         with:
           key: udeps
@@ -129,6 +131,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@56f84321dbccf38fb67ce29ab63e4754056677e0
         with:
           toolchain: ${{ env.RUST_NIGHTLY_TOOLCHAIN_VERSION }}
+          rustup-version: ${{ env.RUSTUP_VERSION }}
           components: rustfmt
       - env:
           RUST_TOOLCHAIN_VERSION: ${{ env.RUST_NIGHTLY_TOOLCHAIN_VERSION }}
@@ -150,6 +153,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@56f84321dbccf38fb67ce29ab63e4754056677e0
         with:
           toolchain: ${{ env.RUST_TOOLCHAIN_VERSION }}
+          rustup-version: ${{ env.RUSTUP_VERSION }}
           components: clippy
       - uses: Swatinem/rust-cache@9d47c6ad4b02e050fd481d890b2ea34778fd09d6 # v2.7.8
         with:
@@ -188,6 +192,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@56f84321dbccf38fb67ce29ab63e4754056677e0
         with:
           toolchain: ${{ env.RUST_TOOLCHAIN_VERSION }}
+          rustup-version: ${{ env.RUSTUP_VERSION }}
           components: rustfmt
       - uses: Swatinem/rust-cache@9d47c6ad4b02e050fd481d890b2ea34778fd09d6 # v2.7.8
         with:
@@ -212,6 +217,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@56f84321dbccf38fb67ce29ab63e4754056677e0
         with:
           toolchain: ${{ env.RUST_TOOLCHAIN_VERSION }}
+          rustup-version: ${{ env.RUSTUP_VERSION }}
       - uses: Swatinem/rust-cache@9d47c6ad4b02e050fd481d890b2ea34778fd09d6 # v2.7.8
         with:
           key: test
@@ -277,6 +283,7 @@ jobs:
         uses: dtolnay/rust-toolchain@56f84321dbccf38fb67ce29ab63e4754056677e0
         with:
           toolchain: ${{ env.RUST_TOOLCHAIN_VERSION }}
+          rustup-version: ${{ env.RUSTUP_VERSION }}
       - uses: Swatinem/rust-cache@9d47c6ad4b02e050fd481d890b2ea34778fd09d6 # v2.7.8
         with:
           key: charts
@@ -344,6 +351,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@56f84321dbccf38fb67ce29ab63e4754056677e0
         with:
           toolchain: ${{ env.RUST_TOOLCHAIN_VERSION }}
+          rustup-version: ${{ env.RUSTUP_VERSION }}
           components: rustfmt
         # This step checks if the current run was triggered by a push to a pr (or a pr being created).
         # If this is the case it changes the version of this project in all Cargo.toml files to include the suffix
