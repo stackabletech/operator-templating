@@ -13,6 +13,13 @@ rust_nightly_version: nightly-2025-01-15
 # be kept in line with the edition in the operator-rs repository.
 rust_edition: 2024
 
+# This value is used to pin (possible since https://github.com/rust-lang/rustup/pull/4259) the
+# rustup version used in CI because rustup introduced multiple breaking changes in the past, see:
+# - https://github.com/rust-lang/rustup/issues/4211
+# - https://github.com/rust-lang/rustup/issues/4337
+# Check for new versions here: https://github.com/rust-lang/rustup/tags
+rustup_version: 1.28.1
+
 # IMPORTANT
 # If you change the Hadolint version here, make sure to also change the hook
 # refs in the local and templated .pre-commit-config.yaml files.
