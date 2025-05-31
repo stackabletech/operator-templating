@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.15.1@sha256:9857836c9ee4268391bb5b09f9f157f3c91bb15821bb77969642813b0d00518d
+# syntax=docker/dockerfile:1.16.0@sha256:e2dd261f92e4b763d789984f6eab84be66ab4f5f08052316d8eb8f173593acf7
 # NOTE: The syntax directive needs to be the first line in a Dockerfile
 # Find the latest versions here: https://hub.docker.com/r/docker/dockerfile/tags
 # And the changelogs: https://docs.docker.com/build/buildkit/dockerfile-release-notes/ or https://github.com/moby/buildkit/releases
@@ -26,6 +26,13 @@ ARG RELEASE="1"
 # These are chosen at random and are this high on purpose to have very little chance to clash with an existing user or group on the host system
 ARG STACKABLE_USER_GID="574654813"
 ARG STACKABLE_USER_UID="782252253"
+
+# Sets the default shell to Bash with strict error handling and robust pipeline processing.
+# "-e": Exits immediately if a command exits with a non-zero status
+# "-u": Treats unset variables as an error, preventing unexpected behavior from undefined variables.
+# "-o pipefail": Causes a pipeline to return the exit status of the last command in the pipe that failed, ensuring errors in any part of a pipeline are not ignored.
+# "-c": Allows the execution of commands passed as a string
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 # These labels have mostly been superceded by the OpenContainer spec annotations below but it doesn't hurt to include them
 # http://label-schema.org/rc1/
@@ -75,6 +82,8 @@ assumeyes=True
 tsflags=nodocs
 EOF
 
+# It complains about echo flags not being available in POSIX sh but we set the shell to bash
+# hadolint ignore=SC3037
 RUN <<EOF
 # Update image and install kerberos client libraries as well as some other utilities
 microdnf update
