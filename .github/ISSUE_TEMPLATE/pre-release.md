@@ -66,15 +66,14 @@ Part of <https://github.com/stackabletech/issues/TRACKING_ISSUE>
 - [ ] _PR for airflow-operator_
 - [ ] _PR for commons-operator_
 - [ ] _PR for druid-operator_
-- [ ] _PR for edc-operator_
 - [ ] _PR for hbase-operator_
 - [ ] _PR for hdfs-operator_
-- [ ] _PR for hello-world-operator_
 - [ ] _PR for hive-operator_
 - [ ] _PR for kafka-operator_
 - [ ] _PR for listener-operator_
 - [ ] _PR for nifi-operator_
 - [ ] _PR for opa-operator_
+- [ ] _PR for opensearch-operator_
 - [ ] _PR for secret-operator_
 - [ ] _PR for spark-k8s-operator_
 - [ ] _PR for superset-operator_
