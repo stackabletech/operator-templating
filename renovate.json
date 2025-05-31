@@ -4,9 +4,13 @@
     "local>stackabletech/.github:renovate-config"
   ],
   "github-actions": {
-    "fileMatch": ["(^template\\/\\.github\\/workflows)\\/[^/]+\\.ya?ml(.j2)?$"]
+    "managerFilePatterns": [
+      "/(^template\\/\\.github\\/workflows)\\/[^/]+\\.ya?ml(.j2)?$/"
+    ]
   },
   "pre-commit": {
-    "fileMatch": ["(^|/)\\.pre-commit-config\\.ya?ml(.j2)$"]
+    "managerFilePatterns": [
+      "/(^|/)\\.pre-commit-config\\.ya?ml(.j2)$/"
+    ]
   }
 }
