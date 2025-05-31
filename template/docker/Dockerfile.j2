@@ -82,8 +82,15 @@ assumeyes=True
 tsflags=nodocs
 EOF
 
+# SC2028
+# echo won't expand escape sequences. Consider printf.
+# https://github.com/koalaman/shellcheck/wiki/SC2028
+# Reason: This is complaining about the complicated PS1 statement.
+# It seems to work as intended so I'm not going to touch it!
+#
+# SC3037
 # It complains about echo flags not being available in POSIX sh but we set the shell to bash
-# hadolint ignore=SC3037
+# hadolint ignore=SC2028,SC3037
 RUN <<EOF
 # Update image and install kerberos client libraries as well as some other utilities
 microdnf update
