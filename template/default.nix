@@ -157,10 +157,6 @@ rec {
     # (see https://github.com/pre-commit/pre-commit-hooks?tab=readme-ov-file#trailing-whitespace).
     # So, remove the trailing newline already here to avoid that an
     # unnecessary change is shown in Git.
-    if [[ "$(uname)" == "Darwin" ]]; then
-      sed -i \"\" '$d' Cargo.nix
-    else
-      sed -i '$d' Cargo.nix
-    fi
+    ${pkgs.gnused}/bin/sed -i '$d' Cargo.nix
   '';
 }
