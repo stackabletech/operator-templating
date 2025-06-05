@@ -117,7 +117,7 @@ rec {
       Cmd = [ "run" ];
     };
   };
-  docker = pkgsLocal.linkFarm "listener-operator-docker" [
+  docker = pkgsLocal.linkFarm "${dockerImage.name}-docker" [
     {
       name = "load-image";
       path = dockerImage;
