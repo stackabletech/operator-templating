@@ -1,8 +1,41 @@
 { sources ? import ./nix/sources.nix # managed by https://github.com/nmattia/niv
 , nixpkgs ? sources.nixpkgs
-, pkgs ? import nixpkgs {}
-, cargo ? import ./Cargo.nix {
-    inherit nixpkgs pkgs; release = false;
+, overlays ? [ (self: super: {
+    # fakeroot (used for building the Docker image) seems to freeze or crash
+    # on Darwin (macOS), but doesn't seem to actually be necessary beyond
+    # production hardening.
+    fakeroot =
+        if self.buildPlatform.isDarwin then
+            self.writeScriptBin "fakeroot" ''exec "$@"''
+        else
+            super.fakeroot;
+}) ]
+# When cross-/remote-building, some binaries still need to run on the local machine instead
+# (non-Nix build tools like Tilt, as well as the container composition scripts)
+, pkgsLocal ? import nixpkgs { inherit overlays; }
+# Default to building for the local CPU architecture
+, targetArch ? pkgsLocal.hostPlatform.linuxArch
+, targetSystem ? "${targetArch}-unknown-linux-gnu"
+, pkgsTarget ? import nixpkgs {
+    inherit overlays;
+
+    # Build our containers for Linux for the local CPU architecture
+    # A remote Linux builder can be set up using https://github.com/stackabletech/nix-docker-builder
+    system = targetSystem;
+
+    # Currently using remote builders rather than cross-compilation,
+    # because the latter requires us to recompile the world several times
+    # just to get the full cross-toolchain up and running.
+    # (Or I (@nightkr) am just dumb and missing something obvious.)
+    # If uncommenting this, make sure to comment the `system =` clause above.
+    #crossSystem = { config = targetSystem; };
+}
+, cargo ? import ./Cargo.nix rec {
+    inherit nixpkgs;
+    pkgs = pkgsTarget;
+    # We're only using this for dev builds at the moment,
+    # so don't pay for release optimization.
+    release = false;
     defaultCrateOverrides = pkgs.defaultCrateOverrides // {
       prost-build = attrs: {
         buildInputs = [ pkgs.protobuf ];
@@ -39,27 +72,37 @@
       };
     };
   }
-, meta ? pkgs.lib.importJSON ./nix/meta.json
+, meta ? pkgsLocal.lib.importJSON ./nix/meta.json
 , dockerName ? "oci.stackable.tech/sandbox/${meta.operator.name}"
 , dockerTag ? null
 }:
 rec {
-  inherit cargo sources pkgs meta;
+  inherit cargo sources pkgsLocal pkgsTarget meta;
+  inherit (pkgsLocal) lib;
+  pkgs = lib.warn "pkgs is not cross-compilation-aware, explicitly use either pkgsLocal or pkgsTarget" pkgsLocal;
   build = cargo.allWorkspaceMembers;
   entrypoint = build+"/bin/stackable-${meta.operator.name}";
-  crds = pkgs.runCommand "${meta.operator.name}-crds.yaml" {}
+  # Run crds in the target environment, to avoid compiling everything twice
+  crds = pkgsTarget.runCommand "${meta.operator.name}-crds.yaml" {}
   ''
     ${entrypoint} crd > $out
   '';
 
-  dockerImage = pkgs.dockerTools.streamLayeredImage {
+  # We're building the docker image *for* Linux, but we need to
+  # build it in the local environment so that the generated load-image
+  # can run locally.
+  # That's still fine, as long as we only refer to pkgsTarget *inside* of the image.
+  dockerImage = pkgsLocal.dockerTools.streamLayeredImage {
     name = dockerName;
     tag = dockerTag;
+    #includeStorePaths = false;
     contents = [
       # Common debugging tools
-      pkgs.bashInteractive pkgs.coreutils pkgs.util-linuxMinimal
+      pkgsTarget.bashInteractive
+      pkgsTarget.coreutils
+      pkgsTarget.util-linuxMinimal
       # Kerberos 5 must be installed globally to load plugins correctly
-      pkgs.krb5
+      pkgsTarget.krb5
       # Make the whole cargo workspace available on $PATH
       build
     ];
@@ -69,27 +112,27 @@ rec {
           fileRefVars = {
             PRODUCT_CONFIG = deploy/config-spec/properties.yaml;
           };
-        in pkgs.lib.concatLists (pkgs.lib.mapAttrsToList (env: path: pkgs.lib.optional (pkgs.lib.pathExists path) "${env}=${path}") fileRefVars);
+        in lib.concatLists (lib.mapAttrsToList (env: path: lib.optional (lib.pathExists path) "${env}=${path}") fileRefVars);
       Entrypoint = [ entrypoint ];
       Cmd = [ "run" ];
     };
   };
-  docker = pkgs.linkFarm "listener-operator-docker" [
+  docker = pkgsLocal.linkFarm "listener-operator-docker" [
     {
       name = "load-image";
       path = dockerImage;
     }
     {
       name = "ref";
-      path = pkgs.writeText "${dockerImage.name}-image-tag" "${dockerImage.imageName}:${dockerImage.imageTag}";
+      path = pkgsLocal.writeText "${dockerImage.name}-image-tag" "${dockerImage.imageName}:${dockerImage.imageTag}";
     }
     {
       name = "image-repo";
-      path = pkgs.writeText "${dockerImage.name}-repo" dockerImage.imageName;
+      path = pkgsLocal.writeText "${dockerImage.name}-repo" dockerImage.imageName;
     }
     {
       name = "image-tag";
-      path = pkgs.writeText "${dockerImage.name}-tag" dockerImage.imageTag;
+      path = pkgsLocal.writeText "${dockerImage.name}-tag" dockerImage.imageTag;
     }
     {
       name = "crds.yaml";
@@ -98,10 +141,10 @@ rec {
   ];
 
   # need to use vendored crate2nix because of https://github.com/kolloch/crate2nix/issues/264
-  crate2nix = import sources.crate2nix {};
-  tilt = pkgs.tilt;
+  crate2nix = import sources.crate2nix { pkgs = pkgsLocal; };
+  tilt = pkgsLocal.tilt;
 
-  regenerateNixLockfiles = pkgs.writeScriptBin "regenerate-nix-lockfiles"
+  regenerateNixLockfiles = pkgsLocal.writeScriptBin "regenerate-nix-lockfiles"
   ''
     #!/usr/bin/env bash
     set -euo pipefail
