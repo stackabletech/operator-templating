@@ -95,7 +95,6 @@ rec {
   dockerImage = pkgsLocal.dockerTools.streamLayeredImage {
     name = dockerName;
     tag = dockerTag;
-    #includeStorePaths = false;
     contents = [
       # Common debugging tools
       pkgsTarget.bashInteractive
