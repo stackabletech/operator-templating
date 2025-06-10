@@ -36,45 +36,84 @@
     # We're only using this for dev builds at the moment,
     # so don't pay for release optimization.
     release = false;
-    defaultCrateOverrides = pkgs.defaultCrateOverrides // {
-      prost-build = attrs: {
-        buildInputs = [ pkgs.protobuf ];
+
+    buildRustCrateForPkgs = pkgs: attrs: pkgs.buildRustCrate.override {
+      # Consider migrating to mold for faster linking, but in my (@nightkr's)
+      # quick testing so far it actually seems to perform slightly worse than
+      # the default one.
+      # stdenv = pkgs.stdenvAdapters.useMoldLinker pkgs.stdenv;
+
+      defaultCrateOverrides = pkgs.defaultCrateOverrides // {
+        # Attributes applied here apply to a single crate
+
+        prost-build = attrs: {
+          buildInputs = [ pkgs.protobuf ];
+        };
+        tonic-reflection = attrs: {
+          buildInputs = [ pkgs.rustfmt ];
+        };
+        csi-grpc = attrs: {
+          nativeBuildInputs = [ pkgs.protobuf ];
+        };
+        stackable-secret-operator = attrs: {
+          buildInputs = [ pkgs.protobuf pkgs.rustfmt ];
+        };
+        stackable-opa-user-info-fetcher = attrs: {
+          # TODO: why is this not pulled in via libgssapi-sys?
+          buildInputs = [ pkgs.krb5 ];
+        };
+        krb5-sys = attrs: {
+          nativeBuildInputs = [ pkgs.pkg-config ];
+          buildInputs = [ pkgs.krb5 ];
+          LIBCLANG_PATH = "${pkgs.libclang.lib}/lib";
+          # Clang's resource directory is located at ${pkgs.clang.cc.lib}/lib/clang/<version>.
+          # Starting with Clang 16, only the major version is used for the resource directory,
+          # whereas the full version was used in prior Clang versions (see
+          # https://github.com/llvm/llvm-project/commit/e1b88c8a09be25b86b13f98755a9bd744b4dbf14).
+          # The clang wrapper ${pkgs.clang} provides a symlink to the resource directory, which
+          # we use instead.
+          BINDGEN_EXTRA_CLANG_ARGS = "-I${pkgs.glibc.dev}/include -I${pkgs.clang}/resource-root/include";
+        };
+        libgssapi-sys = attrs: {
+          buildInputs = [ pkgs.krb5 ];
+          LIBCLANG_PATH = "${pkgs.libclang.lib}/lib";
+          BINDGEN_EXTRA_CLANG_ARGS = "-I${pkgs.glibc.dev}/include -I${pkgs.clang}/resource-root/include";
+        };
       };
-      tonic-reflection = attrs: {
-        buildInputs = [ pkgs.rustfmt ];
-      };
-      csi-grpc = attrs: {
-        nativeBuildInputs = [ pkgs.protobuf ];
-      };
-      stackable-secret-operator = attrs: {
-        buildInputs = [ pkgs.protobuf pkgs.rustfmt ];
-      };
-      stackable-opa-user-info-fetcher = attrs: {
-        # TODO: why is this not pulled in via libgssapi-sys?
-        buildInputs = [ pkgs.krb5 ];
-      };
-      krb5-sys = attrs: {
-        nativeBuildInputs = [ pkgs.pkg-config ];
-        buildInputs = [ pkgs.krb5 ];
-        LIBCLANG_PATH = "${pkgs.libclang.lib}/lib";
-        # Clang's resource directory is located at ${pkgs.clang.cc.lib}/lib/clang/<version>.
-        # Starting with Clang 16, only the major version is used for the resource directory,
-        # whereas the full version was used in prior Clang versions (see
-        # https://github.com/llvm/llvm-project/commit/e1b88c8a09be25b86b13f98755a9bd744b4dbf14).
-        # The clang wrapper ${pkgs.clang} provides a symlink to the resource directory, which
-        # we use instead.
-        BINDGEN_EXTRA_CLANG_ARGS = "-I${pkgs.glibc.dev}/include -I${pkgs.clang}/resource-root/include";
-      };
-      libgssapi-sys = attrs: {
-        buildInputs = [ pkgs.krb5 ];
-        LIBCLANG_PATH = "${pkgs.libclang.lib}/lib";
-        BINDGEN_EXTRA_CLANG_ARGS = "-I${pkgs.glibc.dev}/include -I${pkgs.clang}/resource-root/include";
-      };
-    };
+    } (attrs // {
+      # Attributes applied here apply to all built crates
+      # Note that these *take precedence over* per-crate overrides
+
+      dontStrip = !strip;
+
+      extraRustcOpts = [
+        "-C debuginfo=${toString debuginfo}"
+        # Enabling optimization shrinks the binaries further, but also *vastly*
+        # increases the build time.
+        # "-C opt-level=3"
+      ] ++ attrs.extraRustcOpts;
+
+      # Parallel codegen allows Rustc to use more cores.
+      # This should help speed up compiling "bottleneck" crates that Nix can't
+      # parallelize (like the operator binary itself).
+      codegenUnits = 32;
+    });
   }
 , meta ? pkgsLocal.lib.importJSON ./nix/meta.json
 , dockerName ? "oci.stackable.tech/sandbox/${meta.operator.name}"
 , dockerTag ? null
+# Controls the amount of debug information included in the built operator binaries,
+# see https://doc.rust-lang.org/rustc/codegen-options/index.html#debuginfo
+# For comparison, `cargo build --release` defaults to 0, and the debug profile
+# (no `--release`) defaults to 2.
+# see https://doc.rust-lang.org/cargo/reference/profiles.html#debug
+# Set to 2 if you want to run a debugger, but note that it bloats the Docker
+# images *significantly* (hundreds of megabytes).
+, debuginfo ? 0
+# Strip operator binaries if we don't include debuginfo, because *something*
+# still something still includes a reference to gcc (~230MiB), causing it to be
+# added to the docker images.
+, strip ? if debuginfo == 0 then true else false
 }:
 rec {
   inherit cargo sources pkgsLocal pkgsTarget meta;
