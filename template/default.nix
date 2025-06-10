@@ -114,6 +114,9 @@
 # still something still includes a reference to gcc (~230MiB), causing it to be
 # added to the docker images.
 , strip ? if debuginfo == 0 then true else false
+# We normally don't include a shell in the (dev) operator images, but it can be
+# enabled by enabling this flag.
+, includeShell ? false
 }:
 rec {
   inherit cargo sources pkgsLocal pkgsTarget meta;
@@ -135,14 +138,14 @@ rec {
     name = dockerName;
     tag = dockerTag;
     contents = [
-      # Common debugging tools
-      pkgsTarget.bashInteractive
-      pkgsTarget.coreutils
-      pkgsTarget.util-linuxMinimal
       # Kerberos 5 must be installed globally to load plugins correctly
       pkgsTarget.krb5
       # Make the whole cargo workspace available on $PATH
       build
+    ] ++ lib.optional includeShell [
+      pkgsTarget.bashInteractive
+      pkgsTarget.coreutils
+      pkgsTarget.util-linuxMinimal
     ];
     config = {
       Env =
