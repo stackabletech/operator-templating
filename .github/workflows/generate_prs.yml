@@ -27,83 +27,26 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: ${{ inputs.fail-fast }}
-      # If you add a new repository here, also add it to config/repositories.yaml
       matrix:
+        # This should be the list of repository names from config/repositories.yaml:
+        # yq '.repositories | map(.name)' config/repositories.yaml
         repository:
-          - name: airflow-operator
-            pretty_string: Apache Airflow
-            product_string: airflow
-            url: stackabletech/airflow-operator.git
-          - name: commons-operator
-            include_productconfig: false
-            has_product: false
-            pretty_string: Stackable Commons
-            product_string: commons
-            url: stackabletech/commons-operator.git
-          - name: druid-operator
-            pretty_string: Apache Druid
-            product_string: druid
-            url: stackabletech/druid-operator.git
-          - name: hbase-operator
-            pretty_string: Apache HBase
-            product_string: hbase
-            url: stackabletech/hbase-operator.git
-          - name: hdfs-operator
-            pretty_string: Apache HDFS
-            product_string: hdfs
-            url: stackabletech/hdfs-operator.git
-          - name: hive-operator
-            pretty_string: Apache Hive
-            product_string: hive
-            url: stackabletech/hive-operator.git
-          - name: kafka-operator
-            pretty_string: Apache Kafka
-            product_string: kafka
-            url: stackabletech/kafka-operator.git
-          - name: nifi-operator
-            pretty_string: Apache NiFi
-            product_string: nifi
-            url: stackabletech/nifi-operator.git
-          - name: listener-operator
-            include_productconfig: false
-            has_product: false
-            pretty_string: Stackable Listener Operator
-            product_string: listener-operator
-            run_as: custom
-            url: stackabletech/listener-operator.git
-          - name: opa-operator
-            extra_crates:
-              - stackable-opa-bundle-builder
-            pretty_string: OpenPolicyAgent
-            product_string: opa
-            url: stackabletech/opa-operator.git
-          - name: opensearch-operator
-            pretty_string: OpenSearch
-            product_string: opensearch
-            url: stackabletech/opensearch-operator.git
-          - name: secret-operator
-            include_productconfig: false
-            has_product: false
-            pretty_string: Stackable Secret Operator
-            product_string: secret-operator
-            run_as: custom
-            url: stackabletech/secret-operator.git
-          - name: spark-k8s-operator
-            pretty_string: Apache Spark-on-Kubernetes
-            product_string: spark-k8s
-            url: stackabletech/spark-k8s-operator.git
-          - name: superset-operator
-            pretty_string: Apache Superset
-            product_string: superset
-            url: stackabletech/superset-operator.git
-          - name: trino-operator
-            pretty_string: Trino
-            product_string: trino
-            url: stackabletech/trino-operator.git
-          - name: zookeeper-operator
-            pretty_string: Apache ZooKeeper
-            product_string: zookeeper
-            url: stackabletech/zookeeper-operator.git
+          - airflow-operator
+          - commons-operator
+          - druid-operator
+          - hbase-operator
+          - hdfs-operator
+          - hive-operator
+          - kafka-operator
+          - nifi-operator
+          - listener-operator
+          - opa-operator
+          - opensearch-operator
+          - secret-operator
+          - spark-k8s-operator
+          - superset-operator
+          - trino-operator
+          - zookeeper-operator
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -148,24 +91,14 @@ jobs:
           echo "AUTHOR=stackabletech/developers"
           echo "REASON=Daily run triggered" >> "$GITHUB_ENV"
 
-      - name: Overwrite repositories.yaml for ${{ matrix.repository.name }}
-        run: |
-          cat >config/repositories.yaml <<CONFIG
-          ---
-          repositories:
-          - ${{ toJSON(matrix.repository) }}
-          CONFIG
-
-          # For debugging
-          cat config/repositories.yaml
-
       - name: Run playbook
         env:
           CUSTOM_PR_TITLE: ${{ inputs.custom-pr-title }}
           GH_ACCESS_TOKEN: ${{ secrets.gh_access_token }}
-          # --tags local excludes all actions that actually generate PRs
+          REPOSITORY: ${{ matrix.repository }}
+          # tags local excludes all actions that actually generate PRs
           DRY_RUN_FLAGS: ${{ inputs.dry-run && "--tags local" || "" }}
         run: |
           # Funnel via JSON to ensure that values are escaped properly
-          echo '{}' | jq '{commit_hash: $ENV.GITHUB_SHA, author: $ENV.AUTHOR, reason: $ENV.REASON, custom_pr_title: $ENV.CUSTOM_PR_TITLE, base_dir: $pwd, gh_access_token: $ENV.GH_ACCESS_TOKEN} | with_entries(select(.value != null and .value != ""))' --arg pwd "$(pwd)" > vars.json
+          echo '{}' | jq '{commit_hash: $ENV.GITHUB_SHA, author: $ENV.AUTHOR, reason: $ENV.REASON, custom_pr_title: $ENV.CUSTOM_PR_TITLE, base_dir: $pwd, gh_access_token: $ENV.GH_ACCESS_TOKEN, shard_repositories: [$ENV.REPOSITORY]} | with_entries(select(.value != null and .value != ""))' --arg pwd "$(pwd)" > vars.json
           ansible-playbook playbook/playbook.yaml --extra-vars "@vars.json" $DRY_RUN_FLAGS

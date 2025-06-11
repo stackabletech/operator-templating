@@ -24,6 +24,7 @@
 
     - name: Update repositories from templates
       include_tasks: "update_repo.yaml"
+      when: shard_repositories is undefined or operator.name in shard_repositories
       with_items: "{{ repositories }}"
       loop_control:
         loop_var: operator
