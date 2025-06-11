@@ -116,7 +116,10 @@
 , strip ? if debuginfo == 0 then true else false
 # We normally don't include a shell in the (dev) operator images, but it can be
 # enabled by enabling this flag.
-, includeShell ? false
+# TODO(@nightkr): Re-enabled for now, since some operators ship with bash init
+# scripts (like secret-operator's CSI path migration job). Consider either
+# removing them or integrating them into the main operator binary instead.
+, includeShell ? true
 }:
 rec {
   inherit cargo sources pkgsLocal pkgsTarget meta;
