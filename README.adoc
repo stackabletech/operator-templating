@@ -85,7 +85,7 @@ Consult the section above to learn more about the structure of the template.
 
 === Test changes locally
 
-1. Run the `test.sh` script.
+1. Run the `test.sh` script. To limit the run to a single operator, add `--extra-vars "shard_repositories=['nifi-operator']"` (or your choice of operator).
    It will automatically delete and recreate a `work` directory.
 2. The changes can be examined with `git status`.
    When the pull request is later merged into the `main` branch then pull requests with these changes will be created automatically.
