@@ -1,5 +1,5 @@
 # If you add a new repository here, you also need to add it to the list of
-# repositories in ../.github/workflows/generate_prs.yaml.
+# repositories in ../.github/workflows/generate_prs.yml.
 ---
 repositories:
   - name: airflow-operator
