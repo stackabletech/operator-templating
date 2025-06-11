@@ -113,10 +113,10 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-            sudo apt update &&  \
-            sudo apt install -y software-properties-common && \
-            sudo apt-add-repository ppa:ansible/ansible -y && \
-            sudo apt install -y ansible
+          sudo apt update &&  \
+          sudo apt install -y software-properties-common && \
+          sudo apt-add-repository ppa:ansible/ansible -y && \
+          sudo apt install -y ansible
 
       # NOTE (@NickLarsenNZ): This could be removed in favor of nix-shell and rrbutani/use-nix-shell-action
       - name: Install deps for operators
@@ -159,25 +159,13 @@ jobs:
           # For debugging
           cat config/repositories.yaml
 
-      # Generate PRs
       - name: Run playbook
-        if: ${{ !inputs.dry-run }}
         env:
           CUSTOM_PR_TITLE: ${{ inputs.custom-pr-title }}
           GH_ACCESS_TOKEN: ${{ secrets.gh_access_token }}
+          # --tags local excludes all actions that actually generate PRs
+          DRY_RUN_FLAGS: ${{ inputs.dry-run && "--tags local" || "" }}
         run: |
           # Funnel via JSON to ensure that values are escaped properly
-          # Check if custom PR title is set. If so, insert it into the extra vars
-          if [ -n "$CUSTOM_PR_TITLE" ]; then
-            echo '{}' | jq '{commit_hash: $ENV.GITHUB_SHA, author: $ENV.AUTHOR, reason: $ENV.REASON, custom_pr_title: $ENV.CUSTOM_PR_TITLE, base_dir: $pwd, gh_access_token: $ENV.GH_ACCESS_TOKEN}' --arg pwd "$(pwd)" > vars.json
-          else
-            echo '{}' | jq '{commit_hash: $ENV.GITHUB_SHA, author: $ENV.AUTHOR, reason: $ENV.REASON, base_dir: $pwd, gh_access_token: $ENV.GH_ACCESS_TOKEN}' --arg pwd "$(pwd)" > vars.json
-          fi
-          ansible-playbook playbook/playbook.yaml --extra-vars "@vars.json"
-
-      # Do Not Generate PRs
-      - name: Run playbook (dry-run)
-        if: ${{ inputs.dry-run }}
-        run: ./test.sh
-        env:
-          GH_ACCESS_TOKEN: ""
+          echo '{}' | jq '{commit_hash: $ENV.GITHUB_SHA, author: $ENV.AUTHOR, reason: $ENV.REASON, custom_pr_title: $ENV.CUSTOM_PR_TITLE, base_dir: $pwd, gh_access_token: $ENV.GH_ACCESS_TOKEN} | with_entries(select(.value != null and .value != ""))' --arg pwd "$(pwd)" > vars.json
+          ansible-playbook playbook/playbook.yaml --extra-vars "@vars.json" $DRY_RUN_FLAGS
