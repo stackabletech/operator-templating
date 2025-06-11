@@ -97,7 +97,7 @@ jobs:
           GH_ACCESS_TOKEN: ${{ secrets.gh_access_token }}
           REPOSITORY: ${{ matrix.repository }}
           # tags local excludes all actions that actually generate PRs
-          DRY_RUN_FLAGS: ${{ inputs.dry-run && "--tags local" || "" }}
+          DRY_RUN_FLAGS: ${{ inputs.dry-run && '--tags local' || '' }}
         run: |
           # Funnel via JSON to ensure that values are escaped properly
           echo '{}' | jq '{commit_hash: $ENV.GITHUB_SHA, author: $ENV.AUTHOR, reason: $ENV.REASON, custom_pr_title: $ENV.CUSTOM_PR_TITLE, base_dir: $pwd, gh_access_token: $ENV.GH_ACCESS_TOKEN, shard_repositories: [$ENV.REPOSITORY]} | with_entries(select(.value != null and .value != ""))' --arg pwd "$(pwd)" > vars.json
