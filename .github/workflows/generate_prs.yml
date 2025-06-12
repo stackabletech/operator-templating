@@ -6,15 +6,31 @@ run-name: "Generate Downstream PRs (dry-run: ${{ inputs.dry-run }})"
 on:
   workflow_dispatch:
     inputs:
-      message:
-        description: "Message to include in the generated commits:"
-        required: true
+      keyword:
+        description: "Which area is affected by the rollout of changes"
+        type: choice
+        options:
+          - perf
+          - feat
+          - chore
+          - test
+          - ci
+          - fix
+          - docs
+          - refactor
+          - style
+      scope:
+        description: "The scope of the change, eg. nix, workflow, ..."
+      breaking:
+        description: "Is this rollout a breaking change"
+        type: boolean
+        default: false
       custom-pr-title:
         description: "Optionally a custom PR title. If unset, default will be used"
       dry-run:
         description: "Dry Run (PRs are not generated)"
         type: boolean
-        default: true
+        default: false
       fail-fast:
         description: "Fail fast (if one job fails, all other are cancelled)"
         type: boolean
@@ -80,7 +96,7 @@ jobs:
       - name: Set commit message for manual dispatch
         if: ${{ github.event_name == 'workflow_dispatch' }}
         env:
-          REASON: ${{ github.event.inputs.message }}
+          REASON: "BLAH"
           AUTHOR: ${{ github.event.sender.login }}
         run: |
           echo "AUTHOR=$AUTHOR" >> "$GITHUB_ENV"
