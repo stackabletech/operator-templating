@@ -10,6 +10,7 @@ env:
   NIX_PKG_MANAGER_VERSION: "{[ nix_pkg_manager_version }]"
   RUST_TOOLCHAIN_VERSION: "{[ rust_nightly_version }]"
   HADOLINT_VERSION: "{[ hadolint_version }]"
+  RUSTUP_VERSION: "{[ rustup_version }]"
   PYTHON_VERSION: "{[ python_version }]"
 
 jobs:
@@ -30,6 +31,7 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           rust: ${{ env.RUST_TOOLCHAIN_VERSION }}
+          rustup-version: ${{ env.RUSTUP_VERSION }}
           hadolint: ${{ env.HADOLINT_VERSION }}
           nix: ${{ env.NIX_PKG_MANAGER_VERSION }}
           nix-github-token: ${{ secrets.GITHUB_TOKEN }}
