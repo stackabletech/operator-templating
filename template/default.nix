@@ -141,6 +141,8 @@ rec {
     name = dockerName;
     tag = dockerTag;
     contents = [
+      # grep is needed by the user-info-fetcher to extract the Kerberos realm
+      pkgsTarget.gnugrep
       # Kerberos 5 must be installed globally to load plugins correctly
       pkgsTarget.krb5
       # Make the whole cargo workspace available on $PATH
