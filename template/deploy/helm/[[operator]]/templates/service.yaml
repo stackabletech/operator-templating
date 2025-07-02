@@ -10,7 +10,7 @@ metadata:
   labels:
     {{- include "operator.labels" . | nindent 4 }}
 spec:
-  selector: 
+  selector:
     {{- include "operator.selectorLabels" . | nindent 6 }}
   ports:
     - name: conversion-webhook
