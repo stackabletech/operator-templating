@@ -44,9 +44,9 @@ Part of <https://github.com/stackabletech/issues/TRACKING_ISSUE>
 - [ ] Update Rust toolchain in the `config/versions.yaml` file.
 - [ ] Update Rust toolchain in  UBI9 and stackable-base images
 - [ ] Update cargo-cyclonedx and cargo-auditable in UBI9 and stackable-base images
-- [ ] Generate downstream PRs using the ["Generate Downstream PRs"](https://github.com/stackabletech/operator-templating/actions/workflows/generate_prs.yml) action.
+- [ ] Generate downstream PRs using the ["Generate Downstream PRs"](https://github.com/stackabletech/operator-templating/actions/workflows/generate_prs.yml) action. Use the following title for downstream PRs: `chore(template): Updates for SDP YY.M.X`.
 - [ ] [Search for PRs](https://github.com/search?q=org%3Astackabletech%20sort%3Aupdated-desc%20is%3Apr%20is%3Aopen%20Update%20templated%20files&type=pullrequests) and add them to the list below.
-- [ ] Merge downstream PRs, see below for more details.
+- [ ] Add the `release/YY.M.X` label to the downstream PRs and continue to merge them. See below for more details.
 
 ### Downstream PRs
 
