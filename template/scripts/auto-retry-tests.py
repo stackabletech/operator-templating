@@ -5,7 +5,7 @@ Automated test suite runner with intelligent retry logic for flaky integration t
 This script:
 1. Runs the full test suite initially (with normal cleanup)
 2. Identifies failed tests and retries them with configurable strategy
-3. Manages test namespaces intelligently (cleanup on success, keep failed for debugging)
+3. Manages test namespaces intelligently (cleanup on success, keep failed for debugging by default)
 4. Provides detailed logging and comprehensive reporting
 
 Usage: ./scripts/auto-retry-tests.py --parallel 4 --attempts-serial 3 --attempts-parallel 2 --venv ./venv
@@ -16,6 +16,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import statistics
 import subprocess
 import sys
@@ -32,8 +33,7 @@ class TestConstants:
     """Constants used throughout the test runner."""
 
     MIN_RUNTIME_THRESHOLD = 30.0  # Filter out quick failures (seconds)
-    MAX_RUNTIME_HISTORY = 10  # Keep only recent runs
-    MAX_ERROR_LINES_TO_CHECK = 50  # Lines to scan for errors in logs
+    MAX_RUNTIME_HISTORY = 50  # Keep only recent runs
     MAX_TEST_NAME_LENGTH = 100  # Maximum test name length for filenames
     HASH_SUFFIX_LENGTH = 8  # Length of MD5 hash suffix
     DEFAULT_PARALLEL_WORKERS = 2  # Default number of parallel workers
@@ -231,7 +231,7 @@ class StateManager:
             "parallel": args.parallel,
             "attempts_parallel": args.attempts_parallel,
             "attempts_serial": args.attempts_serial,
-            "keep_failed_namespaces": args.keep_failed_namespaces,
+            "delete_failed_namespaces": args.delete_failed_namespaces,
             "venv": args.venv,
             "extra_args": args.extra_args,
             "output_dir": str(self.output_dir),
@@ -378,7 +378,7 @@ class TestExecutor:
         return f"{safe_test_name}_attempt_{attempt}_{attempt_type}.txt"
 
     def build_test_command(
-        self, test_name: str = None, skip_delete: bool = False
+        self, test_name: str = None, skip_delete: bool = False, work_dir: str = None
     ) -> List[str]:
         """Build the command arguments for running tests."""
         command_args = ["scripts/run-tests"]
@@ -392,6 +392,13 @@ class TestExecutor:
 
         if test_name:
             command_args.extend(["--test", test_name])
+
+        # Add unique work directory to prevent parallel interference
+        # beku deletes the work dir at the start of a test so if a test was already running and then
+        # another starts the new one would delete (and recreate) the work directory.
+        # This does lead to failures.
+        if work_dir:
+            command_args.extend(["--work-dir", work_dir])
 
         # Add any extra arguments passed through
         if self.args.extra_args:
@@ -484,7 +491,20 @@ class TestExecutor:
         attempt_type: str = "initial",
     ) -> TestResult:
         """Run a single test or the full test suite."""
-        command_args = self.build_test_command(test_name, skip_delete)
+        # Create unique work directory to prevent parallel test interference
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[
+            :-3
+        ]  # microseconds to milliseconds
+        if test_name:
+            # Create a unique work directory based on test name and timestamp
+            safe_test_name = test_name.replace("/", "_").replace(",", "_")
+            work_dir = (
+                f"tests/_work_{safe_test_name}_{attempt}_{attempt_type}_{timestamp}"
+            )
+        else:
+            work_dir = f"tests/_work_full_suite_{attempt}_{attempt_type}_{timestamp}"
+
+        command_args = self.build_test_command(test_name, skip_delete, work_dir)
 
         # Set up log file
         if test_name:
@@ -519,6 +539,12 @@ class TestExecutor:
         start_time = time.time()
 
         with open(log_file, "w") as file_handle:
+            # Log the exact command being executed
+            file_handle.write(f"Command: {' '.join(command_args)}\n")
+            file_handle.write(f"Working directory: {os.getcwd()}\n")
+            file_handle.write("=" * 80 + "\n\n")
+            file_handle.flush()
+
             result = subprocess.run(
                 command_args,
                 stdout=file_handle,
@@ -569,9 +595,17 @@ class TestExecutor:
                         print(f"    📊 Average: {self.format_duration(avg_runtime)}")
 
         # If this was a skip_delete attempt and test passed, clean up the namespace
+        # We only want to keep failed namespaces
         if test_name and skip_delete and success and namespace:
             self.delete_test_namespace(namespace)
             print(f"  🧹 Test passed, cleaning up namespace: {namespace}")
+
+        # Clean up the unique work directory after test completion
+        if work_dir and Path(work_dir).exists():
+            try:
+                shutil.rmtree(work_dir)
+            except Exception as exception:
+                print(f"  ⚠️ Failed to clean up work directory {work_dir}: {exception}")
 
         return test_result
 
@@ -727,7 +761,9 @@ class ReportGenerator:
         report.append(f"Parallel: {runner.args.parallel}")
         report.append(f"Parallel retry attempts: {runner.args.attempts_parallel}")
         report.append(f"Serial retry attempts: {runner.args.attempts_serial}")
-        report.append(f"Keep failed namespaces: {runner.args.keep_failed_namespaces}")
+        report.append(
+            f"Delete failed namespaces: {runner.args.delete_failed_namespaces}"
+        )
         report.append(f"Virtualenv: {runner.args.venv or 'None'}")
         report.append("")
 
@@ -882,7 +918,7 @@ class AutoRetryTestRunner:
             # Determine if this is the last attempt and no serial tests follow
             is_last_attempt = attempt == max_attempts
             use_skip_delete = (
-                self.args.keep_failed_namespaces
+                not self.args.delete_failed_namespaces
                 and not serial_tests_follow
                 and is_last_attempt
             )
@@ -892,10 +928,6 @@ class AutoRetryTestRunner:
             print(
                 f"Retrying {len(tests_to_retry)} tests in parallel (max {max_parallel} at once)..."
             )
-            if use_skip_delete:
-                print(
-                    "  Using skip-delete for this final parallel attempt (no serial tests follow)"
-                )
 
             # Execute tests in parallel
             with ThreadPoolExecutor(max_workers=max_parallel) as executor:
@@ -952,10 +984,12 @@ class AutoRetryTestRunner:
         for attempt in range(1, max_attempts + 1):
             # Only use skip-delete on the last attempt
             is_last_attempt = attempt == max_attempts
+            use_skip_delete = not self.args.delete_failed_namespaces and is_last_attempt
+
             result = self.test_executor.run_single_test_suite(
                 self.output_dir,
                 test_name=test_name,
-                skip_delete=self.args.keep_failed_namespaces and is_last_attempt,
+                skip_delete=use_skip_delete,
                 attempt=attempt,
                 attempt_type="serial",
             )
@@ -992,22 +1026,14 @@ class AutoRetryTestRunner:
         else:
             final_status = "failed"
 
-        # Find the last namespace for failed tests
+        # Find the last namespace for failed tests (only if keeping failed namespaces)
         final_namespace = None
-        if final_status == "failed":
+        if final_status == "failed" and not self.args.delete_failed_namespaces:
             # Keep the last failed attempt's namespace
             for result in reversed(retry_results):
                 if result.namespace:
                     final_namespace = result.namespace
                     break
-
-        # Clean up namespaces for successful tests
-        if final_status in ["passed", "flaky"]:
-            # Delete all namespaces for this test
-            all_results = [initial_result] + retry_results
-            for result in all_results:
-                if result.namespace and result.namespace != final_namespace:
-                    self.test_executor.delete_test_namespace(result.namespace)
 
         summary = TestSummary(
             test_name=test_name,
@@ -1078,8 +1104,14 @@ class AutoRetryTestRunner:
         )
 
         if not failed_tests:
-            print("  No failed tests found in output (this might be a parsing issue)")
-            self.report_generator.generate_and_save_final_report(self, self.start_time)
+            print("  No failed tests found in output but run-tests exited with code 1")
+            print(
+                "  This indicates an infrastructure or setup issue that prevents tests from running"
+            )
+            print(
+                "  Check the log file for connection errors, missing dependencies, or cluster issues"
+            )
+            print(f"  Log file: {initial_result.log_file}")
             return False
 
         print(f"  Found {len(failed_tests)} failed tests:")
@@ -1281,9 +1313,9 @@ def main():
 
     # Namespace management arguments
     parser.add_argument(
-        "--keep-failed-namespaces",
+        "--delete-failed-namespaces",
         action="store_true",
-        help="Keep namespaces of failed tests for debugging (only the last one is kept)",
+        help="Delete namespaces of failed tests (default: keep them for debugging)",
     )
 
     # Output arguments
