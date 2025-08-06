@@ -6,7 +6,7 @@ on:
 
 env:
   HADOLINT_VERSION: "v2.12.0"
-  PYTHON_VERSION: "3.12"
+  PYTHON_VERSION: "3.13"
 
 permissions: {}
 
@@ -18,7 +18,7 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-      - uses: stackabletech/actions/run-pre-commit@9aae2d1c14239021bfa33c041010f6fb7adec815 # v0.8.2
+      - uses: stackabletech/actions/run-pre-commit@4483641a7e24057bd2ba51cb4c3f2f0010ad21b7 # v0.8.4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           hadolint: ${{ env.HADOLINT_VERSION }}

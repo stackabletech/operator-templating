@@ -29,8 +29,7 @@ To remove files or directories that already exist in the target repositories the
 
 Anything that is listed here will be deleted from the target repositories.
 
-NOTE: Deletion is the last step that is performed, so if there is an overlap between files existing in the template folder and this setting, the files would not be rolled out, since they'd get deleted before creting the pull request.
-
+NOTE: Deletion is the last step that is performed, so if there is an overlap between files existing in the template folder and this setting, the files would not be rolled out, since they'd get deleted before creating the pull request.
 
 === Configuration
 
