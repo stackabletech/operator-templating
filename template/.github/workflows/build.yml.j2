@@ -340,7 +340,7 @@ jobs:
         with:
           persist-credentials: false
           submodules: recursive
-      - uses: cachix/install-nix-action@f0fe604f8a612776892427721526b4c7cfb23aba # v31.4.1
+      - uses: cachix/install-nix-action@fc6e360bedc9ee72d75e701397f0bb30dce77568 # v31.5.2
       - uses: dtolnay/rust-toolchain@b3b07ba8b418998c39fb20f53e8b695cdcc8de1b
         with:
           toolchain: ${{ env.RUST_TOOLCHAIN_VERSION }}
