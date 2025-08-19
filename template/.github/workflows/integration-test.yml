@@ -32,17 +32,6 @@ jobs:
     #     volumes:
     #       - .:/mnt
     steps:
-      - name: Override integration test options for scheduled run
-        if: github.event_name == 'schedule'
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          echo "TEST_PLATFORM=$DEFAULT_TEST_PLATFORM" | tee -a "$GITHUB_ENV"
-          echo "TEST_ARCHITECTURE=$DEFAULT_TEST_ARCHITECTURE" | tee -a "$GITHUB_ENV"
-          echo "TEST_RUN=$DEFAULT_TEST_RUN" | tee -a "$GITHUB_ENV"
-          echo "TEST_PARAMETER=$DEFAULT_TEST_PARAMETER" | tee -a "$GITHUB_ENV"
-
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
