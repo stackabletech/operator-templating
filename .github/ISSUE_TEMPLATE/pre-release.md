@@ -41,7 +41,9 @@ Part of <https://github.com/stackabletech/issues/TRACKING_ISSUE>
 ### Tasks
 
 - [ ] Run `niv update` and test via `make run-dev`
-- [ ] Update Rust toolchain in the `config/versions.yaml` file.
+- [ ] Update stable Rust toolchain in the `config/versions.yaml` file.
+- [ ] Update nightly Rust toolchain in the `config/versions.yaml` file (Keep in sync across this,
+      operator-rs and docker-images).
 - [ ] Update Rust toolchain in  UBI9 and stackable-base images
 - [ ] Update cargo-cyclonedx and cargo-auditable in UBI9 and stackable-base images
 - [ ] Generate downstream PRs using the ["Generate Downstream PRs"](https://github.com/stackabletech/operator-templating/actions/workflows/generate_prs.yml) action.
