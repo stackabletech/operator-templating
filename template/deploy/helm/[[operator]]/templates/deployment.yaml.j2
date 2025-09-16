@@ -104,6 +104,15 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.priority }}
+      priority: {{ . }}
+      {{- end }}
+      {{- with .Values.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      {{- with .Values.preemptionPolicy }}
+      preemptionPolicy: {{ . }}
+      {{- end }}
 {[% else %}]
 # Templated Deployment disabled for this operator
 {[% endif %}]
