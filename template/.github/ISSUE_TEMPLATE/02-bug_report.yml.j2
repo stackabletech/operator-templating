@@ -12,12 +12,12 @@ body:
       label: Affected Stackable version
       description: Which version of the Stackable Operator do you see this bug in?
 
-# {[% if operator.has_product | default(true) %}]
+  # {[%- if operator.has_product | default(true) +%}]
   - type: input
     attributes:
       label: Affected {[ operator.pretty_string }] version
       description: Which version of {[ operator.pretty_string }] do you see this bug in?
-# {[% endif %}]
+  # {[%- endif +%}]
 
   - type: textarea
     attributes:
@@ -40,7 +40,7 @@ body:
     attributes:
       label: Environment
       description: |
-        What type of kubernetes cluster you are running aginst (k3s/eks/aks/gke/other) and any other information about your environment?
+        What type of kubernetes cluster you are running against (k3s/eks/aks/gke/other) and any other information about your environment?
       placeholder: |
         Examples:
         Output of `kubectl version --short`
