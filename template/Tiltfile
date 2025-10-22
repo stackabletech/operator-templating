@@ -34,9 +34,6 @@ k8s_kind('DaemonSet', image_json_path='{.spec.template.metadata.annotations.inte
 helm_values = settings.get('helm_values', None)
 
 helm_override_image_repository = 'image.repository=' + registry + '/' + operator_name
-if operator_name == "secret-operator":
-   # secret-operator image reference is under the secretOperator section
-   helm_override_image_repository = "secretOperator." + helm_override_image_repository
 
 # Exclude stale CRDs from Helm chart, and apply the rest
 helm_crds, helm_non_crds = filter_yaml(
