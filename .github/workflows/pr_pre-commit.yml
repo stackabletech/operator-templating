@@ -5,7 +5,7 @@ on:
   pull_request:
 
 env:
-  HADOLINT_VERSION: "v2.12.0"
+  HADOLINT_VERSION: "v2.14.0"
   PYTHON_VERSION: "3.14"
 
 permissions: {}
