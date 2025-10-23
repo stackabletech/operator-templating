@@ -22,7 +22,7 @@ hadolint_version: v2.12.0
 # IMPORTANT
 # If you change the Python version here, make sure to also change it in
 # .github/workflows/pr_pre-commit.yml
-python_version: 3.13
+python_version: 3.14
 
 # This Nix version is used in the operators pre-commit workflow as they require
 # Nix to run some checks. Check for new versions here:
