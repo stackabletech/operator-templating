@@ -1,13 +1,13 @@
 ---
 # IMPORTANT
 # If you change the Rust toolchain version here, make sure to also change
-# docker-images/ubi8-rust-builder/Dockerfile & docker-images/ubi9-rust-builder/Dockerfile
-rust_version: 1.87.0
+# docker-images/ubi9-rust-builder/Dockerfile
+rust_version: 1.89.0
 
 # This nightly version is only used for cargo fmt invocations, because we use nightly-only
 # rustfmt config options in rustfmt.toml. The version should be kept in line with the version
 # used in the operator-rs repository.
-rust_nightly_version: nightly-2025-05-26
+rust_nightly_version: nightly-2025-10-23
 
 # This edition is mostly used for rustfmt commands and the rustfmt config file. The edition should
 # be kept in line with the edition in the operator-rs repository.
@@ -17,12 +17,12 @@ rust_edition: 2024
 # If you change the Hadolint version here, make sure to also change the hook
 # refs in the local and templated .pre-commit-config.yaml files.
 # And due to a bug you also need to update the version in .github/workflows/pr_pre_commit.yml
-hadolint_version: v2.12.0
+hadolint_version: v2.14.0
 
 # IMPORTANT
 # If you change the Python version here, make sure to also change it in
 # .github/workflows/pr_pre-commit.yml
-python_version: 3.13
+python_version: 3.14
 
 # This Nix version is used in the operators pre-commit workflow as they require
 # Nix to run some checks. Check for new versions here:
