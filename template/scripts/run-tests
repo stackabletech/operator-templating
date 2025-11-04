@@ -292,7 +292,9 @@ def release_file(
                 logging.error(f"Failed to delete patched release file: {release_file}")
 
 
-def maybe_install_release(skip_release: bool, release_file: str, listener_class_preset: str) -> None:
+def maybe_install_release(
+    skip_release: bool, release_file: str, listener_class_preset: str
+) -> None:
     if skip_release:
         logging.debug("Skip release installation")
         return
@@ -303,7 +305,11 @@ def maybe_install_release(skip_release: bool, release_file: str, listener_class_
             "install",
             "--release-file",
             release_file,
-            *(["--listener-class-preset", listener_class_preset] if listener_class_preset else []),
+            *(
+                ["--listener-class-preset", listener_class_preset]
+                if listener_class_preset
+                else []
+            ),
             "tests",
         ]
         logging.debug(f"Running : {stackablectl_cmd}")
