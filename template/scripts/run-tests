@@ -149,7 +149,6 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         help="Choose the ListenerClass preset",
         type=str,
         required=False,
-        default="none",
     )
 
     return parser.parse_args(argv)
@@ -304,8 +303,7 @@ def maybe_install_release(skip_release: bool, release_file: str, listener_class_
             "install",
             "--release-file",
             release_file,
-            "--listener-class-preset",
-            listener_class_preset,
+            *(["--listener-class-preset", listener_class_preset] if listener_class_preset else []),
             "tests",
         ]
         logging.debug(f"Running : {stackablectl_cmd}")
