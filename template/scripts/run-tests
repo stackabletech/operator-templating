@@ -144,6 +144,14 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         default=os.path.join("tests", "_work"),
     )
 
+    parser.add_argument(
+        "--listener-class-preset",
+        help="Choose the ListenerClass preset",
+        type=str,
+        required=False,
+        default="none",
+    )
+
     return parser.parse_args(argv)
 
 
@@ -285,7 +293,7 @@ def release_file(
                 logging.error(f"Failed to delete patched release file: {release_file}")
 
 
-def maybe_install_release(skip_release: bool, release_file: str) -> None:
+def maybe_install_release(skip_release: bool, release_file: str, listener_class_preset: str) -> None:
     if skip_release:
         logging.debug("Skip release installation")
         return
@@ -296,6 +304,8 @@ def maybe_install_release(skip_release: bool, release_file: str) -> None:
             "install",
             "--release-file",
             release_file,
+            "--listener-class-preset",
+            listener_class_preset,
             "tests",
         ]
         logging.debug(f"Running : {stackablectl_cmd}")
@@ -436,7 +446,7 @@ def main(argv) -> int:
         have_requirements()
         gen_tests(opts.test_suite, opts.namespace, opts.work_dir)
         with release_file(opts.operator, opts.skip_operator) as f:
-            maybe_install_release(opts.skip_release, f)
+            maybe_install_release(opts.skip_release, f, opts.listener_class_preset)
         if opts.skip_tests:
             logging.info("Skip running tests.")
         else:
