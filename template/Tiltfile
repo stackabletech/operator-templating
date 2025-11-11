@@ -5,7 +5,7 @@ registry = settings.get('default_registry', 'oci.stackable.tech/sandbox')
 # Configure default registry either read from config file above, or with default value of "oci.stackable.tech/sandbox"
 default_registry(registry)
 
-# Configure which builder to use from config file, defaults to 'crate2nix'
+# Configure which builder to use from config file, defaults to 'nix'
 builder = settings.get('builder', 'crate2nix')
 
 meta = read_json('nix/meta.json')
