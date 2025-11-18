@@ -4,5 +4,5 @@
 # May be something to investigate.
 retired_files:
   - .github/ISSUE_TEMPLATE/bug_report.yml
-  - .readme/static/sdp_overview.png
+  - .readme/static/borrowed/sdp_overview.png
   - bors.toml
