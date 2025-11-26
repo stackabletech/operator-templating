@@ -14,6 +14,9 @@ rules:
   comments:
     min-spaces-from-content: 1  # Needed due to https://github.com/adrienverge/yamllint/issues/443
   comments-indentation: disable # This is generally useless and interferes with commented example values
+  braces:
+    max-spaces-inside: 1
+    max-spaces-inside-empty: 0
 
 yaml-files:
   - '*.yaml'
