@@ -30,3 +30,5 @@ python_version: 3.14
 # Usually the latest version should just work and as such the version here can
 # be bumped without any constraints.
 nix_pkg_manager_version: 2.30.0
+
+jinja2_cli_version: 0.8.2
