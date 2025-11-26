@@ -11,6 +11,7 @@ env:
   RUST_TOOLCHAIN_VERSION: "{[ rust_nightly_version }]"
   HADOLINT_VERSION: "{[ hadolint_version }]"
   PYTHON_VERSION: "{[ python_version }]"
+  JINJA2_CLI_VERSION: "{[ jinja2_cli_version }]"
 
 jobs:
   pre-commit:
@@ -33,3 +34,4 @@ jobs:
           hadolint: ${{ env.HADOLINT_VERSION }}
           nix: ${{ env.NIX_PKG_MANAGER_VERSION }}
           nix-github-token: ${{ secrets.GITHUB_TOKEN }}
+          jinja2-cli: ${{ env.JINJA2_CLI_VERSION }}
