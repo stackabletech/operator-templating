@@ -18,15 +18,7 @@ on:
     # Run every Saturday morning: https://crontab.guru/#15_3_*_*_6
     - cron: '15 3 * * 6'
   pull_request:
-    paths:
-      - '.github/workflows/build.yaml'
-      - 'rust-toolchain.toml'
-      - '.dockerignore'
-      - 'deploy/**'
-      - '.cargo/**'
-      - 'docker/**'
-      - 'Cargo.*'
-      - '*.rs'
+    # Do not limit by paths. This workflow contains a required job.
   merge_group:
 
 env:
@@ -39,8 +31,42 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  # This workflow contains a "required job", and GitHub Actions isn't clever
+  # enough to detect that it should be skipped, and therefore pass (like they
+  # allow for skipping jobs in a workflow).
+  # Therefore, we have to move path filters/globs down to an actual job, and
+  # emit an output that can be used to skip irrelevant jobs.
+  detect-changes:
+    name: Detect relevant changed files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: stackabletech/actions/detect-changes@a1ab9bf951cf97728f0efaa58ba2105ad955e2e3 # v0.11.0
+        with:
+          persist-credentials: false
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Check for changed files
+        id: check
+        uses: ./.github/actions/detect-changes
+        with:
+          patterns: |
+            - '.github/workflows/build.yaml'
+            - 'rust-toolchain.toml'
+            - '.dockerignore'
+            - 'deploy/**'
+            - '.cargo/**'
+            - 'docker/**'
+            - 'Cargo.*'
+            - '*.rs'
+    outputs:
+      detected: ${{ steps.check.outputs.detected }}
+
   cargo-udeps:
     name: Run cargo-udeps
+    if: needs.detect-changes.outputs.detected == 'true'
+    needs: [detect-changes]
     runs-on: ubuntu-latest
     env:
       RUSTC_BOOTSTRAP: 1
@@ -76,7 +102,8 @@ jobs:
 
   build-container-image:
     name: Build/Publish ${{ matrix.runner.arch }} Image
-    if: github.event_name != 'merge_group'
+    if: (github.event_name != 'merge_group') && needs.detect-changes.outputs.detected == 'true'
+    needs: [detect-changes]
     permissions:
       id-token: write
     strategy:
@@ -159,8 +186,9 @@ jobs:
 
   publish-index-manifest:
     name: Publish/Sign ${{ needs.build-container-image.outputs.operator-version }} Index
-    if: github.event_name != 'merge_group'
+    if: (github.event_name != 'merge_group') && needs.detect-changes.outputs.detected == 'true'
     needs:
+      - detect-changes
       - build-container-image
     permissions:
       id-token: write
@@ -182,8 +210,9 @@ jobs:
 
   publish-helm-chart:
     name: Package/Publish ${{ needs.build-container-image.outputs.operator-version }} Helm Chart
-    if: github.event_name != 'merge_group'
+    if: (github.event_name != 'merge_group') && needs.detect-changes.outputs.detected == 'true'
     needs:
+      - detect-changes
       - build-container-image
     permissions:
       id-token: write
@@ -208,8 +237,9 @@ jobs:
 
   openshift-preflight-check:
     name: Run OpenShift Preflight Check for ${{ needs.build-container-image.outputs.operator-version }}-${{ matrix.arch }}
-    if: github.event_name != 'merge_group'
+    if: (github.event_name != 'merge_group') && needs.detect-changes.outputs.detected == 'true'
     needs:
+      - detect-changes
       - build-container-image
       - publish-index-manifest
     strategy:
@@ -243,8 +273,9 @@ jobs:
 
   notify:
     name: Failure Notification
-    if: (failure() || github.run_attempt > 1) && github.event_name != 'merge_group'
+    if: (failure() || github.run_attempt > 1) && github.event_name != 'merge_group' && needs.detect-changes.outputs.detected == 'true'
     needs:
+      - detect-changes
       - build-container-image
       - publish-index-manifest
       - publish-helm-chart
