@@ -22,6 +22,9 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
+        {{- if .Values.maintenance.customResourceDefinitions.maintain }}
+        webhook.stackable.tech/conversion: enabled
+        {{- end }}
         {{- include "operator.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.image.pullSecrets }}
@@ -79,7 +82,9 @@ spec:
             - name: KUBERNETES_CLUSTER_DOMAIN
               value: {{ .Values.kubernetesClusterDomain | quote }}
             {{- end }}
+
             {{- include "telemetry.envVars" . | nindent 12 }}
+            {{- include "maintenance.envVars" . | nindent 12 }}
 {[% if operator.product_string in ['opa'] %}]
             - name: OPA_BUNDLE_BUILDER_CLUSTERROLE
               value: {{ include "operator.fullname" . }}-opa-bundle-builder-clusterrole
