@@ -2,12 +2,12 @@
 # IMPORTANT
 # If you change the Rust toolchain version here, make sure to also change
 # docker-images/ubi9-rust-builder/Dockerfile
-rust_version: 1.89.0
+rust_version: 1.92.0
 
 # This nightly version is only used for cargo fmt invocations, because we use nightly-only
 # rustfmt config options in rustfmt.toml. The version should be kept in line with the version
 # used in the operator-rs repository.
-rust_nightly_version: nightly-2025-10-23
+rust_nightly_version: nightly-2026-02-19
 
 # This edition is mostly used for rustfmt commands and the rustfmt config file. The edition should
 # be kept in line with the edition in the operator-rs repository.
@@ -29,6 +29,7 @@ python_version: 3.14
 # https://github.com/NixOS/nix/tags
 # Usually the latest version should just work and as such the version here can
 # be bumped without any constraints.
-nix_pkg_manager_version: 2.30.0
+nix_pkg_manager_version: 2.33.3
 
-jinja2_cli_version: 0.8.2
+# Check https://pypi.org/project/jinja2-cli/#history for updates
+jinja2_cli_version: 1.0.0
