@@ -139,7 +139,7 @@ jobs:
           set -euo pipefail
           [ -n "$GITHUB_DEBUG" ] && set -x
 
-          CURRENT_VERSION=$(cargo metadata --format-version 1 --no-deps | jq -r '.packages[0].version')
+          CURRENT_VERSION=$(cargo metadata --format-version 1 --no-deps | jq -r '.packages[] | select(.name == "stackable-{[ operator.name }]") | .version')
 
           if [ "$GITHUB_EVENT_NAME" == 'pull_request' ]; then
             # Include a PR suffix if this workflow is triggered by a PR
