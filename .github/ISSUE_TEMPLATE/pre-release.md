@@ -44,8 +44,8 @@ Part of <https://github.com/stackabletech/issues/TRACKING_ISSUE>
 - [ ] Update stable Rust toolchain in the `config/versions.yaml` file.
 - [ ] Update nightly Rust toolchain in the `config/versions.yaml` file (Keep in sync across this,
       operator-rs and docker-images).
-- [ ] Update Rust toolchain in  UBI9 and stackable-base images
-- [ ] Update cargo-cyclonedx and cargo-auditable in UBI9 and stackable-base images
+- [ ] Update Rust toolchain in UBI10 and stackable-base images
+- [ ] Update cargo-cyclonedx and cargo-auditable in UBI10 and stackable-base images
 - [ ] Generate downstream PRs using the ["Generate Downstream PRs"](https://github.com/stackabletech/operator-templating/actions/workflows/generate_prs.yml) action. Use the following title for downstream PRs: `chore(template): Updates for SDP YY.M.X`.
 - [ ] [Search for PRs](https://github.com/search?q=org%3Astackabletech%20sort%3Aupdated-desc%20is%3Apr%20is%3Aopen%20Update%20templated%20files&type=pullrequests) and add them to the list below.
 - [ ] Add the `release/YY.M.X` label to the downstream PRs and continue to merge them. See below for more details.
@@ -63,7 +63,7 @@ Part of <https://github.com/stackabletech/issues/TRACKING_ISSUE>
     | xargs -I {} echo "- [ ] _PR for {}_"
 -->
 
-- [ ] _PR for ubi9-rust-builder image_
+- [ ] _PR for ubi10-rust-builder image_
 - [ ] _PR for stackable-base image_
 - [ ] _PR for airflow-operator_
 - [ ] _PR for commons-operator_

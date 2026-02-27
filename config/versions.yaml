@@ -1,7 +1,7 @@
 ---
 # IMPORTANT
 # If you change the Rust toolchain version here, make sure to also change
-# docker-images/ubi9-rust-builder/Dockerfile
+# docker-images/ubi10-rust-builder/Dockerfile
 rust_version: 1.93.0
 
 # This nightly version is only used for cargo fmt invocations, because we use nightly-only
