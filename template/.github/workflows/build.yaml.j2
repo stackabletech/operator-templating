@@ -174,6 +174,7 @@ jobs:
           container-file: docker/Dockerfile
 
       - name: Publish Container Image
+        if: ${{ !github.event.pull_request.head.repo.fork }}
         uses: stackabletech/actions/publish-image@babe44d7b1db87f8e7731c011151d22a8a374191 # v0.12.0
         with:
           image-registry-uri: oci.stackable.tech
@@ -185,7 +186,10 @@ jobs:
 
   publish-index-manifest:
     name: Publish/Sign ${{ needs.build-container-image.outputs.operator-version }} Index
-    if: (github.event_name != 'merge_group') && needs.detect-changes.outputs.detected == 'true'
+    if: |
+      (github.event_name != 'merge_group')
+      && needs.detect-changes.outputs.detected == 'true'
+      && !github.event.pull_request.head.repo.fork
     needs:
       - detect-changes
       - build-container-image
@@ -209,7 +213,9 @@ jobs:
 
   publish-helm-chart:
     name: Package/Publish ${{ needs.build-container-image.outputs.operator-version }} Helm Chart
-    if: (github.event_name != 'merge_group') && needs.detect-changes.outputs.detected == 'true'
+    if: |
+      (github.event_name != 'merge_group')
+      && needs.detect-changes.outputs.detected == 'true'
     needs:
       - detect-changes
       - build-container-image
@@ -233,10 +239,14 @@ jobs:
           chart-directory: deploy/helm/${{ env.OPERATOR_NAME }}
           chart-version: ${{ needs.build-container-image.outputs.operator-version }}
           app-version: ${{ needs.build-container-image.outputs.operator-version }}
+          publish-and-sign: ${{ !github.event.pull_request.head.repo.fork }}
 
   openshift-preflight-check:
     name: Run OpenShift Preflight Check for ${{ needs.build-container-image.outputs.operator-version }}-${{ matrix.arch }}
-    if: (github.event_name != 'merge_group') && needs.detect-changes.outputs.detected == 'true'
+    if: |
+      (github.event_name != 'merge_group')
+      && needs.detect-changes.outputs.detected == 'true'
+      && !github.event.pull_request.head.repo.fork
     needs:
       - detect-changes
       - build-container-image
@@ -272,7 +282,11 @@ jobs:
 
   notify:
     name: Failure Notification
-    if: (failure() || github.run_attempt > 1) && github.event_name != 'merge_group' && needs.detect-changes.outputs.detected == 'true'
+    if: |
+      (failure() || github.run_attempt > 1)
+      && github.event_name != 'merge_group'
+      && needs.detect-changes.outputs.detected == 'true'
+      && !github.event.pull_request.head.repo.fork
     needs:
       - detect-changes
       - build-container-image
