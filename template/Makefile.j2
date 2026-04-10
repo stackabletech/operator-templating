@@ -10,8 +10,7 @@
 .PHONY: build publish
 
 OPERATOR_NAME := {[ operator.name }]
-VERSION := $(shell cargo metadata --format-version 1 | jq -r '.packages[] | select(.name=="stackable-${OPERATOR_NAME}")
-| .version')
+VERSION := $(shell cargo metadata --format-version 1 | jq -r '.packages[] | select(.name=="stackable-${OPERATOR_NAME}") | .version')
 
 OCI_REGISTRY_HOSTNAME := oci.stackable.tech
 OCI_REGISTRY_PROJECT_IMAGES := sdp
@@ -19,72 +18,67 @@ OCI_REGISTRY_PROJECT_IMAGES := sdp
 SHELL=/usr/bin/env bash -euo pipefail
 
 render-readme:
-scripts/render_readme.sh
+	scripts/render_readme.sh
 
 render-docs:
-scripts/docs_templating.sh
+	scripts/docs_templating.sh
 
 ## Docker related targets
 docker-build:
-docker build --force-rm --build-arg VERSION=${VERSION} -t
-"${OCI_REGISTRY_HOSTNAME}/${OCI_REGISTRY_PROJECT_IMAGES}/${OPERATOR_NAME}:${VERSION}-${ARCH}" -f docker/Dockerfile .
+	docker build --force-rm --build-arg VERSION=${VERSION} -t "${OCI_REGISTRY_HOSTNAME}/${OCI_REGISTRY_PROJECT_IMAGES}/${OPERATOR_NAME}:${VERSION}-${ARCH}" -f docker/Dockerfile .
 
 ## Chart related targets
 compile-chart: version crds config
 
 chart-clean:
-rm -rf "deploy/helm/${OPERATOR_NAME}/configs"
-rm -rf "deploy/helm/${OPERATOR_NAME}/crds"
+	rm -rf "deploy/helm/${OPERATOR_NAME}/configs"
+	rm -rf "deploy/helm/${OPERATOR_NAME}/crds"
 
 version:
-cat "deploy/helm/${OPERATOR_NAME}/Chart.yaml" | yq ".version = \"${VERSION}\" | .appVersion = \"${VERSION}\"" >
-"deploy/helm/${OPERATOR_NAME}/Chart.yaml.new"
-mv "deploy/helm/${OPERATOR_NAME}/Chart.yaml.new" "deploy/helm/${OPERATOR_NAME}/Chart.yaml"
+	cat "deploy/helm/${OPERATOR_NAME}/Chart.yaml" | yq ".version = \"${VERSION}\" | .appVersion = \"${VERSION}\"" > "deploy/helm/${OPERATOR_NAME}/Chart.yaml.new"
+	mv "deploy/helm/${OPERATOR_NAME}/Chart.yaml.new" "deploy/helm/${OPERATOR_NAME}/Chart.yaml"
 
 config:
-if [ -d "deploy/config-spec/" ]; then\
-mkdir -p "deploy/helm/${OPERATOR_NAME}/configs";\
-cp -r deploy/config-spec/* "deploy/helm/${OPERATOR_NAME}/configs";\
-fi
+	if [ -d "deploy/config-spec/" ]; then\
+		mkdir -p "deploy/helm/${OPERATOR_NAME}/configs";\
+		cp -r deploy/config-spec/* "deploy/helm/${OPERATOR_NAME}/configs";\
+	fi
 
 # We generate a crds.yaml, so that the effect of code changes are visible.
 # The operator will take care of the CRD rollout itself.
 crds:
-mkdir -p extra
-cargo run --bin stackable-"${OPERATOR_NAME}" -- crd > extra/crds.yaml
+	mkdir -p extra
+	cargo run --bin stackable-"${OPERATOR_NAME}" -- crd > extra/crds.yaml
 
 chart-lint: compile-chart
-docker run -it -v $(shell pwd):/build/helm-charts -w /build/helm-charts quay.io/helmpack/chart-testing:v3.5.0 ct lint
---config deploy/helm/ct.yaml
+	docker run -it -v $(shell pwd):/build/helm-charts -w /build/helm-charts quay.io/helmpack/chart-testing:v3.5.0  ct lint --config deploy/helm/ct.yaml
 
 clean: chart-clean
-cargo clean
-docker rmi --force '${OCI_REGISTRY_HOSTNAME}/${OCI_REGISTRY_PROJECT_IMAGES}/${OPERATOR_NAME}:${VERSION}'
+	cargo clean
+	docker rmi --force '${OCI_REGISTRY_HOSTNAME}/${OCI_REGISTRY_PROJECT_IMAGES}/${OPERATOR_NAME}:${VERSION}'
 
 regenerate-charts: chart-clean compile-chart
 
 regenerate-nix:
-nix run --extra-experimental-features "nix-command flakes" -f . regenerateNixLockfiles
+	nix run --extra-experimental-features "nix-command flakes" -f . regenerateNixLockfiles
 
 build: regenerate-charts regenerate-nix docker-build
 
 check-nix:
-@which nix || (echo "Error: 'nix' is not installed. Please install it to proceed."; exit 1)
+	@which nix || (echo "Error: 'nix' is not installed. Please install it to proceed."; exit 1)
 
 check-kubernetes:
-@kubectl cluster-info > /dev/null 2>&1 || (echo "Error: Kubernetes is not running or kubectl is not properly
-configured."; exit 1)
+	@kubectl cluster-info > /dev/null 2>&1 || (echo "Error: Kubernetes is not running or kubectl is not properly configured."; exit 1)
 
 run-dev: check-nix check-kubernetes
-kubectl apply -f deploy/stackable-operators-ns.yaml
-nix run --extra-experimental-features "nix-command flakes" -f. tilt -- up --port {[5430 + operator_index}] --namespace
-stackable-operators
+	kubectl apply -f deploy/stackable-operators-ns.yaml
+	nix run --extra-experimental-features "nix-command flakes" -f. tilt -- up --port {[5430 + operator_index}] --namespace stackable-operators
 
 stop-dev: check-nix check-kubernetes
-nix run --extra-experimental-features "nix-command flakes" -f. tilt -- down
+	nix run --extra-experimental-features "nix-command flakes" -f. tilt -- down
 
 helm-install:
-helm install \
---values deploy/helm/${OPERATOR_NAME}/values.yaml \
---values deploy/helm/${OPERATOR_NAME}/values/$(OCI_REGISTRY_HOSTNAME).yaml \
-${OPERATOR_NAME} deploy/helm/${OPERATOR_NAME}
+	helm install \
+		--values deploy/helm/${OPERATOR_NAME}/values.yaml \
+		--values deploy/helm/${OPERATOR_NAME}/values/$(OCI_REGISTRY_HOSTNAME).yaml \
+		${OPERATOR_NAME} deploy/helm/${OPERATOR_NAME}

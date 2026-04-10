@@ -1,5 +1,0 @@
----
-# Values overlay for chart packages published to oci.stackable.tech.
-image:
-  registry: oci.stackable.tech
-  repository: sdp/airflow-operator
