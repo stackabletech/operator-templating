@@ -79,6 +79,6 @@ stop-dev: check-nix check-kubernetes
 
 helm-install:
 	helm install \
-		--values deploy/helm/airflow-operator/values.yaml \
-		--values deploy/helm/airflow-operator/values/$(OCI_REGISTRY_HOSTNAME).yaml \
-		airflow-operator deploy/helm/airflow-operator
+		--values deploy/helm/${OPERATOR_NAME}/values.yaml \
+		--values deploy/helm/${OPERATOR_NAME}/values/$(OCI_REGISTRY_HOSTNAME).yaml \
+		${OPERATOR_NAME} deploy/helm/${OPERATOR_NAME}
