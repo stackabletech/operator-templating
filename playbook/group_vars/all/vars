@@ -5,7 +5,7 @@ author_mail: "github@stackable.de"
 # Defines which subdirectory to check the target repos out in
 work_dir: "{{ base_dir }}/work"
 
-# Directory containinng the template structure to roll out
+# Directory containing the template structure to roll out
 template_dir: "{{ base_dir }}/template"
 
 # The name for the branch that will be created and from which the pr will be initialized
