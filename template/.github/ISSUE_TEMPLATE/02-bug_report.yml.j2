@@ -12,7 +12,7 @@ body:
       label: Affected Stackable version
       description: Which version of the Stackable Operator do you see this bug in?
 
-  # {[%- if operator.has_product | default(true) +%}]
+  # {[%- if operator.config.has_product | default(true) +%}]
   - type: input
     attributes:
       label: Affected {[ operator.pretty_string }] version
