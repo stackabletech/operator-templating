@@ -6,72 +6,91 @@ repositories:
     pretty_string: Apache Airflow
     product_string: airflow
     url: stackabletech/airflow-operator.git
+
   - name: commons-operator
-    include_productconfig: false
-    has_product: false
     pretty_string: Stackable Commons
     product_string: commons
     url: stackabletech/commons-operator.git
+    config:
+      include_productconfig: false
+      has_product: false
+
   - name: druid-operator
     pretty_string: Apache Druid
     product_string: druid
     url: stackabletech/druid-operator.git
+
   - name: hbase-operator
     pretty_string: Apache HBase
     product_string: hbase
     url: stackabletech/hbase-operator.git
+
   - name: hdfs-operator
     pretty_string: Apache HDFS
     product_string: hdfs
     url: stackabletech/hdfs-operator.git
+
   - name: hive-operator
     pretty_string: Apache Hive
     product_string: hive
     url: stackabletech/hive-operator.git
+
   - name: kafka-operator
     pretty_string: Apache Kafka
     product_string: kafka
     url: stackabletech/kafka-operator.git
+
   - name: nifi-operator
     pretty_string: Apache NiFi
     product_string: nifi
     url: stackabletech/nifi-operator.git
+
   - name: listener-operator
-    include_productconfig: false
-    has_product: false
     pretty_string: Stackable Listener Operator
     product_string: listener-operator
-    run_as: custom
     url: stackabletech/listener-operator.git
+    config:
+      include_productconfig: false
+      has_product: false
+      run_as: custom
+
   - name: opa-operator
-    extra_crates:
-      - stackable-opa-bundle-builder
     pretty_string: OpenPolicyAgent
     product_string: opa
     url: stackabletech/opa-operator.git
+    config:
+      extra_crates:
+        - stackable-opa-bundle-builder
+
   - name: opensearch-operator
     pretty_string: OpenSearch
     product_string: opensearch
     url: stackabletech/opensearch-operator.git
+
   - name: secret-operator
-    include_productconfig: false
-    has_product: false
     pretty_string: Stackable Secret Operator
     product_string: secret-operator
-    run_as: custom
     url: stackabletech/secret-operator.git
+    config:
+      include_productconfig: false
+      has_product: false
+      run_as: custom
+
   - name: spark-k8s-operator
     pretty_string: Apache Spark-on-Kubernetes
     product_string: spark-k8s
     url: stackabletech/spark-k8s-operator.git
+
   - name: superset-operator
     pretty_string: Apache Superset
     product_string: superset
     url: stackabletech/superset-operator.git
+
   - name: trino-operator
     pretty_string: Trino
     product_string: trino
     url: stackabletech/trino-operator.git
+
   - name: zookeeper-operator
     pretty_string: Apache ZooKeeper
     product_string: zookeeper

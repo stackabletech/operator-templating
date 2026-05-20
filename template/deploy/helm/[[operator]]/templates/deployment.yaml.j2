@@ -1,4 +1,4 @@
-{[% if operator.run_as is undefined or operator.run_as == "deployment" %}]
+{[% if operator.config.run_as is undefined or operator.config.run_as == "deployment" %}]
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -71,14 +71,15 @@ spec:
             - name: OPERATOR_SERVICE_NAME
               value: {{ include "operator.fullname" . }}
 
-            # The URI of the image registry, like "oci.stackable.tech". Used to derive product image
-            # name.
-            - name: IMAGE_REGISTRY_URI
-              value: {{ .Values.image.registry }}
-
-            # The image repository, like "sdp/airflow-operator"
+{[% if operator.config.has_product | default(true) %}]
+            # The product image repository, like "oci.stackable.tech/sdp".
+            - name: IMAGE_REPOSITORY
+              value: {{ .Values.image.productRepository | default .Values.image.repository }}
+{[% else %}]
+            # The image repository, like "oci.stackable.tech/sdp".
             - name: IMAGE_REPOSITORY
               value: {{ .Values.image.repository }}
+{[% endif %}]
 
             # Operators need to know the node name they are running on, to e.g. discover the
             # Kubernetes domain name from the kubelet API.

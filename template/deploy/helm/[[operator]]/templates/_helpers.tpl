@@ -79,8 +79,8 @@ helm.sh/test: {{ include "operator.chart" . }}
 {{- end }}
 
 {{/*
-Build the full container image reference.
+Build the full operator container image reference.
 */}}
 {{- define "operator.image" -}}
-{{- printf "%s/%s:%s" .Values.image.registry .Values.image.repository (.Values.image.tag | default .Chart.AppVersion) -}}
+{{- printf "%s/%s:%s" .Values.image.repository .Chart.Name (.Values.image.tag | default .Chart.AppVersion) -}}
 {{- end }}
