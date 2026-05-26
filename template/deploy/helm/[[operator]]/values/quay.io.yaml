@@ -1,4 +1,0 @@
----
-# Values overlay for chart packages published to quay.io.
-image:
-  repository: quay.io/stackable/sdp
