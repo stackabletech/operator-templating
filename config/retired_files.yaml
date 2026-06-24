@@ -4,4 +4,5 @@
 # May be something to investigate.
 retired_files:
   - .readme/static/borrowed/sdp_overview.png
+  - .github/workflows/pr_pre-commit.yaml
   - .github/workflows/build.yml
