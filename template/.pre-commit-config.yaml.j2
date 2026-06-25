@@ -38,6 +38,9 @@ repos:
     hooks:
       - id: shellcheck
         args: ["--severity=info"]
+        # Needed to make prek ignore .j2 files when running this hook.
+        # pre-commit does this by default.
+        exclude: \.j2$
 
   # WARNING (@NickLarsenNZ): Nix users need to install ruff first.
   # If you do not, you will need to delete the cached ruff binary shown in the
