@@ -205,6 +205,9 @@ jobs:
     permissions:
       id-token: write
     runs-on: ubuntu-latest
+    outputs:
+      oci-index-digest: ${{ steps.publish-oci.outputs.image-index-manifest-digest }}
+      quay-index-digest: ${{ steps.publish-quay.outputs.image-index-manifest-digest }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -212,6 +215,7 @@ jobs:
           persist-credentials: false
 
       - name: Publish and Sign Image Index to oci.stackable.tech
+        id: publish-oci
         uses: stackabletech/actions/publish-image-index-manifest@a14cbd08d9e034e2361ea9205b32aff0491885db # v0.15.0
         with:
           image-registry-uri: oci.stackable.tech
@@ -221,6 +225,7 @@ jobs:
           image-index-manifest-tag: ${{ needs.build-container-image.outputs.operator-version }}
 
       - name: Publish and Sign Image Index to quay.io
+        id: publish-quay
         uses: stackabletech/actions/publish-image-index-manifest@a14cbd08d9e034e2361ea9205b32aff0491885db # v0.15.0
         with:
           image-registry-uri: quay.io
@@ -228,6 +233,64 @@ jobs:
           image-registry-password: ${{ secrets.QUAY_ROBOT_SDP_GITHUB_ACTION_BUILD_SECRET }}
           image-repository: stackable/sdp/${{ env.OPERATOR_NAME }}
           image-index-manifest-tag: ${{ needs.build-container-image.outputs.operator-version }}
+
+  # Generate SLSA build provenance for the multi-arch image index and attach it
+  # to the published image in each registry. The reusable workflow signs the
+  # provenance with keyless signing (GitHub Actions as the OIDC identity) and
+  # pushes the attestation next to the image.
+  provenance-oci:
+    name: Generate Provenance for ${{ needs.build-container-image.outputs.operator-version }} (oci.stackable.tech)
+    if: |
+      (github.event_name != 'merge_group')
+      && needs.detect-changes.outputs.detected == 'true'
+      && !github.event.pull_request.head.repo.fork
+    needs:
+      - detect-changes
+      - build-container-image
+      - publish-index-manifest
+    permissions:
+      actions: read # detect the build workflow that generated the image
+      id-token: write # mint the OIDC token for keyless signing
+      packages: write # needed until https://github.com/slsa-framework/slsa-github-generator/issues/1257 is resolved
+    # MUST be referenced by a @vX.Y.Z tag (not a SHA), otherwise the reusable
+    # workflow cannot verify its own provenance.
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.1.0
+    with:
+      # The 'env' context is not available in job-level 'with' inputs of
+      # reusable workflow calls (unlike step-level 'with'), so OPERATOR_NAME
+      # can't be used here and the operator name is templated in directly.
+      image: oci.stackable.tech/sdp/{[ operator.name }]
+      digest: ${{ needs.publish-index-manifest.outputs.oci-index-digest }}
+      registry-username: robot$sdp+github-action-build
+    secrets:
+      registry-password: ${{ secrets.HARBOR_ROBOT_SDP_GITHUB_ACTION_BUILD_SECRET }}
+
+  provenance-quay:
+    name: Generate Provenance for ${{ needs.build-container-image.outputs.operator-version }} (quay.io)
+    if: |
+      (github.event_name != 'merge_group')
+      && needs.detect-changes.outputs.detected == 'true'
+      && !github.event.pull_request.head.repo.fork
+    needs:
+      - detect-changes
+      - build-container-image
+      - publish-index-manifest
+    permissions:
+      actions: read # detect the build workflow that generated the image
+      id-token: write # mint the OIDC token for keyless signing
+      packages: write # needed until https://github.com/slsa-framework/slsa-github-generator/issues/1257 is resolved
+    # MUST be referenced by a @vX.Y.Z tag (not a SHA), otherwise the reusable
+    # workflow cannot verify its own provenance.
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.1.0
+    with:
+      # The 'env' context is not available in job-level 'with' inputs of
+      # reusable workflow calls (unlike step-level 'with'), so OPERATOR_NAME
+      # can't be used here and the operator name is templated in directly.
+      image: quay.io/stackable/sdp/{[ operator.name }]
+      digest: ${{ needs.publish-index-manifest.outputs.quay-index-digest }}
+      registry-username: stackable+robot_sdp_github_action_build
+    secrets:
+      registry-password: ${{ secrets.QUAY_ROBOT_SDP_GITHUB_ACTION_BUILD_SECRET }}
 
   publish-helm-chart:
     name: Package/Publish ${{ needs.build-container-image.outputs.operator-version }} Helm Chart
@@ -328,6 +391,8 @@ jobs:
       - detect-changes
       - build-container-image
       - publish-index-manifest
+      - provenance-oci
+      - provenance-quay
       - publish-helm-chart
     runs-on: ubuntu-latest
     steps:
