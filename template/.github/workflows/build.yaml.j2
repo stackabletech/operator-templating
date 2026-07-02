@@ -254,7 +254,7 @@ jobs:
       packages: write # needed until https://github.com/slsa-framework/slsa-github-generator/issues/1257 is resolved
     # MUST be referenced by a @vX.Y.Z tag (not a SHA), otherwise the reusable
     # workflow cannot verify its own provenance.
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.1.0
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@f7dd8c54c2067bafc12ca7a55595d5ee9b75204a # v2.1.0
     with:
       # The 'env' context is not available in job-level 'with' inputs of
       # reusable workflow calls (unlike step-level 'with'), so OPERATOR_NAME
@@ -281,7 +281,7 @@ jobs:
       packages: write # needed until https://github.com/slsa-framework/slsa-github-generator/issues/1257 is resolved
     # MUST be referenced by a @vX.Y.Z tag (not a SHA), otherwise the reusable
     # workflow cannot verify its own provenance.
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.1.0
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@f7dd8c54c2067bafc12ca7a55595d5ee9b75204a # v2.1.0
     with:
       # The 'env' context is not available in job-level 'with' inputs of
       # reusable workflow calls (unlike step-level 'with'), so OPERATOR_NAME
