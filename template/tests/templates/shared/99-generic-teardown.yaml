@@ -1,0 +1,75 @@
+---
+# Generic, product-agnostic teardown step for Stackable kuttl tests.
+#
+# Runs BEFORE kuttl deletes the test namespace. It removes every Stackable workload so the built-in
+# StatefulSet controller can no longer recreate Pods during namespace deletion (the recreation race
+# that wedges Pods on ephemeral-PVC ownership / listener-secret CSI mount and blocks teardown).
+#
+# It hardcodes nothing about the product under test:
+#   1. discovers and deletes ALL `*.stackable.tech` custom resources in the namespace (Stackable
+#      StatefulSets are managed by their CR, so they must be removed this way),
+#   2. deletes the NON-Stackable Pod-owning workload controllers directly — StatefulSets, Deployments,
+#      ReplicaSets, DaemonSets, Jobs NOT labelled stackable.tech/vendor=Stackable (unmanaged
+#      test-helper / infra deps such as MinIO/Keycloak/LDAP/KDC; disposable, and removing them stops
+#      Pod recreation). Stackable-managed workloads are excluded on purpose — they are removed via
+#      their CR (step 1) + GC, so deleting them here would race the operator into recreating them,
+#   3. waits for the Stackable-managed StatefulSets to be gone (selected by the
+#      `stackable.tech/vendor=Stackable` label, so a StatefulSet the step can't remove — owned by
+#      another controller — doesn't make it wait out its timeout), so nothing recreates Pods,
+#   4. force-deletes any remaining Pods (safe now) instead of waiting out product shutdown grace.
+#
+# Drop this file in as the highest-numbered step of a test (e.g. 99-teardown.yaml), or — better —
+# have it injected into every test from a single source (see teardown-step-placement.md).
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+timeout: 600
+commands:
+  - timeout: 600
+    script: |
+      set -u
+      NS="$NAMESPACE"
+
+      # 1. Delete ALL Stackable CRs in the namespace (dynamic kind discovery — no per-product names).
+      #    Stackable StatefulSets are MANAGED: the operator recreates them from the CR, so they must be
+      #    removed via the CR, not by deleting the StatefulSet directly.
+      kinds="$(kubectl api-resources --verbs=delete --namespaced -o name 2>/dev/null \
+                | grep '\.stackable\.tech$' | paste -sd, -)"
+      [ -n "$kinds" ] && kubectl -n "$NS" delete "$kinds" --all --ignore-not-found --wait=false || true
+
+      # 2. Best-effort: delete the NON-Stackable Pod-owning workload controllers directly (test helpers
+      #    like *-test-helper / checks, and infra deps — MinIO/Keycloak are Deployments and use PVCs;
+      #    OpenLDAP/KDC may be bare StatefulSets). These are disposable and, crucially, unmanaged: no
+      #    operator watches them, so deleting the top-level object sticks and nothing recreates it.
+      #    Removing them stops them recreating Pods, so the force-delete/wait below can't churn and
+      #    nothing re-adds pvc-protection during namespace deletion.
+      #
+      #    We deliberately EXCLUDE Stackable-managed workloads (stackable.tech/vendor=Stackable). Those
+      #    are removed by deleting their CR (step 1) + owner-reference GC, and waited on in step 3.
+      #    Deleting them directly here would RACE the operator: our delete fires the operator's
+      #    owned-object watch, and if its informer cache hasn't yet seen the CR deletion (no
+      #    deletionTimestamp cached), the reconcile re-applies the StatefulSet — recreation overtaking
+      #    our delete. `notin (Stackable)` also matches objects with no vendor label, i.e. exactly the
+      #    unmanaged ones.
+      kubectl -n "$NS" delete statefulsets,deployments,replicasets,daemonsets,jobs \
+        -l 'stackable.tech/vendor notin (Stackable)' \
+        --ignore-not-found --wait=false >/dev/null 2>&1 || true
+
+      # 3. Wait for the STACKABLE StatefulSets to be gone (their controller then can't recreate Pods).
+      #    Scoped to the Stackable vendor label so a foreign StatefulSet the step can't remove (owned by
+      #    another controller) can't make this loop burn its full 300s timeout. We only need to
+      #    guarantee the operator-managed STSs — the wedge-prone ones — are cleared here.
+      sel="stackable.tech/vendor=Stackable"
+      for _ in $(seq 1 150); do
+        [ -z "$(kubectl -n "$NS" get statefulsets -l "$sel" -o name 2>/dev/null)" ] && break
+        sleep 2
+      done
+
+      # 4. Force-delete any lingering Pods (nothing recreates them now); skips product grace periods.
+      kubectl -n "$NS" delete pods --all --grace-period=0 --force --ignore-not-found >/dev/null 2>&1 || true
+
+      # 5. Best-effort: let Pods clear so the namespace delete has no work left.
+      for _ in $(seq 1 60); do
+        [ -z "$(kubectl -n "$NS" get pods -o name 2>/dev/null)" ] && break
+        sleep 2
+      done
+      echo "teardown: stackable CRs deleted; pods remaining in $NS: $(kubectl -n "$NS" get pods --no-headers 2>/dev/null | wc -l)"
