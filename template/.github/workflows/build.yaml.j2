@@ -39,9 +39,11 @@ jobs:
   detect-changes:
     name: Detect relevant changed files
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
           fetch-depth: 0
@@ -67,6 +69,8 @@ jobs:
     if: needs.detect-changes.outputs.detected == 'true'
     needs: [detect-changes]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     env:
       RUSTC_BOOTSTRAP: 1
     steps:
@@ -77,7 +81,7 @@ jobs:
           version: ubuntu-latest
 
       - name: Checkout Repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
           submodules: recursive
@@ -91,6 +95,7 @@ jobs:
         with:
           cache-all-crates: "true"
           key: udeps
+          lookup-only: ${{ github.event_name == 'pull_request' }}
 
       - name: Install cargo-udeps
         uses: stackabletech/cargo-install-action@8f7dbbcd2ebe22717efc132d0dd61e80841994b9 # cargo-udeps
@@ -103,6 +108,7 @@ jobs:
     if: (github.event_name != 'merge_group') && needs.detect-changes.outputs.detected == 'true'
     needs: [detect-changes]
     permissions:
+      contents: read
       id-token: write
     strategy:
       fail-fast: false
@@ -114,14 +120,25 @@ jobs:
     outputs:
       operator-version: ${{ steps.version.outputs.OPERATOR_VERSION }}
     steps:
+      # Use cached apt packages on PRs.
+      # For merges to main and releases, bypass the cache and install fresh package to ensure we have the absolute latest versions.
       - name: Install host dependencies
+        if: github.event_name == 'pull_request'
         uses: awalsh128/cache-apt-pkgs-action@2c09a5e66da6c8016428a2172bd76e5e4f14bb17 # v1.5.3
         with:
           packages: protobuf-compiler krb5-user libkrb5-dev libclang-dev liblzma-dev libssl-dev pkg-config apt-transport-https
           version: ${{ matrix.runner.name }}
 
+      - name: Install host dependencies (no cache)
+        if: github.event_name != 'pull_request'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y protobuf-compiler krb5-user libkrb5-dev \
+            libclang-dev liblzma-dev libssl-dev pkg-config apt-transport-https
+
+
       - name: Checkout Repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
           submodules: recursive
@@ -203,6 +220,7 @@ jobs:
       - detect-changes
       - build-container-image
     permissions:
+      contents: read
       id-token: write
     runs-on: ubuntu-latest
     outputs:
@@ -210,7 +228,7 @@ jobs:
       quay-index-digest: ${{ steps.publish-quay.outputs.image-index-manifest-digest }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
 
@@ -297,15 +315,17 @@ jobs:
     if: |
       (github.event_name != 'merge_group')
       && needs.detect-changes.outputs.detected == 'true'
+      && !github.event.pull_request.head.repo.fork
     needs:
       - detect-changes
       - build-container-image
     permissions:
+      contents: read
       id-token: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
           submodules: recursive
@@ -394,13 +414,9 @@ jobs:
       - provenance-oci
       - provenance-quay
       - publish-helm-chart
+      - finished
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-        with:
-          persist-credentials: false
-
       - name: Send Notification
         uses: stackabletech/actions/send-slack-notification@a8af17a19bdcc3b5da0065f76e73827ba0c072ce # v0.16.0
         with:

@@ -2,6 +2,8 @@
 - name: Synchronize operator template files with operator repositories
   hosts: localhost
   connection: local
+  vars:
+    gh_access_token: "{{ lookup('env', 'GH_ACCESS_TOKEN') }}"
 
   tasks:
     - name: Include data which repositories to check
