@@ -53,7 +53,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
-      - uses: cachix/install-nix-action@fd24c48048070c1be9acd18c9d369a83f0fe94d7 # v31.8.1
+      - uses: cachix/install-nix-action@630ae543ea3a38a9a4166f03376c02c50f408342 # v31.11.0
       - name: Install Ansible
         env:
           DEBIAN_FRONTEND: noninteractive
@@ -78,15 +78,14 @@ jobs:
       - name: Install jinja2
         run: pip install -r requirements.txt
 
-      # Create commit message and run the playbook
+      # Create commit message depending on whether this is run manually or due to a scheduled run
       - name: Run playbook
         env:
           CUSTOM_PR_TITLE: ${{ inputs.custom-pr-title }}
           GH_ACCESS_TOKEN: ${{ secrets.gh_access_token }}
           REPOSITORY: ${{ matrix.repository }}
-          DRY_RUN_FLAGS: ${{ (github.event_name != 'schedule' && inputs.dry-run != false) && '--tags=local' || '' }}
-          # Safely pass inputs/context via environment variables to prevent injection
-          INPUT_MESSAGE: ${{ github.event.inputs.message }}
+          DRY_RUN_FLAGS: ${{ inputs.dry-run && '--tags=local' || '' }}
+          INPUT_MESSAGE: ${{ inputs.message }}
           SENDER_LOGIN: ${{ github.event.sender.login }}
           EVENT_NAME: ${{ github.event_name }}
         run: |
@@ -98,7 +97,7 @@ jobs:
             REASON="$INPUT_MESSAGE"
           fi
 
-          # Encode parameters safely using jq, without serializing the GH_ACCESS_TOKEN
+          # Encode parameters using jq, without serializing the GH_ACCESS_TOKEN
           jq -n \
             --arg commit_hash "$GITHUB_SHA" \
             --arg author "$AUTHOR" \
@@ -109,4 +108,6 @@ jobs:
             '{commit_hash: $commit_hash, author: $author, reason: $reason, custom_pr_title: $custom_pr_title, base_dir: $base_dir, shard_repositories: [$repository]} | with_entries(select(.value != null and .value != ""))' > vars.json
 
           # Run the Ansible playbook. The token is read directly from the GH_ACCESS_TOKEN environment variable.
+          # $DRY_RUN_FLAGS is intentionally unquoted (empty or one fixed flag)
+          # shellcheck disable=SC2086
           ansible-playbook playbook/playbook.yaml --extra-vars "@vars.json" $DRY_RUN_FLAGS
