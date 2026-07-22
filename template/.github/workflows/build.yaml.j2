@@ -39,9 +39,11 @@ jobs:
   detect-changes:
     name: Detect relevant changed files
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
           fetch-depth: 0
@@ -57,8 +59,9 @@ jobs:
             - 'deploy/**'
             - '.cargo/**'
             - 'docker/**'
-            - 'Cargo.*'
-            - '*.rs'
+            - '**/Cargo.toml'
+            - 'Cargo.lock'
+            - '**/*.rs'
     outputs:
       detected: ${{ steps.check.outputs.detected }}
 
@@ -67,17 +70,19 @@ jobs:
     if: needs.detect-changes.outputs.detected == 'true'
     needs: [detect-changes]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     env:
       RUSTC_BOOTSTRAP: 1
     steps:
       - name: Install host dependencies
-        uses: awalsh128/cache-apt-pkgs-action@2c09a5e66da6c8016428a2172bd76e5e4f14bb17 # v1.5.3
+        uses: awalsh128/cache-apt-pkgs-action@553a35bb8ebd9fcabcb1c9451aa4c98e1b4ca8a9 # v1.6.3
         with:
           packages: protobuf-compiler krb5-user libkrb5-dev libclang-dev liblzma-dev libssl-dev pkg-config apt-transport-https
           version: ubuntu-latest
 
       - name: Checkout Repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
           submodules: recursive
@@ -93,16 +98,20 @@ jobs:
           key: udeps
 
       - name: Install cargo-udeps
-        uses: stackabletech/cargo-install-action@8f7dbbcd2ebe22717efc132d0dd61e80841994b9 # cargo-udeps
+        uses: stackabletech/cargo-install-action@e3e2dcf8d0f0e5bdbc619bf6ee7560dd68152d3c # cargo-udeps
 
       - name: Run cargo-udeps
         run: cargo udeps --workspace --all-targets
 
   build-container-image:
     name: Build/Publish ${{ matrix.runner.arch }} Image
-    if: (github.event_name != 'merge_group') && needs.detect-changes.outputs.detected == 'true'
+    if: |
+      github.repository_owner == 'stackabletech'
+      && (github.event_name != 'merge_group')
+      && needs.detect-changes.outputs.detected == 'true'
     needs: [detect-changes]
     permissions:
+      contents: read
       id-token: write
     strategy:
       fail-fast: false
@@ -115,13 +124,13 @@ jobs:
       operator-version: ${{ steps.version.outputs.OPERATOR_VERSION }}
     steps:
       - name: Install host dependencies
-        uses: awalsh128/cache-apt-pkgs-action@2c09a5e66da6c8016428a2172bd76e5e4f14bb17 # v1.5.3
+        uses: awalsh128/cache-apt-pkgs-action@553a35bb8ebd9fcabcb1c9451aa4c98e1b4ca8a9 # v1.6.3
         with:
           packages: protobuf-compiler krb5-user libkrb5-dev libclang-dev liblzma-dev libssl-dev pkg-config apt-transport-https
           version: ${{ matrix.runner.name }}
 
       - name: Checkout Repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
           submodules: recursive
@@ -156,7 +165,7 @@ jobs:
           echo "OPERATOR_VERSION=$NEW_VERSION" | tee -a "$GITHUB_OUTPUT"
 
       - name: Install Nix
-        uses: cachix/install-nix-action@fc6e360bedc9ee72d75e701397f0bb30dce77568 # v31.5.2
+        uses: cachix/install-nix-action@630ae543ea3a38a9a4166f03376c02c50f408342 # v31.11.0
 
       - name: Install Rust ${{ env.RUST_TOOLCHAIN_VERSION }} Toolchain
         shell: bash
@@ -196,13 +205,15 @@ jobs:
   publish-index-manifest:
     name: Publish/Sign ${{ needs.build-container-image.outputs.operator-version }} Index
     if: |
-      (github.event_name != 'merge_group')
+      github.repository_owner == 'stackabletech'
+      && (github.event_name != 'merge_group')
       && needs.detect-changes.outputs.detected == 'true'
       && !github.event.pull_request.head.repo.fork
     needs:
       - detect-changes
       - build-container-image
     permissions:
+      contents: read
       id-token: write
     runs-on: ubuntu-latest
     outputs:
@@ -210,7 +221,7 @@ jobs:
       quay-index-digest: ${{ steps.publish-quay.outputs.image-index-manifest-digest }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
 
@@ -241,7 +252,8 @@ jobs:
   provenance-oci:
     name: Generate Provenance for ${{ needs.build-container-image.outputs.operator-version }} (oci.stackable.tech)
     if: |
-      (github.event_name != 'merge_group')
+      github.repository_owner == 'stackabletech'
+      && (github.event_name != 'merge_group')
       && needs.detect-changes.outputs.detected == 'true'
       && !github.event.pull_request.head.repo.fork
     needs:
@@ -268,7 +280,8 @@ jobs:
   provenance-quay:
     name: Generate Provenance for ${{ needs.build-container-image.outputs.operator-version }} (quay.io)
     if: |
-      (github.event_name != 'merge_group')
+      github.repository_owner == 'stackabletech'
+      && (github.event_name != 'merge_group')
       && needs.detect-changes.outputs.detected == 'true'
       && !github.event.pull_request.head.repo.fork
     needs:
@@ -295,17 +308,20 @@ jobs:
   publish-helm-chart:
     name: Package/Publish ${{ needs.build-container-image.outputs.operator-version }} Helm Chart
     if: |
-      (github.event_name != 'merge_group')
+      github.repository_owner == 'stackabletech'
+      && (github.event_name != 'merge_group')
       && needs.detect-changes.outputs.detected == 'true'
+      && !github.event.pull_request.head.repo.fork
     needs:
       - detect-changes
       - build-container-image
     permissions:
+      contents: read
       id-token: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
           submodules: recursive
@@ -338,7 +354,8 @@ jobs:
   openshift-preflight-check:
     name: Run OpenShift Preflight Check for ${{ needs.build-container-image.outputs.operator-version }}-${{ matrix.arch }}
     if: |
-      (github.event_name != 'merge_group')
+      github.repository_owner == 'stackabletech'
+      && (github.event_name != 'merge_group')
       && needs.detect-changes.outputs.detected == 'true'
       && !github.event.pull_request.head.repo.fork
     needs:
@@ -372,35 +389,48 @@ jobs:
     # WARNING: Do not change the name unless you will also be changing the
     # Required Checks (in branch protections) in GitHub settings.
     name: Finished Build and Publish
+    if: always()
     needs:
+      - detect-changes
       - cargo-udeps
+      - build-container-image
+      - publish-index-manifest
       - openshift-preflight-check
       - publish-helm-chart
+      - provenance-oci
+      - provenance-quay
     runs-on: ubuntu-latest
     steps:
-      - run: echo "We are done here"
+      - name: Fail if a required job failed or was cancelled
+        if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
+        run: |
+          echo "One or more required jobs failed or were cancelled."
+          exit 1
+
+      - name: Finished
+        run: echo "All required jobs succeeded or were intentionally skipped."
 
   notify:
     name: Failure Notification
     if: |
-      (failure() || github.run_attempt > 1)
+      !cancelled()
+      && github.repository_owner == 'stackabletech'
+      && (contains(needs.*.result, 'failure') || github.run_attempt > 1)
       && github.event_name != 'merge_group'
       && needs.detect-changes.outputs.detected == 'true'
       && !github.event.pull_request.head.repo.fork
     needs:
       - detect-changes
+      - cargo-udeps
       - build-container-image
       - publish-index-manifest
       - provenance-oci
       - provenance-quay
       - publish-helm-chart
+      - openshift-preflight-check
+      - finished
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-        with:
-          persist-credentials: false
-
       - name: Send Notification
         uses: stackabletech/actions/send-slack-notification@a8af17a19bdcc3b5da0065f76e73827ba0c072ce # v0.16.0
         with:
