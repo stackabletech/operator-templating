@@ -6,6 +6,9 @@ retired_files:
   - .readme/static/borrowed/sdp_overview.png
   - .github/workflows/pr_pre-commit.yaml
   - .github/workflows/build.yml
+  - .github/ISSUE_TEMPLATE/normal-issue.md
+  - .github/ISSUE_TEMPLATE/new_version.md
+  - .github/ISSUE_TEMPLATE/bug_report.yml
   - deploy/config-spec
   - deploy/helm/[[operator.name]]/configs
   - deploy/helm/[[operator.name]]/templates/configmap.yaml
