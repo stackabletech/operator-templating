@@ -5,6 +5,7 @@ ignore:
   # yamllint can't parse these files as yaml because of j2 templating
   - template/.github/ISSUE_TEMPLATE/bug_report.yml.j2
   - template/deploy/helm/\[\[operator\]\]/Chart.yaml.j2
+  - template/deploy/helm/artifacthub-repo.yml.j2
   - template/deploy/helm/**/templates
 
 rules:
