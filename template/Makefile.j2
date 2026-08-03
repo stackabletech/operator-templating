@@ -28,7 +28,7 @@ docker-build:
 	docker build --force-rm --build-arg VERSION=${VERSION} -t "${OCI_REGISTRY_HOSTNAME}/${OCI_REGISTRY_PROJECT_IMAGES}/${OPERATOR_NAME}:${VERSION}-${ARCH}" -f docker/Dockerfile .
 
 ## Chart related targets
-compile-chart: version crds
+compile-chart: version crds crd-annotation
 
 chart-clean:
 	rm -rf "deploy/helm/${OPERATOR_NAME}/crds"
@@ -42,6 +42,29 @@ version:
 crds:
 	mkdir -p extra
 	cargo run --bin stackable-"${OPERATOR_NAME}" -- crd > extra/crds.yaml
+
+# This adds CRD metadata for artifacthub.io (AH) to Chart.yaml.
+# We don't ship CRDs in our Helm charts (anymore), so we need these annotations to provide details.
+# We only list the storage version as we're unsure if AH supports more than one (docs unclear).
+# The yq thing here selects the storage version and then maps various metadata bits to the form AH requires.
+#
+# It appends a single annotation whose value is a list, one entry per CRD.
+# Example: For the secret-operator that comes out as:
+#
+#   artifacthub.io/crds: |-
+#     - kind: SecretClass
+#       version: v1alpha2
+#       name: secretclasses.secrets.stackable.tech
+#       displayName: SecretClass
+#       description: A SecretClass is a cluster-global Kubernetes resource that defines ...
+#     - kind: TrustStore
+#       version: v1alpha1
+#       name: truststores.secrets.stackable.tech
+#       displayName: TrustStore
+#       description: A TrustStore requests information about how to validate secrets ...
+crd-annotation: crds
+	@CRDS="$$(yq ea -o=yaml '[.] | map(.spec.versions |= map(select(.storage == true))) | map({"kind": .spec.names.kind, "version": .spec.versions[0].name, "name": .metadata.name, "displayName": .spec.names.kind, "description": (.spec.versions[0].schema.openAPIV3Schema.description // "")})' extra/crds.yaml)" \
+		yq -i '.annotations["artifacthub.io/crds"] = strenv(CRDS) | .annotations["artifacthub.io/crds"] style="literal"' "deploy/helm/${OPERATOR_NAME}/Chart.yaml"
 
 chart-lint: compile-chart
 	docker run -it -v $(shell pwd):/build/helm-charts -w /build/helm-charts quay.io/helmpack/chart-testing:v3.5.0  ct lint --config deploy/helm/ct.yaml
