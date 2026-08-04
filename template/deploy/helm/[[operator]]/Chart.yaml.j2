@@ -9,10 +9,7 @@ home: https://github.com/stackabletech/{[ operator.name }]
 sources:
   - https://github.com/stackabletech/{[ operator.name }]
 
-keywords:
-{[%- for keyword in operator.keywords %}]
-  - {[ keyword }]
-{[%- endfor %}]
+keywords: {[ operator.keywords | tojson }]
 
 maintainers:
   - name: Stackable
