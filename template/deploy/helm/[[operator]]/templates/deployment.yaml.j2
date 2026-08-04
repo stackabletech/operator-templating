@@ -17,7 +17,6 @@ spec:
     metadata:
       annotations:
         internal.stackable.tech/image: {{ include "operator.image" . }}
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -42,9 +41,6 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          volumeMounts:
-            - mountPath: /etc/stackable/{{ include "operator.appname" . }}/config-spec
-              name: config-spec
           env:
             # The following env vars are passed as clap (think CLI) arguments to the operator.
             # They are picked up by clap using the structs defied in the operator.
@@ -99,10 +95,6 @@ spec:
             - name: OPA_BUNDLE_BUILDER_CLUSTERROLE
               value: {{ include "operator.fullname" . }}-opa-bundle-builder-clusterrole
 {[% endif %}]
-      volumes:
-        - name: config-spec
-          configMap:
-            name: {{ include "operator.fullname" . }}-configmap
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

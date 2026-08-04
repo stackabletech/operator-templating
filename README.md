@@ -55,7 +55,6 @@ Target repositories are configured in `repositories.yaml` in the following form:
 | `url` | The github repository for this operator. Need to be in the form of `<org>/<repo>.git`. |
 | `product_string` | A lower case string to use in config files, file names and the like. Should not contain whitespaces. This can sometimes be a shortened version of the full name, for example for Open Policy Agent this would be "opa" |
 | `pretty_string` | The actual name of the product, including whitespaces and proper capitalization. This is intended to be used in doc or man files or similar things. |
-| `config.include_productconfig` | Whether to include files from the `deploy/config-spec` folder into the os package. *Default*: true |
 | `config.has_product` | Indicates that the operator manages a product. This is particularly useful to differentiate between core and product operators. *Default*: true |
 | `config.run_as` | Whether to run the operator as a default Deployment, or something custom. |
 

@@ -1,56 +1,138 @@
 # If you add a new repository here, you also need to add it to the list of
 # repositories in ../.github/workflows/generate_prs.yml.
+#
+# chart_description and keywords end up in the Helm chart's Chart.yaml and are
+# indexed by Artifact Hub and our own Hub. Descriptions deliberately use the form "operator for
+# Apache X" rather than "Apache X operator": the ASF mark must refer to the
+# upstream project, not read as part of our product name.
+#
+# hub_component_slug only needs setting where the Hub component slug differs
+# from product_string. Operators with has_product: false have no Hub component
+# at all, so they get no hub_component_slug.
 ---
 repositories:
   - name: airflow-operator
     pretty_string: Apache Airflow
     product_string: airflow
     url: stackabletech/airflow-operator.git
+    chart_description: Kubernetes operator for Apache Airflow. Deploy and run Airflow with the Stackable Data Platform (SDP).
+    keywords:
+      - apache-airflow
+      - airflow
+      - workflow-orchestration
+      - kubernetes
+      - operator
+      - big-data
 
   - name: commons-operator
     pretty_string: Stackable Commons
-    product_string: commons
+    product_string: commons-operator
     url: stackabletech/commons-operator.git
+    chart_description: Kubernetes operator for common resources shared across the Stackable Data Platform (SDP).
+    keywords:
+      - stackable
+      - data-platform
+      - kubernetes
+      - operator
     config:
-      include_productconfig: false
       has_product: false
 
   - name: druid-operator
     pretty_string: Apache Druid
     product_string: druid
     url: stackabletech/druid-operator.git
+    chart_description: Kubernetes operator for Apache Druid. Deploy and run Druid clusters with the Stackable Data Platform (SDP).
+    keywords:
+      - apache-druid
+      - druid
+      - olap
+      - analytics
+      - kubernetes
+      - operator
+      - big-data
 
   - name: hbase-operator
     pretty_string: Apache HBase
     product_string: hbase
     url: stackabletech/hbase-operator.git
+    chart_description: Kubernetes operator for Apache HBase. Deploy and run HBase masters and region servers with the Stackable Data Platform (SDP).
+    keywords:
+      - apache-hbase
+      - hbase
+      - nosql
+      - kubernetes
+      - operator
+      - big-data
 
   - name: hdfs-operator
     pretty_string: Apache HDFS
     product_string: hdfs
     url: stackabletech/hdfs-operator.git
+    chart_description: Kubernetes operator for Apache Hadoop HDFS. Deploy and run HDFS NameNodes, DataNodes and JournalNodes with the Stackable Data Platform (SDP).
+    keywords:
+      - apache-hadoop
+      - hadoop
+      - hdfs
+      - storage
+      - kubernetes
+      - operator
+      - big-data
 
   - name: hive-operator
     pretty_string: Apache Hive
     product_string: hive
     url: stackabletech/hive-operator.git
+    chart_description: Kubernetes operator for Apache Hive. Deploy and run the Hive Metastore with the Stackable Data Platform (SDP).
+    keywords:
+      - apache-hive
+      - hive
+      - hive-metastore
+      - metastore
+      - kubernetes
+      - operator
+      - big-data
 
   - name: kafka-operator
     pretty_string: Apache Kafka
     product_string: kafka
     url: stackabletech/kafka-operator.git
+    chart_description: Kubernetes operator for Apache Kafka. Deploy and run Kafka brokers with the Stackable Data Platform (SDP).
+    keywords:
+      - apache-kafka
+      - kafka
+      - streaming
+      - messaging
+      - kubernetes
+      - operator
+      - big-data
 
   - name: nifi-operator
     pretty_string: Apache NiFi
     product_string: nifi
     url: stackabletech/nifi-operator.git
+    chart_description: Kubernetes operator for Apache NiFi. Deploy and run NiFi clusters with the Stackable Data Platform (SDP).
+    keywords:
+      - apache-nifi
+      - nifi
+      - dataflow
+      - etl
+      - kubernetes
+      - operator
+      - big-data
 
   - name: listener-operator
     pretty_string: Stackable Listener Operator
     product_string: listener-operator
     url: stackabletech/listener-operator.git
+    chart_description: Kubernetes operator for exposing pods through listeners, load balancers and NodePorts. Part of the Stackable Data Platform (SDP).
+    keywords:
+      - listener
+      - load-balancer
+      - service-discovery
+      - networking
+      - kubernetes
+      - operator
     config:
-      include_productconfig: false
       has_product: false
       run_as: custom
 
@@ -58,6 +140,15 @@ repositories:
     pretty_string: OpenPolicyAgent
     product_string: opa
     url: stackabletech/opa-operator.git
+    chart_description: Kubernetes operator for the Open Policy Agent (OPA). Deploy and run OPA for authorization with the Stackable Data Platform (SDP).
+    keywords:
+      - open-policy-agent
+      - opa
+      - authorization
+      - policy
+      - rego
+      - kubernetes
+      - operator
     config:
       extra_crates:
         - stackable-opa-bundle-builder
@@ -66,32 +157,80 @@ repositories:
     pretty_string: OpenSearch
     product_string: opensearch
     url: stackabletech/opensearch-operator.git
+    chart_description: Kubernetes operator for OpenSearch. Deploy and run OpenSearch clusters with the Stackable Data Platform (SDP).
+    keywords:
+      - opensearch
+      - search
+      - observability
+      - kubernetes
+      - operator
 
   - name: secret-operator
     pretty_string: Stackable Secret Operator
     product_string: secret-operator
     url: stackabletech/secret-operator.git
+    chart_description: Kubernetes operator for provisioning TLS certificates, Kerberos keytabs and other secrets to pods. Part of the Stackable Data Platform (SDP).
+    keywords:
+      - secrets
+      - tls
+      - kerberos
+      - csi
+      - kubernetes
+      - operator
     config:
-      include_productconfig: false
       has_product: false
       run_as: custom
 
   - name: spark-k8s-operator
     pretty_string: Apache Spark-on-Kubernetes
     product_string: spark-k8s
+    hub_component_slug: spark
     url: stackabletech/spark-k8s-operator.git
+    chart_description: Kubernetes operator for Apache Spark. Run Spark applications on Kubernetes with the Stackable Data Platform (SDP).
+    keywords:
+      - apache-spark
+      - spark
+      - spark-on-kubernetes
+      - kubernetes
+      - operator
+      - big-data
 
   - name: superset-operator
     pretty_string: Apache Superset
     product_string: superset
     url: stackabletech/superset-operator.git
+    chart_description: Kubernetes operator for Apache Superset. Deploy and run Superset with the Stackable Data Platform (SDP).
+    keywords:
+      - apache-superset
+      - superset
+      - business-intelligence
+      - dashboards
+      - kubernetes
+      - operator
 
   - name: trino-operator
     pretty_string: Trino
     product_string: trino
     url: stackabletech/trino-operator.git
+    chart_description: Kubernetes operator for Trino. Deploy and run Trino coordinators and workers with the Stackable Data Platform (SDP).
+    keywords:
+      - trino
+      - sql
+      - query-engine
+      - federation
+      - kubernetes
+      - operator
+      - big-data
 
   - name: zookeeper-operator
     pretty_string: Apache ZooKeeper
     product_string: zookeeper
     url: stackabletech/zookeeper-operator.git
+    chart_description: Kubernetes operator for Apache ZooKeeper. Deploy and run ZooKeeper ensembles with the Stackable Data Platform (SDP).
+    keywords:
+      - apache-zookeeper
+      - zookeeper
+      - coordination
+      - kubernetes
+      - operator
+      - big-data

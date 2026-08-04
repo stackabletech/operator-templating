@@ -84,7 +84,7 @@
 
     - name: "Operator [{{ operator.name }}] remove retired files and directories"
       file:
-        path: "{{ work_dir }}/{{ operator.name }}/{{ item | replace('[[product]]', operator.product_string) }}"
+        path: "{{ work_dir }}/{{ operator.name }}/{{ item | replace('[[operator.name]]', operator.name) }}"
         state: absent
       with_items: "{{ retired_files | default([]) }}"
       register: deletion_result
