@@ -58,7 +58,7 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          sudo apt update &&  \
+          sudo apt update && \
           sudo apt install -y software-properties-common && \
           sudo apt-add-repository ppa:ansible/ansible -y && \
           sudo apt install -y ansible
@@ -92,9 +92,12 @@ jobs:
           if [ "$EVENT_NAME" = "schedule" ]; then
             AUTHOR="stackabletech/developers"
             REASON="Weekly run triggered"
-          else
+          elif [ "$EVENT_NAME" = "workflow_dispatch" ]; then
             AUTHOR="$SENDER_LOGIN"
             REASON="$INPUT_MESSAGE"
+          else
+            echo "Unexpected event name '$EVENT_NAME'; expected 'schedule' or 'workflow_dispatch'"
+            exit 1
           fi
 
           # Encode parameters using jq, without serializing the GH_ACCESS_TOKEN
