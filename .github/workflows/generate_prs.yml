@@ -106,7 +106,7 @@ jobs:
             --arg author "$AUTHOR" \
             --arg reason "$REASON" \
             --arg custom_pr_title "$CUSTOM_PR_TITLE" \
-            --arg base_dir "$(pwd)" \
+            --arg base_dir "${PWD}" \
             --arg repository "$REPOSITORY" \
             '{commit_hash: $commit_hash, author: $author, reason: $reason, custom_pr_title: $custom_pr_title, base_dir: $base_dir, shard_repositories: [$repository]} | with_entries(select(.value != null and .value != ""))' > vars.json
 
