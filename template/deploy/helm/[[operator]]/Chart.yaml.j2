@@ -6,13 +6,14 @@ appVersion: "<version_placeholder>"
 description: "{[ operator.chart_description }]"
 
 home: https://github.com/stackabletech/{[ operator.name }]
+# One known use of this is the Artifact Hub (AH) listing which shows the logo.
+# AH downloads the logo and re-hosts it.
+# We opted to not use the project logos (e.g. the Apache Spark logo) here due to trademark concerns.
+icon: https://raw.githubusercontent.com/stackabletech/{[ operator.name }]/main/.readme/static/borrowed/Icon_Stackable.svg
 sources:
   - https://github.com/stackabletech/{[ operator.name }]
 
-keywords:
-{[%- for keyword in operator.keywords %}]
-  - {[ keyword }]
-{[%- endfor %}]
+keywords: {[ operator.keywords | tojson }]
 
 maintainers:
   - name: Stackable

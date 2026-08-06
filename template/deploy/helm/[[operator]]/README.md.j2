@@ -40,9 +40,9 @@ See the [documentation](https://docs.stackable.tech/home/stable/{[ operator.prod
 
 This operator installs and manages its own CustomResourceDefinitions, so they are not part of this chart.
 The resources it reconciles, and the configuration they accept, are described in the [documentation](https://docs.stackable.tech/home/stable/{[ operator.product_string }]/).
-{[%- if operator.config.has_product | default(true) %}]
+{[% if operator.config.has_product | default(true) %}]
 Each CRD is also browsable on the [Stackable Hub](https://hub.stackable.tech/components/{[ operator.hub_component_slug | default(operator.product_string) }]), with its schema and the API versions served per SDP release.
-{[%- endif %}]
+{[% endif %}]
 
 ## Links
 
