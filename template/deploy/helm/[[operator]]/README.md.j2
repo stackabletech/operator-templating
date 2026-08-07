@@ -6,7 +6,7 @@
    The blank line below satisfies MD022 for this template and is stripped from the
    rendered file by the whitespace-control marker closing this comment. -#}
 
-# Helm Chart for Stackable Operator for {[ operator.pretty_string }]
+# Helm Chart for {[ operator.chart_title | default("Stackable Operator for " + operator.pretty_string) }]
 
 {[ operator.chart_description }]
 
