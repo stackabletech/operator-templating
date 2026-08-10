@@ -62,6 +62,31 @@ jobs:
     outputs:
       detected: ${{ steps.check.outputs.detected }}
 
+  helm-lint:
+    name: Lint Helm Chart
+    needs:
+      - detect-changes
+    if: needs.detect-changes.outputs.detected == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Validates the chart templates and, where a values.schema.json exists, the
+      # default values against it.
+      #
+      # The chart cannot render without a registry overlay, because image.repository
+      # is only set there.
+      - name: Lint Helm Chart
+        env:
+          CHART_DIRECTORY: deploy/helm/{[ operator.name }]
+        run: |
+          for registry in oci.stackable.tech quay.io; do
+            helm lint "$CHART_DIRECTORY" --values "$CHART_DIRECTORY/values/${registry}.yaml"
+          done
+
   cargo-udeps:
     name: Run cargo-udeps
     if: needs.detect-changes.outputs.detected == 'true'
@@ -384,6 +409,7 @@ jobs:
     needs:
       - detect-changes
       - cargo-udeps
+      - helm-lint
       - build-container-image
       - publish-index-manifest
       - provenance-oci
