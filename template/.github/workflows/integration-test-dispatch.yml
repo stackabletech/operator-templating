@@ -1,0 +1,57 @@
+---
+name: Integration Test (Dispatch)
+
+on:
+  workflow_dispatch:
+    inputs:
+      test-mode:
+        description: Test mode
+        required: true
+        type: choice
+        options:
+          - profile
+          - custom
+      test-mode-input:
+        description: |
+          The profile or the runner used. Eg: `smoke-latest` or `amd64` (see tests/interu.yaml)
+        required: true
+      test-suite:
+        description: Name of the test-suite. Only used if test-mode is `custom`
+      test:
+        description: Name of the test. Only used of test-mode is `custom`
+
+permissions: {}
+
+jobs:
+  test:
+    name: Run Integration Test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+          submodules: recursive
+
+      - name: Run Integration Test
+        id: test
+        uses: stackabletech/actions/run-integration-test@b5cc0acc5287f6184551b77f3ae4a5c3e41678c4 # v0.17.3
+        with:
+          replicated-api-token: ${{ secrets.REPLICATED_API_TOKEN }}
+          otlp-bearer-token: ${{ secrets.OTLP_BEARER_TOKEN }}
+          test-mode-input: ${{ inputs.test-mode-input }}
+          test-suite: ${{ inputs.test-suite }}
+          test-mode: ${{ inputs.test-mode }}
+          test: ${{ inputs.test }}
+
+      - name: Send Notification
+        if: ${{ failure() || github.run_attempt > 1 }}
+        uses: stackabletech/actions/send-slack-notification@b5cc0acc5287f6184551b77f3ae4a5c3e41678c4 # v0.17.3
+        with:
+          slack-token: ${{ secrets.SLACK_INTEGRATION_TEST_TOKEN }}
+          failed-tests: ${{ steps.test.outputs.failed-tests }}
+          test-health: ${{ steps.test.outputs.health }}
+          test-result: ${{ steps.test.conclusion }}
+          channel-id: C07UYJYSMSN # notifications-integration-tests
+          type: integration-test
