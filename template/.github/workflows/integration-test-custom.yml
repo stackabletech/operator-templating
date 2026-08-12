@@ -1,24 +1,16 @@
 ---
-name: Integration Test (Dispatch)
+name: Integration Test (Custom)
 
 on:
   workflow_dispatch:
     inputs:
-      test-mode:
-        description: Test mode
-        required: true
-        type: choice
-        options:
-          - profile
-          - custom
-      test-mode-input:
-        description: |
-          The profile or the runner used. Eg: `smoke-latest` or `amd64` (see tests/interu.yaml)
+      test-runner:
+        description: Name of the test runner, eg. `amd64` (see test/interu.yaml)
         required: true
       test-suite:
-        description: Name of the test-suite. Only used if test-mode is `custom`
+        description: Name of the test-suite, eg. `openshift`
       test:
-        description: Name of the test. Only used of test-mode is `custom`
+        description: Name of the test, eg. `smoke`
 
 permissions: {}
 
@@ -40,9 +32,9 @@ jobs:
         with:
           replicated-api-token: ${{ secrets.REPLICATED_API_TOKEN }}
           otlp-bearer-token: ${{ secrets.OTLP_BEARER_TOKEN }}
-          test-mode-input: ${{ inputs.test-mode-input }}
+          test-mode-input: ${{ inputs.test-runner }}
           test-suite: ${{ inputs.test-suite }}
-          test-mode: ${{ inputs.test-mode }}
+          test-mode: custom
           test: ${{ inputs.test }}
 
       - name: Send Notification
