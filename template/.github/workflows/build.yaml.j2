@@ -98,7 +98,9 @@ jobs:
           key: udeps
 
       - name: Install cargo-udeps
-        uses: stackabletech/cargo-install-action@e3e2dcf8d0f0e5bdbc619bf6ee7560dd68152d3c # cargo-udeps
+        uses: stackabletech/cargo-install-action@e3e2dcf8d0f0e5bdbc619bf6ee7560dd68152d3c
+        with:
+          crate: cargo-udeps
 
       - name: Run cargo-udeps
         run: cargo udeps --workspace --all-targets
