@@ -19,6 +19,6 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-      - uses: stackabletech/actions/run-prek@dc83bb926cc464f0f32454e934777116bd1c7768 # v0.16.3
+      - uses: stackabletech/actions/run-prek@b5cc0acc5287f6184551b77f3ae4a5c3e41678c4 # v0.17.3
         with:
           hadolint: ${{ env.HADOLINT_VERSION }}
