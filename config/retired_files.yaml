@@ -5,7 +5,7 @@
 # TODO (@Techassi): Clean those up
 retired_files:
   - .readme/static/borrowed/sdp_overview.png
-  - .github/workflows/integration-test.yaml
+  - .github/workflows/integration-test.yml
   - .github/workflows/pr_pre-commit.yaml
   - .github/workflows/build.yml
   - .github/ISSUE_TEMPLATE/normal-issue.md
