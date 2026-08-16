@@ -169,6 +169,14 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     )
 
     parser.add_argument(
+        "--release-file",
+        help="Path to the test release file (default tests/release.yaml)",
+        type=str,
+        required=False,
+        default=os.path.join("tests", "release.yaml"),
+    )
+
+    parser.add_argument(
         "--listener-class-preset",
         help="Choose the ListenerClass preset",
         type=str,
@@ -225,7 +233,7 @@ def have_requirements() -> None:
 
 @contextlib.contextmanager
 def release_file(
-    operators: list[tuple[str, str]], skip_ops: list[str]
+    release_file: str, operators: list[tuple[str, str]], skip_ops: list[str]
 ) -> collections.abc.Generator[str, None, None]:
     """Generate a (possibly modified) copy of the release.yaml file.
 
@@ -241,7 +249,6 @@ def release_file(
     """
 
     def _patch():
-        release_file = os.path.join("tests", "release.yaml")
         # A marker to validate that all ops were patched
         patched_release = []
         with open(release_file, "r") as f:
@@ -487,7 +494,7 @@ def main(argv) -> int:
             opts.namespace,
             opts.work_dir,
         )
-        with release_file(opts.operator, opts.skip_operator) as f:
+        with release_file(opts.release_file, opts.operator, opts.skip_operator) as f:
             maybe_install_release(opts.skip_release, f, opts.listener_class_preset)
         if opts.skip_tests:
             logging.info("Skip running tests.")
