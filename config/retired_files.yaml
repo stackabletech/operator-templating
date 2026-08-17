@@ -12,5 +12,6 @@ retired_files:
   - .github/ISSUE_TEMPLATE/new_version.md
   - .github/ISSUE_TEMPLATE/bug_report.yml
   - deploy/config-spec
+  - deploy/helm/artifacthub-repo.yml
   - deploy/helm/[[operator.name]]/configs
   - deploy/helm/[[operator.name]]/templates/configmap.yaml
