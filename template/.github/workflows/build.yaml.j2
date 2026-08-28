@@ -411,9 +411,28 @@ jobs:
       - finished
     runs-on: ubuntu-latest
     steps:
+      - name: Combine Check Results
+        id: combine
+        env:
+          OPENSHIFT_PREFLIGHT_CHECK_RESULT: ${{ needs.openshift-preflight-check.result }}
+          CARGO_UDEPS_RESULT: ${{ needs.cargo-udeps.result }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [ -n "${RUNNER_DEBUG+set}" ] && set -x
+
+          COMBINED_CHECKS_RESULT="success"
+
+          if [ "$OPENSHIFT_PREFLIGHT_CHECK_RESULT" == "failure" ] || [ "$CARGO_UDEPS_RESULT" == "failure" ]; then
+            COMBINED_CHECKS_RESULT="failure"
+          fi
+
+          echo "COMBINED_CHECKS_RESULT=$COMBINED_CHECKS_RESULT" | tee -a "$GITHUB_OUTPUT"
+
       - name: Send Notification
         uses: stackabletech/actions/send-slack-notification@0fe048f952bee522474903a925ea48dc706a0bb4 # v0.17.5
         with:
+          combined-checks-result: ${{ steps.combine.outputs.COMBINED_CHECKS_RESULT }}
           publish-helm-chart-result: ${{ needs.publish-helm-chart.result }}
           publish-manifests-result: ${{ needs.publish-index-manifest.result }}
           build-result: ${{ needs.build-container-image.result }}
