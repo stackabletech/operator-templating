@@ -404,6 +404,7 @@ jobs:
     needs:
       - detect-changes
       - cargo-udeps
+      - helm-lint
       - build-container-image
       - publish-index-manifest
       - publish-helm-chart
@@ -416,6 +417,7 @@ jobs:
         env:
           OPENSHIFT_PREFLIGHT_CHECK_RESULT: ${{ needs.openshift-preflight-check.result }}
           CARGO_UDEPS_RESULT: ${{ needs.cargo-udeps.result }}
+          HELM_LINT_RESULT: ${{ needs.helm-lint.result }}
         shell: bash
         run: |
           set -euo pipefail
@@ -423,7 +425,7 @@ jobs:
 
           COMBINED_CHECKS_RESULT="success"
 
-          if [ "$OPENSHIFT_PREFLIGHT_CHECK_RESULT" == "failure" ] || [ "$CARGO_UDEPS_RESULT" == "failure" ]; then
+          if [ "$OPENSHIFT_PREFLIGHT_CHECK_RESULT" == "failure" ] || [ "$CARGO_UDEPS_RESULT" == "failure" ] || [ "$HELM_LINT_RESULT" == "failure" ]; then
             COMBINED_CHECKS_RESULT="failure"
           fi
 
