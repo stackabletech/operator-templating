@@ -221,8 +221,8 @@ jobs:
           image-registry-username: robot$sdp+github-action-build
           image-registry-password: ${{ secrets.HARBOR_ROBOT_SDP_GITHUB_ACTION_BUILD_SECRET }}
           image-repository: sdp/${{ env.OPERATOR_NAME }}
-          image-manifest-tag: ${{ steps.build.outputs.image-manifest-tag }}
-          source-image-uri: ${{ steps.build.outputs.image-manifest-uri }}
+          canonical-image-manifest-tag: ${{ steps.build.outputs.image-manifest-tag }}
+          canonical-source-image-uri: ${{ steps.build.outputs.image-manifest-uri }}
 
       - name: Publish Container Image to quay.io
         if: ${{ !github.event.pull_request.head.repo.fork }}
@@ -232,8 +232,8 @@ jobs:
           image-registry-username: stackable+robot_sdp_github_action_build
           image-registry-password: ${{ secrets.QUAY_ROBOT_SDP_GITHUB_ACTION_BUILD_SECRET }}
           image-repository: stackable/sdp/${{ env.OPERATOR_NAME }}
-          image-manifest-tag: ${{ steps.build.outputs.image-manifest-tag }}
-          source-image-uri: ${{ steps.build.outputs.image-manifest-uri }}
+          canonical-image-manifest-tag: ${{ steps.build.outputs.image-manifest-tag }}
+          canonical-source-image-uri: ${{ steps.build.outputs.image-manifest-uri }}
 
   publish-index-manifest:
     name: Publish/Sign ${{ needs.build-container-image.outputs.operator-version }} Index
@@ -262,7 +262,7 @@ jobs:
           image-registry-username: robot$sdp+github-action-build
           image-registry-password: ${{ secrets.HARBOR_ROBOT_SDP_GITHUB_ACTION_BUILD_SECRET }}
           image-repository: sdp/${{ env.OPERATOR_NAME }}
-          image-index-manifest-tag: ${{ needs.build-container-image.outputs.operator-version }}
+          canonical-image-index-manifest-tag: ${{ needs.build-container-image.outputs.operator-version }}
 
       - name: Publish and Sign Image Index to quay.io
         uses: stackabletech/actions/publish-image-index-manifest@e8aed001d347bcf693e41b61f4098b0cb94b4ab6 # v0.18.0
@@ -271,7 +271,7 @@ jobs:
           image-registry-username: stackable+robot_sdp_github_action_build
           image-registry-password: ${{ secrets.QUAY_ROBOT_SDP_GITHUB_ACTION_BUILD_SECRET }}
           image-repository: stackable/sdp/${{ env.OPERATOR_NAME }}
-          image-index-manifest-tag: ${{ needs.build-container-image.outputs.operator-version }}
+          canonical-image-index-manifest-tag: ${{ needs.build-container-image.outputs.operator-version }}
 
   publish-helm-chart:
     name: Package/Publish ${{ needs.build-container-image.outputs.operator-version }} Helm Chart
