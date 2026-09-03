@@ -3,20 +3,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "operator.fullname" . }}-deployment
+  name: {{ include "{[ operator.name }].fullname" . }}-deployment
   labels:
-    {{- include "operator.labels" . | nindent 4 }}
+    {{- include "{[ operator.name }].labels" . | nindent 4 }}
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      {{- include "operator.selectorLabels" . | nindent 6 }}
+      {{- include "{[ operator.name }].selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
-        internal.stackable.tech/image: {{ include "operator.image" . }}
+        internal.stackable.tech/image: {{ include "{[ operator.name }].image" . }}
         {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -24,20 +24,20 @@ spec:
         {{- if .Values.maintenance.customResourceDefinitions.maintain }}
         webhook.stackable.tech/conversion: enabled
         {{- end }}
-        {{- include "operator.selectorLabels" . | nindent 8 }}
+        {{- include "{[ operator.name }].selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "operator.serviceAccountName" . }}
+      serviceAccountName: {{ include "{[ operator.name }].serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ include "operator.appname" . }}
+        - name: {{ include "{[ operator.name }].appname" . }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ include "operator.image" . }}
+          image: {{ include "{[ operator.name }].image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
@@ -65,7 +65,7 @@ spec:
             # The name of the Kubernetes Service that point to the operator Pod, e.g. used to
             # construct the conversion webhook endpoint.
             - name: OPERATOR_SERVICE_NAME
-              value: {{ include "operator.fullname" . }}
+              value: {{ include "{[ operator.name }].fullname" . }}
 
 {[% if operator.config.has_product | default(true) %}]
             # The product image repository, like "oci.stackable.tech/sdp".
@@ -89,11 +89,11 @@ spec:
               value: {{ .Values.kubernetesClusterDomain | quote }}
             {{- end }}
 
-            {{- include "telemetry.envVars" . | nindent 12 }}
-            {{- include "maintenance.envVars" . | nindent 12 }}
+            {{- include "{[ operator.name }].telemetry.envVars" . | nindent 12 }}
+            {{- include "{[ operator.name }].maintenance.envVars" . | nindent 12 }}
 {[% if operator.product_string in ['opa'] %}]
             - name: OPA_BUNDLE_BUILDER_CLUSTERROLE
-              value: {{ include "operator.fullname" . }}-opa-bundle-builder-clusterrole
+              value: {{ include "{[ operator.name }].fullname" . }}-opa-bundle-builder-clusterrole
 {[% endif %}]
       {{- with .Values.nodeSelector }}
       nodeSelector:
