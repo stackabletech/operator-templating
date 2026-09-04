@@ -11,13 +11,13 @@ import unittest
 from pathlib import Path
 
 NAME_PATTERN = r'\b(?:define|include|template)\s+"([^"]+)"'
-CHART_PATTERN = r"(?:^|/)deploy/helm/([^/]+)/templates/"
+CHART_PATTERN = r"(?:^|/)deploy/helm/(?P<chart>[^/]+)/templates/"
 
 
 def chart_of(path):
     """The chart whose templates directory holds path, or None if it is outside one."""
     found = re.search(CHART_PATTERN, Path(path).as_posix())
-    return found.group(1) if found else None
+    return found.group("chart") if found else None
 
 
 def unprefixed(text, chart):
@@ -81,13 +81,14 @@ if __name__ == "__main__":
                 file=sys.stderr,
             )
             sys.exit(2)
-        names = unprefixed(Path(path).read_text(), chart)
-        if names:
+        text = Path(path).read_text(encoding="utf-8")
+        unprefixed_names = unprefixed(text, chart)
+        if unprefixed_names:
             failed = True
             print(
                 f"{path}: defined templates and the calls to them must be prefixed with '{chart}.'"
             )
-            for name in names:
+            for name in unprefixed_names:
                 print(f"  {name}")
 
     sys.exit(1 if failed else 0)
