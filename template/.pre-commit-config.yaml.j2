@@ -66,6 +66,12 @@ repos:
 
   - repo: local
     hooks:
+      - id: check-namespaced-defines
+        name: check-namespaced-defines
+        language: system
+        entry: python3 scripts/check_namespaced_defines.py
+        files: ^deploy/helm/[^/]+/templates/
+
       - id: regenerate-charts
         name: regenerate-charts
         language: system
