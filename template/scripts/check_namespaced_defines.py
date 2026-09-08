@@ -26,6 +26,7 @@ def unprefixed(text, chart):
     return sorted({name for name in names if not name.startswith(f"{chart}.")})
 
 
+# Run these with: python3 -m unittest check_namespaced_defines.py
 class TestCoreMethods(unittest.TestCase):
     def test_chart_of(self):
         self.assertEqual(
