@@ -1,0 +1,28 @@
+{{ .Chart.Name }} {{ .Chart.AppVersion }} is installed in namespace {{ .Release.Namespace }}.
+
+{[% if operator.config.has_product | default(true) %}]
+This installs the Stackable operator for {[ operator.pretty_string }] only.
+
+Find more information in our documentation:
+
+* https://docs.stackable.tech/home/stable/{[ operator.product_string }]/
+* https://hub.stackable.tech/components/{[ operator.hub_component_slug | default(operator.product_string) }]
+{[% else %}]
+This installs the {[ operator.chart_title }] only.
+It provides resources that the product operators consume, so there is nothing further to apply.
+
+Find more information in our documentation:
+
+* https://docs.stackable.tech/home/stable/{[ operator.product_string }]/
+{[% endif %}]
+{{ if .Values.maintenance.customResourceDefinitions.maintain }}
+The operator installs and updates its own CustomResourceDefinitions when it starts, so the chart
+does not ship them. They appear shortly after the pod becomes ready.
+{{- else }}
+WARNING: maintenance.customResourceDefinitions.maintain is false, so this operator will not install
+its CustomResourceDefinitions and the chart does not ship them either. Apply them yourself before
+creating any resources managed by this operator, otherwise the API server will reject them.
+{{- end }}
+
+Learn more at https://stackable.tech
+Thank you for using Stackable!
