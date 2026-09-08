@@ -83,7 +83,7 @@ if __name__ == "__main__":
             )
             sys.exit(2)
         text = Path(path).read_text(encoding="utf-8")
-        unprefixed_names = unprefixed(text, chart)
+        unprefixed_names = unprefixed(text, chart_name)
         if unprefixed_names:
             failed = True
             print(
