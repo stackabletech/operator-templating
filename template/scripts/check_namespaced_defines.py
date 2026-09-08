@@ -20,10 +20,10 @@ def chart_of(path):
     return found.group("chart") if found else None
 
 
-def unprefixed(text, chart):
+def unprefixed(text, chart_name):
     """The defined template names in text, and the calls to them, lacking the chart prefix."""
     names = re.findall(NAME_PATTERN, text)
-    return sorted({name for name in names if not name.startswith(f"{chart}.")})
+    return sorted({name for name in names if not name.startswith(f"{chart_name}.")})
 
 
 # Run these with: python3 -m unittest check_namespaced_defines.py
