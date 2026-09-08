@@ -87,7 +87,7 @@ if __name__ == "__main__":
         if unprefixed_names:
             failed = True
             print(
-                f"{path}: defined templates and the calls to them must be prefixed with '{chart}.'"
+                f"{path}: defined templates and the calls to them must be prefixed with '{chart_name}.'"
             )
             for name in unprefixed_names:
                 print(f"  {name}")
