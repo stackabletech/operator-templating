@@ -75,7 +75,7 @@ if __name__ == "__main__":
 
     failed = False
     for path in sys.argv[1:]:
-        chart = chart_of(path)
+        chart_name = chart_of(path)
         if chart_name is None:
             print(
                 f"{sys.argv[0]}: {path} is not inside deploy/helm/<chart>/templates/",
