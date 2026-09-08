@@ -20,9 +20,9 @@ def chart_of(path):
     return found.group("chart") if found else None
 
 
-def unprefixed(text, chart_name):
-    """The defined template names in text, and the calls to them, lacking the chart prefix."""
-    names = re.findall(NAME_PATTERN, text)
+def unprefixed(file_contents, chart_name):
+    """The defined template names in file_contents, and the calls to them, lacking the chart prefix."""
+    names = re.findall(NAME_PATTERN, file_contents)
     return sorted({name for name in names if not name.startswith(f"{chart_name}.")})
 
 
@@ -82,8 +82,8 @@ if __name__ == "__main__":
                 file=sys.stderr,
             )
             sys.exit(2)
-        text = Path(path).read_text(encoding="utf-8")
-        unprefixed_names = unprefixed(text, chart_name)
+        file_contents = Path(path).read_text(encoding="utf-8")
+        unprefixed_names = unprefixed(file_contents, chart_name)
         if unprefixed_names:
             failed = True
             print(
