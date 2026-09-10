@@ -1,0 +1,52 @@
+# Configuration for typos (https://github.com/crate-ci/typos), run via the prek
+# hook in .pre-commit-config.yaml.
+#
+# This config covers operator-templating itself. The operator repositories each
+# carry their own typos.toml, which is deliberately NOT rolled out from
+# template/: typos has no layered configuration
+# (https://github.com/crate-ci/typos/issues/193), so the nearest config file
+# wins outright and is never merged with one further up the tree. A templated
+# config could not be extended with repo-specific words, and adding one word to
+# one operator would otherwise mean a PR here plus a sync to all repositories.
+#
+# Only the hook is shared, via template/.pre-commit-config.yaml.j2.
+#
+# Before adding an entry here, consider an in-place marker instead. Use one when
+# the word is correct at this one site and would still be a typo elsewhere:
+#
+#   # spellchecker:disable-line       at the end of the line it applies to
+#   # spellchecker:ignore-next-line   on its own line, above the offending line
+#   # spellchecker:off / :on          around a block
+#
+# Every entry below gets a one-line comment saying what the word is.
+
+[files]
+# Bare `typos` skips hidden directories, but prek passes explicit paths and so
+# does check them. Turn it off so both agree -- without this, template/.readme/
+# and template/.github/ are invisible to a local run but not to the hook.
+ignore-hidden = false
+
+extend-exclude = [
+    # `.git` itself, which ignore-hidden = false would otherwise pull in.
+    ".git/",
+]
+
+[default]
+# typos has no native suppression directive
+# (https://github.com/crate-ci/typos/issues/316), so these regexes provide one.
+# They cover `#`, `//`, `<!-- -->`, `;`, `/* */` and Jinja `{# #}` comments.
+#
+# Both failure modes are safe: an unterminated `:off` suppresses nothing rather
+# than swallowing the rest of the file, and `disable-line` only matches when the
+# marker ends the line, so trailing text defeats it instead of widening it.
+extend-ignore-re = [
+    "(?Rm)^.*(#|//|<!--|;|/\\*)\\s*spellchecker:disable-line\\s*(-->|#\\}|\\*/)?\\s*$",
+    "(#|//|<!--|;|/\\*)\\s*spellchecker:ignore-next-line\\s*(-->|#\\}|\\*/)?\\s*\\n.*",
+    "(?s)(#|//|<!--|;|/\\*|\")\\s*spellchecker:off\\s*(-->|#\\}|\\*/|\")?.*?(#|//|<!--|;|/\\*|\")\\s*spellchecker:on\\s*(-->|#\\}|\\*/|\")?",
+]
+
+[default.extend-words]
+# Azure Kubernetes Service. Appears in the README footer partial that is
+# rendered into every operator repository. A single lowercase entry covers
+# every casing, so no separate `AKS` entry is needed.
+aks = "aks"
