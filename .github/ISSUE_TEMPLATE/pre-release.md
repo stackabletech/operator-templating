@@ -20,16 +20,17 @@ assignees: ''
 
 Part of <https://github.com/stackabletech/issues/TRACKING_ISSUE>
 
-## Update pre-commit Workflow
+## Update prek Workflow
 
 > [!NOTE]
-> The pre-commit config and workflows need to be kept up-to-date to ensure
+> The prek config and workflows need to be kept up-to-date to ensure
 > usage of recent tooling versions. This requires some manual work in this
 > repository.
 
-- [ ] Update `python-version` in local and templated `pr_pre-commit.yml` workflow
 - [ ] Update hook refs in local and templated `.pre-commit-config.yaml` file
 - [ ] Update Hadolint version in the `config/versions.yaml` file
+- [ ] Update Jinja2 CLI version in the `config/versions.yaml` file
+- [ ] Update Nix package manager version in the `config/versions.yaml` file
 
 ## Update Rust Toolchain
 
@@ -46,7 +47,7 @@ Part of <https://github.com/stackabletech/issues/TRACKING_ISSUE>
       operator-rs and docker-images).
 - [ ] Update Rust toolchain in UBI10 and stackable-base images
 - [ ] Update cargo-cyclonedx and cargo-auditable in UBI10 and stackable-base images
-- [ ] Generate downstream PRs using the ["Generate Downstream PRs"](https://github.com/stackabletech/operator-templating/actions/workflows/generate_prs.yml) action. Use the following title for downstream PRs: `chore(template): Updates for SDP YY.M.X`.
+- [ ] Generate downstream PRs using the ["Generate Downstream PRs"](https://github.com/stackabletech/operator-templating/actions/workflows/generate_prs.yml) action. Use the following title for downstream PRs: `chore(template): Updates for SDP YY.M.X`. Additionally, put `Part of <THIS_ISSUE>` into the message to automatically link downstream PRs to the issue.
 - [ ] [Search for PRs](https://github.com/search?q=org%3Astackabletech%20sort%3Aupdated-desc%20is%3Apr%20is%3Aopen%20Update%20templated%20files&type=pullrequests) and add them to the list below.
 - [ ] Add the `release/YY.M.X` label to the downstream PRs and continue to merge them. See below for more details.
 
