@@ -27,7 +27,7 @@ Part of <https://github.com/stackabletech/issues/TRACKING_ISSUE>
 > usage of recent tooling versions. This requires some manual work in this
 > repository.
 
-- [ ] Update hook refs in local and templated `.prek-config.yaml` file
+- [ ] Update hook refs in local and templated `.pre-commit-config.yaml` file
 - [ ] Update Hadolint version in the `config/versions.yaml` file
 - [ ] Update Jinja2 CLI version in the `config/versions.yaml` file
 - [ ] Update Nix package manager version in the `config/versions.yaml` file
