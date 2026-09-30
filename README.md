@@ -81,8 +81,7 @@ As convention, new repositories should start from this block and add only what t
 ```toml
 [files]
 # Bare `typos` skips hidden directories, but prek passes explicit paths and so does
-# check them. Turn it off so a local run and the hook agree; without it, .github/
-# and .readme/ are invisible locally but not to CI.
+# check them. 
 ignore-hidden = false
 
 extend-exclude = [
@@ -117,7 +116,7 @@ extend-ignore-re = [
 aks = "aks"
 ```
 
-`aks` is the only word that is genuinely universal.
+`aks` is the only word that is universal.
 Everything else measured across the operator repositories turned out to be repo-local: `aas` in opa-operator, `shs` in spark-k8s-operator, base64 fixtures in secret-operator. <!-- spellchecker:disable-line -->
 Short tokens that appear in several repositories (`ot`, `fo`) do so for unrelated reasons and belong in the repository that has them, not here. <!-- spellchecker:disable-line -->
 

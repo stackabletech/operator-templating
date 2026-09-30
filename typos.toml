@@ -2,11 +2,9 @@
 # hook in .pre-commit-config.yaml.
 #
 # This config covers operator-templating itself. The operator repositories each
-# carry their own typos.toml, which is deliberately NOT rolled out from
-# template/: typos has no layered configuration
-# (https://github.com/crate-ci/typos/issues/193), so the nearest config file
-# wins outright and is never merged with one further up the tree. A templated
-# config could not be extended with repo-specific words, and adding one word to
+# carry their own typos.toml, which is NOT rolled out from template.
+# typos has no layered configuration (https://github.com/crate-ci/typos/issues/193),
+# templated config could not be extended with repo-specific words, and adding one word to
 # one operator would otherwise mean a PR here plus a sync to all repositories.
 #
 # Only the hook is shared, via template/.pre-commit-config.yaml.j2.
@@ -24,6 +22,7 @@
 # Bare `typos` skips hidden directories, but prek passes explicit paths and so
 # does check them. Turn it off so both agree -- without this, template/.readme/
 # and template/.github/ are invisible to a local run but not to the hook.
+
 ignore-hidden = false
 
 extend-exclude = [

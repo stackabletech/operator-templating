@@ -6,11 +6,12 @@ default_language_version:
 
 repos:
   - repo: https://github.com/crate-ci/typos
-    rev: v1.50.1
+    rev: 43b6c087ac471e2ea7b8af622ff15f05c0c365b # v1.50.1
     hooks:
       - id: typos
         # Drop the upstream default `--write-changes` so the hook reports and
-        # fails instead of rewriting files. Keep `--force-exclude` so the
+        # fails instead of rewriting files.
+        # Keep `--force-exclude` so the
         # excludes in typos.toml still apply to the paths prek passes in.
         args: ["--force-exclude"]
 
