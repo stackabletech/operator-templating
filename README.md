@@ -72,7 +72,7 @@ The hook is templated in `template/.pre-commit-config.yaml.j2`.
 The word lists are **not** templated: each repository has its own `typos.toml`.
 
 That split is forced by the tool. typos has no layered configuration yet ([crate-ci/typos#193](https://github.com/crate-ci/typos/issues/193)).
-Keeping the word lists local also means adding a word is a PR per repository instead of a templating run. 
+Keeping the word lists local also means adding a word is a PR per repository instead of a templating run.
 
 ### The core config
 
