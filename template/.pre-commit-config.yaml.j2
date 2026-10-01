@@ -15,7 +15,7 @@ repos:
     hooks:
       - id: typos
         # Drop the upstream default `--write-changes` so the hook reports and
-        # fails instead of rewriting files. 
+        # fails instead of rewriting files.
         # Keep `--force-exclude` so the
         # excludes in typos.toml still apply to the paths prek passes in.
         args: ["--force-exclude"]
