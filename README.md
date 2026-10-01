@@ -81,7 +81,7 @@ As convention, new repositories should start from this block and add only what t
 ```toml
 [files]
 # Bare `typos` skips hidden directories, but prek passes explicit paths and so does
-# check them. 
+# check them.
 ignore-hidden = false
 
 extend-exclude = [
