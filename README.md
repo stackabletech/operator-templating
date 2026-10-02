@@ -69,14 +69,13 @@ Additional settings can be found in `playbook/group_vars/all`, but these are not
 
 Every managed repository runs [typos](https://github.com/crate-ci/typos) as a prek hook.
 The hook is templated in `template/.pre-commit-config.yaml.j2`.
-The word lists are **not** templated: each repository has its own `typos.toml`.
-
-That split is forced by the tool. typos has no layered configuration yet ([crate-ci/typos#193](https://github.com/crate-ci/typos/issues/193)).
+The word lists are **not** templated: each repository has its own `typos.toml`, because typos has no layered configuration yet ([crate-ci/typos#193](https://github.com/crate-ci/typos/issues/193)).
 Keeping the word lists local also means adding a word is a PR per repository instead of a templating run.
+Files rendered from `template/` are checked in this repository once.
 
 ### The core config
 
-As convention, new repositories should start from this block and add only what they actually need.
+As a convention, new repositories should start from this block and add only what they actually need.
 
 ```toml
 # Configuration for typos (https://github.com/crate-ci/typos), run via the prek
@@ -85,9 +84,9 @@ As convention, new repositories should start from this block and add only what t
 # Before adding an entry here, consider an in-place marker instead. Use one when
 # the word is correct at this one site and would still be a typo elsewhere:
 #
-#   # spellchecker:disable-line       at the end of the line it applies to
-#   # spellchecker:ignore-next-line   on its own line, above the offending line
-#   # spellchecker:off / :on          around a block
+#   # typos:ignore-line        at the end of the line it applies to
+#   # typos:ignore-next-line   on its own line, above the offending line
+#   # typos:off / typos:on     around a block
 #
 # Every entry below gets a one-line comment saying what the word is.
 
@@ -111,37 +110,22 @@ extend-exclude = [
 [default]
 # typos has no native suppression directive
 # (https://github.com/crate-ci/typos/issues/316), so these regexes provide one.
-# They cover `#`, `//`, `<!-- -->`, `;`, `/* */` and Jinja `{# #}` comments,
-# which spans every file type in this repo.
-#
-# Both failure modes are safe:
-#   * unterminated `:off` suppresses nothing rather than swallowing the rest of the file.
-#   * `disable-line` only matches when the marker ends the line.
+# A marker must sit in a comment: after `#`, `//` or `;` (free text may follow),
+# or inside a closed `<!-- -->`, `/* */` or `{# #}` (free text may precede the
+# closer). An unterminated `typos:off` suppresses nothing.
 extend-ignore-re = [
-    "(?Rm)^.*(#|//|<!--|;|/\\*)\\s*spellchecker:disable-line\\s*(-->|#\\}|\\*/)?\\s*$",
-    "(#|//|<!--|;|/\\*)\\s*spellchecker:ignore-next-line\\s*(-->|#\\}|\\*/)?\\s*\\n.*",
-    "(?s)(#|//|<!--|;|/\\*|\")\\s*spellchecker:off\\s*(-->|#\\}|\\*/|\")?.*?(#|//|<!--|;|/\\*|\")\\s*spellchecker:on\\s*(-->|#\\}|\\*/|\")?",
+    '(?Rm)^.*?(?:(?:^|[^{])(?:#|//|;)[ \t]*typos:ignore-line\b.*|(?:<!--[ \t]*typos:ignore-line\b.*?-->|/\*[ \t]*typos:ignore-line\b.*?\*/|\{#[ \t]*typos:ignore-line\b.*?#\})[ \t]*)$',
+    '(?Rm)^[ \t]*(?:(?:#|//|;)[ \t]*typos:ignore-next-line\b.*|(?:<!--[ \t]*typos:ignore-next-line\b.*?-->|/\*[ \t]*typos:ignore-next-line\b.*?\*/|\{#[ \t]*typos:ignore-next-line\b.*?#\})[ \t]*)\r?\n.*$',
+    '(?ms)(?:(?:^|[^{])(?:#|//|;)[ \t]*typos:off\b|<!--[ \t]*typos:off\b[^\n]*?-->|/\*[ \t]*typos:off\b[^\n]*?\*/|\{#[ \t]*typos:off\b[^\n]*?#\}).*?(?:(?:^|[^{])(?:#|//|;)[ \t]*typos:on\b|<!--[ \t]*typos:on\b[^\n]*?-->|/\*[ \t]*typos:on\b[^\n]*?\*/|\{#[ \t]*typos:on\b[^\n]*?#\})',
 ]
 
 [default.extend-words]
-# Azure Kubernetes Service. Appears in README footer and as the runner platform `aks-1.36` in tests/interu.yaml.
-# A single lowercase entry covers every casing, so no separate `AKS` entry is needed.
+# Azure Kubernetes Service
 aks = "aks"
 ```
 
-`aks` is the only word that is universal.
-Everything else measured across the operator repositories turned out to be repo-local: `aas` in opa-operator, `shs` in spark-k8s-operator, base64 fixtures in secret-operator. <!-- spellchecker:disable-line -->
-Short tokens that appear in several repositories (`ot`, `fo`) do so for unrelated reasons and belong in the repository that has them, not here. <!-- spellchecker:disable-line -->
-
-### Check each string once
-
-`extra/crds.yaml` is excluded on purpose.
-Its content is generated partly Kubernetes' own schema documentation and partly doc comments owned by `operator-rs` or by the operator's own `crd` module, the latter is already checked independently.
-The same applies to files rendered from `template/`: a typo in `template/.readme/partials/borrowed/footer.md.j2.j2` is caught here, once, instead of in all sixteen repositories.
-
 ### Conventions
 
-- The hook runs report-only. `args: ["--force-exclude"]`.
 - Every entry in a `typos.toml` gets a one-line comment saying what the word is.
 - Prefer an in-place marker over a config entry when the word is correct at one site and would still be a typo elsewhere
 
