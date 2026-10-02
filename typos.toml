@@ -1,0 +1,37 @@
+# Configuration for typos (https://github.com/crate-ci/typos), run via the prek
+# hook in .pre-commit-config.yaml.
+#
+# Before adding an entry here, consider an in-place marker instead. Use one when
+# the word is correct at this one site and would still be a typo elsewhere:
+#
+#   # typos:ignore-line        at the end of the line it applies to
+#   # typos:ignore-next-line   on its own line, above the offending line
+#   # typos:off / typos:on     around a block
+#
+# Every entry below gets a one-line comment saying what the word is.
+
+[files]
+# Bare `typos` skips hidden dirs by default, but prek passes explicit paths and
+# so does check them. Turn it off so both agree.
+ignore-hidden = false
+
+extend-exclude = [
+    # `.git` itself, which ignore-hidden = false would otherwise pull in.
+    ".git/",
+]
+
+[default]
+# typos has no native suppression directive
+# (https://github.com/crate-ci/typos/issues/316), so these regexes provide one.
+# A marker must sit in a comment: after `#`, `//` or `;` (free text may follow),
+# or inside a closed `<!-- -->`, `/* */` or `{# #}` (free text may precede the
+# closer). An unterminated `typos:off` suppresses nothing.
+extend-ignore-re = [
+    '(?Rm)^.*?(?:(?:^|[^{])(?:#|//|;)[ \t]*typos:ignore-line\b.*|(?:<!--[ \t]*typos:ignore-line\b.*?-->|/\*[ \t]*typos:ignore-line\b.*?\*/|\{#[ \t]*typos:ignore-line\b.*?#\})[ \t]*)$',
+    '(?Rm)^[ \t]*(?:(?:#|//|;)[ \t]*typos:ignore-next-line\b.*|(?:<!--[ \t]*typos:ignore-next-line\b.*?-->|/\*[ \t]*typos:ignore-next-line\b.*?\*/|\{#[ \t]*typos:ignore-next-line\b.*?#\})[ \t]*)\r?\n.*$',
+    '(?ms)(?:(?:^|[^{])(?:#|//|;)[ \t]*typos:off\b|<!--[ \t]*typos:off\b[^\n]*?-->|/\*[ \t]*typos:off\b[^\n]*?\*/|\{#[ \t]*typos:off\b[^\n]*?#\}).*?(?:(?:^|[^{])(?:#|//|;)[ \t]*typos:on\b|<!--[ \t]*typos:on\b[^\n]*?-->|/\*[ \t]*typos:on\b[^\n]*?\*/|\{#[ \t]*typos:on\b[^\n]*?#\})',
+]
+
+[default.extend-words]
+# Azure Kubernetes Service
+aks = "aks"
