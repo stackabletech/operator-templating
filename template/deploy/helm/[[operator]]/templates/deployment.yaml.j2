@@ -95,6 +95,14 @@ spec:
             - name: OPA_BUNDLE_BUILDER_CLUSTERROLE
               value: {{ include "{[ operator.name }].fullname" . }}-opa-bundle-builder-clusterrole
 {[% endif %}]
+          startupProbe:
+            httpGet:
+              path: /ready
+              port: 8443
+              scheme: HTTPS
+            periodSeconds: 3
+            failureThreshold: 30
+            timeoutSeconds: 3
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
