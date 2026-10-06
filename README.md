@@ -103,8 +103,6 @@ extend-exclude = [
 #   # typos:ignore-line        at the end of the line it applies to
 #   # typos:ignore-next-line   on its own line, above the offending line
 #   # typos:ignore-block-start / typos:ignore-block-end   around a block
-#
-
 extend-ignore-re = [
     '(?Rm)^.*?(?:(?:^|[^{])(?:#|//|;)[ \t]*typos:ignore-line\b.*|(?:<!--[ \t]*typos:ignore-line\b.*?-->|/\*[ \t]*typos:ignore-line\b.*?\*/|\{#[ \t]*typos:ignore-line\b.*?#\})[ \t]*)$',
     '(?Rm)^[ \t]*(?:(?:#|//|;)[ \t]*typos:ignore-next-line\b.*|(?:<!--[ \t]*typos:ignore-next-line\b.*?-->|/\*[ \t]*typos:ignore-next-line\b.*?\*/|\{#[ \t]*typos:ignore-next-line\b.*?#\})[ \t]*)\r?\n.*$',
