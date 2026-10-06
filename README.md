@@ -80,13 +80,6 @@ As a convention, new repositories should start from this block and add only what
 ```toml
 # Configuration for typos (https://github.com/crate-ci/typos), run via the prek
 # hook in .pre-commit-config.yaml.
-#
-# Use one of the following when the word is correct at one place but would still be a typo elsewhere:
-#
-#   # typos:ignore-line        at the end of the line it applies to
-#   # typos:ignore-next-line   on its own line, above the offending line
-#   # typos:ignore-block-start / typos:ignore-block-end   around a block
-#
 
 [files]
 # Bare `typos` skips hidden dirs by default, but prek passes explicit paths and
@@ -94,7 +87,7 @@ As a convention, new repositories should start from this block and add only what
 ignore-hidden = false
 
 extend-exclude = [
-    # `.git` itself, which ignore-hidden = false would otherwise pull in.
+    # Ignore `.git`, which the above `ignore-hidden = false` would otherwise pull in.
     ".git/",
 ]
 
@@ -104,6 +97,14 @@ extend-exclude = [
 # A marker must sit in a comment: after `#`, `//` or `;` (free text may follow),
 # or inside a closed `<!-- -->`, `/* */` or `{# #}` (free text may precede the
 # closer). An unterminated `typos:ignore-block-start` suppresses nothing.
+#
+# Use one of the following when the word is correct at one place but would still be a typo elsewhere:
+#
+#   # typos:ignore-line        at the end of the line it applies to
+#   # typos:ignore-next-line   on its own line, above the offending line
+#   # typos:ignore-block-start / typos:ignore-block-end   around a block
+#
+
 extend-ignore-re = [
     '(?Rm)^.*?(?:(?:^|[^{])(?:#|//|;)[ \t]*typos:ignore-line\b.*|(?:<!--[ \t]*typos:ignore-line\b.*?-->|/\*[ \t]*typos:ignore-line\b.*?\*/|\{#[ \t]*typos:ignore-line\b.*?#\})[ \t]*)$',
     '(?Rm)^[ \t]*(?:(?:#|//|;)[ \t]*typos:ignore-next-line\b.*|(?:<!--[ \t]*typos:ignore-next-line\b.*?-->|/\*[ \t]*typos:ignore-next-line\b.*?\*/|\{#[ \t]*typos:ignore-next-line\b.*?#\})[ \t]*)\r?\n.*$',
