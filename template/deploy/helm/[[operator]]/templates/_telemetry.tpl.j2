@@ -1,5 +1,5 @@
 {{/*
-Shared by FILE_LOG_DIRECTORY and the log volume mount in deployment.yaml, which have to agree.
+Used by FILE_LOG_DIRECTORY and the log volume mount in deployment.yaml, which have to agree.
 */}}
 {{- define "{[ operator.name }].telemetry.fileLogDirectory" -}}
 /var/log/{{ include "{[ operator.name }].appname" . }}
