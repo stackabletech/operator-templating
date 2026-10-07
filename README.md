@@ -65,6 +65,62 @@ These are the only variables currently being used on the playbooks, but can be e
 
 Additional settings can be found in `playbook/group_vars/all`, but these are not intended to be freely changed and should be treated with care.
 
+## Spell checking
+
+Every managed repository runs [typos](https://github.com/crate-ci/typos) as a prek hook.
+The hook is templated in `template/.pre-commit-config.yaml.j2`.
+The word lists are **not** templated: each repository has its own `typos.toml`, because typos has no layered configuration yet ([crate-ci/typos#193](https://github.com/crate-ci/typos/issues/193)).
+Keeping the word lists local also means adding a word is a PR per repository instead of a templating run.
+Files rendered from `template/` are checked in this repository once.
+
+### The core config
+
+As a convention, new repositories should start from this block and add only what they actually need.
+
+```toml
+# Configuration for typos (https://github.com/crate-ci/typos), run via the prek
+# hook in .pre-commit-config.yaml.
+
+[files]
+# Bare `typos` skips hidden dirs by default, but prek passes explicit paths and
+# so does check them. Turn it off so both agree.
+ignore-hidden = false
+
+extend-exclude = [
+    # Ignore `.git`, which the above `ignore-hidden = false` would otherwise pull in.
+    ".git/",
+]
+
+[default]
+# typos has no native suppression directive
+# (https://github.com/crate-ci/typos/issues/316), so these regexes provide one.
+# A marker must sit in a comment: after `#`, `//` or `;` (free text may follow),
+# or inside a closed `<!-- -->`, `/* */` or `{# #}` (free text may precede the
+# closer). An unterminated `typos:ignore-block-start` suppresses nothing.
+#
+# Use one of the following when the word is correct at one place but would still be a typo elsewhere:
+#
+#   # typos:ignore-line        at the end of the line it applies to
+#   # typos:ignore-next-line   on its own line, above the offending line
+#   # typos:ignore-block-start / typos:ignore-block-end   around a block
+extend-ignore-re = [
+    '(?Rm)^.*?(?:(?:^|[^{])(?:#|//|;)[ \t]*typos:ignore-line\b.*|(?:<!--[ \t]*typos:ignore-line\b.*?-->|/\*[ \t]*typos:ignore-line\b.*?\*/|\{#[ \t]*typos:ignore-line\b.*?#\})[ \t]*)$',
+    '(?Rm)^[ \t]*(?:(?:#|//|;)[ \t]*typos:ignore-next-line\b.*|(?:<!--[ \t]*typos:ignore-next-line\b.*?-->|/\*[ \t]*typos:ignore-next-line\b.*?\*/|\{#[ \t]*typos:ignore-next-line\b.*?#\})[ \t]*)\r?\n.*$',
+    '(?ms)(?:(?:^|[^{])(?:#|//|;)[ \t]*typos:ignore-block-start\b|<!--[ \t]*typos:ignore-block-start\b[^\n]*?-->|/\*[ \t]*typos:ignore-block-start\b[^\n]*?\*/|\{#[ \t]*typos:ignore-block-start\b[^\n]*?#\}).*?(?:(?:^|[^{])(?:#|//|;)[ \t]*typos:ignore-block-end\b|<!--[ \t]*typos:ignore-block-end\b[^\n]*?-->|/\*[ \t]*typos:ignore-block-end\b[^\n]*?\*/|\{#[ \t]*typos:ignore-block-end\b[^\n]*?#\})',
+]
+
+# Before adding an entry in here, consider an in-place marker instead.
+# Every entry below gets a one-line comment saying what the word is.
+[default.extend-words]
+# Azure Kubernetes Service
+aks = "aks"
+```
+
+### Conventions
+
+- Every entry in a `typos.toml` gets a one-line comment saying what the word is.
+- Prefer an in-place marker over a config entry when the word is correct at one site and would still be a typo elsewhere
+
 ## Making changes to the template
 
 If you want to make a change that should be rolled out to all operators, make the change in the `template` directory.
