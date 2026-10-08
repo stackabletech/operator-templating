@@ -1,10 +1,22 @@
 # If you add a new repository here, you also need to add it to the list of
 # repositories in ../.github/workflows/generate_prs.yml.
 #
-# chart_description and keywords end up in the Helm chart's Chart.yaml and are
-# indexed by Artifact Hub and our own Hub. Descriptions deliberately use the form "operator for
-# Apache X" rather than "Apache X operator": the ASF mark must refer to the
-# upstream project, not read as part of our product name.
+# chart_description, keywords and artifacthub_category end up in the Helm chart's
+# Chart.yaml and are indexed by Artifact Hub and our own Hub. Descriptions deliberately
+# use the form "operator for Apache X" rather than "Apache X operator": the ASF mark must
+# refer to the upstream project, not read as part of our product name.
+#
+# artifacthub_category must be one of the eight values Artifact Hub accepts, or
+# skip-prediction where none of them fits.
+# Without it Artifact Hub guesses from the keywords, which are mostly wrong for us.
+# I opened an issue upstream about getting that list extended
+# but until then we're stuck: https://github.com/artifacthub/hub/issues/4888
+#
+# artifacthub_alternative_name is what people search for, such as "spark" for
+# spark-k8s-operator.
+# Artifact Hub gives it the same "weight" as the name.
+# One of the two must be a substring of the other, otherwise Artifact Hub rejects it.
+# Optional: leave it out where no alias is better than the chart name.
 #
 # hub_component_slug only needs setting where the Hub component slug differs
 # from product_string. Operators with has_product: false have no Hub component
@@ -17,6 +29,8 @@ repositories:
     url: stackabletech/airflow-operator.git
     artifacthub_repository_id: 81701bbe-789b-4398-846d-cdf4e922d3b2
     chart_description: Kubernetes operator for Apache Airflow. Deploy and run Airflow with the Stackable Data Platform (SDP).
+    artifacthub_category: integration-delivery
+    artifacthub_alternative_name: airflow
     keywords:
       - apache-airflow
       - airflow
@@ -32,6 +46,7 @@ repositories:
     url: stackabletech/commons-operator.git
     artifacthub_repository_id: 1a53cf2b-a870-4b19-b3cc-e914d02c2076
     chart_description: Kubernetes operator for common resources shared across the Stackable Data Platform (SDP).
+    artifacthub_category: skip-prediction
     keywords:
       - stackable
       - data-platform
@@ -49,6 +64,8 @@ repositories:
     ignored_files:
       - deploy/helm/artifacthub-repo.yaml.j2
     chart_description: Kubernetes operator for Apache Druid. Deploy and run Druid clusters with the Stackable Data Platform (SDP).
+    artifacthub_category: database
+    artifacthub_alternative_name: druid
     keywords:
       - apache-druid
       - druid
@@ -64,6 +81,8 @@ repositories:
     url: stackabletech/hbase-operator.git
     artifacthub_repository_id: 64f82a91-c7c7-4964-8115-c846436f139f
     chart_description: Kubernetes operator for Apache HBase. Deploy and run HBase masters and region servers with the Stackable Data Platform (SDP).
+    artifacthub_category: database
+    artifacthub_alternative_name: hbase
     keywords:
       - apache-hbase
       - hbase
@@ -78,6 +97,8 @@ repositories:
     url: stackabletech/hdfs-operator.git
     artifacthub_repository_id: 2d19d362-65c5-47ab-b04a-217b5bd32f2c
     chart_description: Kubernetes operator for Apache Hadoop HDFS. Deploy and run HDFS NameNodes, DataNodes and JournalNodes with the Stackable Data Platform (SDP).
+    artifacthub_category: storage
+    artifacthub_alternative_name: hdfs
     keywords:
       - apache-hadoop
       - hadoop
@@ -93,6 +114,8 @@ repositories:
     url: stackabletech/hive-operator.git
     artifacthub_repository_id: 3dcde43a-1a00-44ba-a70c-837d37737140
     chart_description: Kubernetes operator for Apache Hive. Deploy and run the Hive Metastore with the Stackable Data Platform (SDP).
+    artifacthub_category: database
+    artifacthub_alternative_name: hive
     keywords:
       - apache-hive
       - hive
@@ -108,6 +131,8 @@ repositories:
     url: stackabletech/kafka-operator.git
     artifacthub_repository_id: 93d87788-9ae7-4f2f-870d-04134948785a
     chart_description: Kubernetes operator for Apache Kafka. Deploy and run Kafka brokers with the Stackable Data Platform (SDP).
+    artifacthub_category: streaming-messaging
+    artifacthub_alternative_name: kafka
     keywords:
       - apache-kafka
       - kafka
@@ -123,6 +148,8 @@ repositories:
     url: stackabletech/nifi-operator.git
     artifacthub_repository_id: e0f40fc2-895b-4bbf-9446-91a47035d858
     chart_description: Kubernetes operator for Apache NiFi. Deploy and run NiFi clusters with the Stackable Data Platform (SDP).
+    artifacthub_category: integration-delivery
+    artifacthub_alternative_name: nifi
     keywords:
       - apache-nifi
       - nifi
@@ -139,6 +166,7 @@ repositories:
     url: stackabletech/listener-operator.git
     artifacthub_repository_id: 739bf044-22df-4d16-b4a9-d2a326e3c821
     chart_description: Kubernetes operator for exposing pods through listeners, load balancers and NodePorts. Part of the Stackable Data Platform (SDP).
+    artifacthub_category: networking
     keywords:
       - listener
       - load-balancer
@@ -156,6 +184,8 @@ repositories:
     url: stackabletech/opa-operator.git
     artifacthub_repository_id: af99c9ca-d938-4416-a154-bc358595b378
     chart_description: Kubernetes operator for the Open Policy Agent (OPA). Deploy and run OPA for authorization with the Stackable Data Platform (SDP).
+    artifacthub_category: security
+    artifacthub_alternative_name: opa
     keywords:
       - open-policy-agent
       - opa
@@ -174,6 +204,8 @@ repositories:
     url: stackabletech/opensearch-operator.git
     artifacthub_repository_id: 379132ea-3510-4899-bb2d-310a415fa419
     chart_description: Kubernetes operator for OpenSearch. Deploy and run OpenSearch clusters with the Stackable Data Platform (SDP).
+    artifacthub_category: monitoring-logging
+    artifacthub_alternative_name: opensearch
     keywords:
       - opensearch
       - search
@@ -188,6 +220,7 @@ repositories:
     url: stackabletech/secret-operator.git
     artifacthub_repository_id: 8b2d881e-50e2-4810-a01c-338bbfaac78c
     chart_description: Kubernetes operator for provisioning TLS certificates, Kerberos keytabs and other secrets to pods. Part of the Stackable Data Platform (SDP).
+    artifacthub_category: security
     keywords:
       - secrets
       - tls
@@ -206,6 +239,8 @@ repositories:
     url: stackabletech/spark-k8s-operator.git
     artifacthub_repository_id: f2de1657-1ef4-483f-905a-c981e38cfb57
     chart_description: Kubernetes operator for Apache Spark. Run Spark applications on Kubernetes with the Stackable Data Platform (SDP).
+    artifacthub_category: integration-delivery
+    artifacthub_alternative_name: spark
     keywords:
       - apache-spark
       - spark
@@ -220,6 +255,8 @@ repositories:
     url: stackabletech/superset-operator.git
     artifacthub_repository_id: 49f70221-f2d0-463c-89d8-41682d5d53df
     chart_description: Kubernetes operator for Apache Superset. Deploy and run Superset with the Stackable Data Platform (SDP).
+    artifacthub_category: skip-prediction
+    artifacthub_alternative_name: superset
     keywords:
       - apache-superset
       - superset
@@ -234,6 +271,8 @@ repositories:
     url: stackabletech/trino-operator.git
     artifacthub_repository_id: 02de1bee-270f-4d85-bc30-6e5d2288b2b7
     chart_description: Kubernetes operator for Trino. Deploy and run Trino coordinators and workers with the Stackable Data Platform (SDP).
+    artifacthub_category: database
+    artifacthub_alternative_name: trino
     keywords:
       - trino
       - sql
@@ -249,6 +288,8 @@ repositories:
     url: stackabletech/zookeeper-operator.git
     artifacthub_repository_id: 60d8c6a9-e317-4d69-868b-b10663af6290
     chart_description: Kubernetes operator for Apache ZooKeeper. Deploy and run ZooKeeper ensembles with the Stackable Data Platform (SDP).
+    artifacthub_category: skip-prediction
+    artifacthub_alternative_name: zookeeper
     keywords:
       - apache-zookeeper
       - zookeeper
