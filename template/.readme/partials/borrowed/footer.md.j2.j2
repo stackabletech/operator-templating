@@ -5,6 +5,7 @@ Without SDP, you assemble each product yourself: from the project's own Helm cha
 Each product then runs, and everything between the products is yours to build and keep working, for example TLS certificates and Kerberos across products, authorization, service discovery, exposing services outside the cluster, and testing upgrades together.
 SDP covers that part.
 The products in a release are released together, handle cross-cutting concerns such as security, logging, monitoring and lineage the same way, and get upgrades and fixes as one platform on a predictable schedule.
+Every image is signed and comes with an SBOM, see [verifying image signatures](https://docs.stackable.tech/home/stable/guides/enabling-verification-of-image-signatures/) and [viewing and verifying SBOMs](https://docs.stackable.tech/home/stable/guides/viewing-and-verifying-sboms/).
 
 If you run a single product, a well-maintained chart exists for it, and you are happy to own its configuration, security and upgrades yourself, that chart can be a reasonable choice.
 
@@ -12,7 +13,7 @@ If you run a single product, a well-maintained chart exists for it, and you are 
 
 This operator is written and maintained by [Stackable](https://stackable.tech) and is part of the Stackable Data Platform.
 
-![The Stackable Data Platform: Apache Superset for visualization; Apache Spark for analytics and AI; Trino, Apache Hive, Apache NiFi and Apache Spark for data processing; Apache Druid, Apache HBase with Apache Phoenix and Apache Omid, Apache Hadoop HDFS and OpenSearch for storage; Apache NiFi and Apache Kafka for data ingestion; Apache Airflow and Apache ZooKeeper for orchestration; Open Policy Agent for security, Prometheus for monitoring and Vector for logging; all on Kubernetes and OpenShift](./.readme/static/borrowed/stackable_overview.svg)
+![The Stackable Data Platform: Apache Superset for visualization; Apache Spark for analytics and AI; Trino, Apache Hive, Apache NiFi and Apache Spark for data processing; Apache Druid (deprecated), Apache HBase with Apache Phoenix, Apache Hadoop HDFS and OpenSearch for storage; Apache NiFi and Apache Kafka for data ingestion; Apache Airflow and Apache ZooKeeper for orchestration; Open Policy Agent for security, Prometheus metrics for monitoring and Vector for logging; all on Kubernetes and OpenShift](./.readme/static/borrowed/stackable_overview.svg)
 
 Underneath the product operators, the commons, secret and listener operators provide what all products share: S3 and authentication settings, TLS certificates and Kerberos keytabs, exposing services outside the cluster and more.
 
@@ -38,7 +39,7 @@ The Kubernetes and OpenShift versions each release supports are listed on [hub.s
 These are the operators that are currently part of the Stackable Data Platform:
 
 * [Stackable Operator for Apache Airflow](https://github.com/stackabletech/airflow-operator)
-* [Stackable Operator for Apache Druid](https://github.com/stackabletech/druid-operator)
+* [Stackable Operator for Apache Druid](https://github.com/stackabletech/druid-operator), deprecated since SDP 26.7
 * [Stackable Operator for Apache HBase](https://github.com/stackabletech/hbase-operator)
 * [Stackable Operator for Apache Hadoop HDFS](https://github.com/stackabletech/hdfs-operator)
 * [Stackable Operator for Apache Hive](https://github.com/stackabletech/hive-operator)
