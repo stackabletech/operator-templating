@@ -1,7 +1,8 @@
 <!-- markdownlint-disable MD041 -->
+{[% set hub_url = ('components/' ~ (operator.hub_component_slug | default(operator.product_string))) if (operator.config.has_product | default(true)) else 'crds' %}]
 {# NOTE: the empty line above is important! -#}
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/stackabletech/{{operator_name}}-operator/graphs/commit-activity)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)](https://docs.stackable.tech/home/stable/contributor/index.html)
 [![License OSL3.0](https://img.shields.io/badge/license-OSL3.0-green)](./LICENSE)
 
-[Documentation](https://docs.stackable.tech/home/stable/{{operator_docs_slug}}) {% if quickstart_link %}| [Quickstart]({{quickstart_link}}) {% endif %}| [Stackable Data Platform](https://stackable.tech/) | [Platform Docs](https://docs.stackable.tech/) | [Discussions](https://github.com/orgs/stackabletech/discussions) | [Discord](https://discord.gg/7kZ3BNnCAF)
+[Documentation](https://docs.stackable.tech/home/stable/{{operator_docs_slug}}) {% if quickstart_link %}| [Quickstart]({{quickstart_link}}) {% endif %}| [Stackable Data Platform](https://stackable.tech/) | [Platform Docs](https://docs.stackable.tech/) | [Stackable Hub](https://hub.stackable.tech/{[hub_url}]) | [Discussions](https://github.com/orgs/stackabletech/discussions) | [Discord](https://discord.gg/7kZ3BNnCAF)
