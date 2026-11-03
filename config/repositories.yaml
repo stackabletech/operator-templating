@@ -6,11 +6,10 @@
 # use the form "operator for Apache X" rather than "Apache X operator": the ASF mark must
 # refer to the upstream project, not read as part of our product name.
 #
-# artifacthub_category must be one of the eight values Artifact Hub accepts, or
-# skip-prediction where none of them fits.
+# artifacthub_category must be one of the categories Artifact Hub accepts
+# (https://github.com/artifacthub/hub/blob/master/internal/category/catalog/categories.yaml),
+# or skip-prediction where none of them fits.
 # Without it Artifact Hub guesses from the keywords, which are mostly wrong for us.
-# I opened an issue upstream about getting that list extended
-# but until then we're stuck: https://github.com/artifacthub/hub/issues/4888
 #
 # artifacthub_alternative_name is what people search for, such as "spark" for
 # spark-k8s-operator.
@@ -29,7 +28,7 @@ repositories:
     url: stackabletech/airflow-operator.git
     artifacthub_repository_id: 81701bbe-789b-4398-846d-cdf4e922d3b2
     chart_description: Kubernetes operator for Apache Airflow. Deploy and run Airflow with the Stackable Data Platform (SDP).
-    artifacthub_category: integration-delivery
+    artifacthub_category: data-processing
     artifacthub_alternative_name: airflow
     keywords:
       - apache-airflow
@@ -148,7 +147,7 @@ repositories:
     url: stackabletech/nifi-operator.git
     artifacthub_repository_id: e0f40fc2-895b-4bbf-9446-91a47035d858
     chart_description: Kubernetes operator for Apache NiFi. Deploy and run NiFi clusters with the Stackable Data Platform (SDP).
-    artifacthub_category: integration-delivery
+    artifacthub_category: data-processing
     artifacthub_alternative_name: nifi
     keywords:
       - apache-nifi
@@ -239,7 +238,7 @@ repositories:
     url: stackabletech/spark-k8s-operator.git
     artifacthub_repository_id: f2de1657-1ef4-483f-905a-c981e38cfb57
     chart_description: Kubernetes operator for Apache Spark. Run Spark applications on Kubernetes with the Stackable Data Platform (SDP).
-    artifacthub_category: integration-delivery
+    artifacthub_category: data-processing
     artifacthub_alternative_name: spark
     keywords:
       - apache-spark
@@ -255,7 +254,7 @@ repositories:
     url: stackabletech/superset-operator.git
     artifacthub_repository_id: 49f70221-f2d0-463c-89d8-41682d5d53df
     chart_description: Kubernetes operator for Apache Superset. Deploy and run Superset with the Stackable Data Platform (SDP).
-    artifacthub_category: skip-prediction
+    artifacthub_category: analytics
     artifacthub_alternative_name: superset
     keywords:
       - apache-superset
@@ -271,7 +270,7 @@ repositories:
     url: stackabletech/trino-operator.git
     artifacthub_repository_id: 02de1bee-270f-4d85-bc30-6e5d2288b2b7
     chart_description: Kubernetes operator for Trino. Deploy and run Trino coordinators and workers with the Stackable Data Platform (SDP).
-    artifacthub_category: database
+    artifacthub_category: data-processing
     artifacthub_alternative_name: trino
     keywords:
       - trino
