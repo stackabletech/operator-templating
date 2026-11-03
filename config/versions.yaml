@@ -32,7 +32,7 @@ python_version: 3.14
 # https://github.com/NixOS/nix/tags
 # Usually the latest version should just work and as such the version here can
 # be bumped without any constraints.
-nix_pkg_manager_version: 2.33.3
+nix_pkg_manager_version: 2.35.4
 
 # Check https://pypi.org/project/jinja2-cli/#history for updates
 jinja2_cli_version: 1.0.0
