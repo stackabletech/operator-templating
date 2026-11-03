@@ -16,8 +16,11 @@ rust_edition: 2024
 # IMPORTANT
 # If you change the Hadolint version here, make sure to also change the hook
 # refs in the local and templated .pre-commit-config.yaml files.
-# And due to a bug you also need to update the version in .github/workflows/pr_pre_commit.yml
-hadolint_version: v2.14.0
+# See https://github.com/hadolint/hadolint/releases for the latest release.
+#
+# And due to a bug you also need to update the version in .github/workflows/pr_prek.yaml
+# See https://github.com/hadolint/hadolint/issues/886.
+hadolint_version: v2.15.1
 
 # IMPORTANT
 # If you change the Python version here, make sure to also change it in
