@@ -6,7 +6,9 @@ default_language_version:
 
 repos:
   - repo: https://github.com/crate-ci/typos
-    rev: 00f422f3b19c57bc6338715ebfe3316d38768461  # v1.50.3
+    # NOTE (@Techassi): As of 2026-11-03, 1.52.0 isn't yet available in PyPi.
+    # See https://github.com/crate-ci/typos/issues/1641
+    rev: 7f9d0819ca1c008ade73f4b41fa9d258d48f605b  # v1.51.1
     hooks:
       - id: typos
         # Drop the upstream default `--write-changes` so the hook only
@@ -33,7 +35,7 @@ repos:
         files: \.(yml|yaml)(\.j2)*$
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: a4d5d37e66ebcd6b3705204a1d6dbb56dea66338 # 0.49.0
+    rev: cbcdc463be5464e25e3e955a511599a67b9b987f # 0.50.0
     hooks:
       - id: markdownlint
         types: [text]
@@ -49,7 +51,7 @@ repos:
   # If you do not, you will need to delete the cached ruff binary shown in the
   # error message
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: c59bba8fb259db0fec2bbb77ad8ba51ea7341b56 # 0.15.20
+    rev: 25bcf95026b96e2dd3c0aec3090c3d6ef6ca2e6c # 0.17.3
     hooks:
       # Run the linter.
       - id: ruff-check
@@ -64,7 +66,7 @@ repos:
         files: ^(template/)?\.github/workflows/.*\.ya?ml(\.j2)?
 
   - repo: https://github.com/hadolint/hadolint
-    rev: 57e1618d78fd469a92c1e584e8c9313024656623 # 2.14.0
+    rev: 2eece55955ced00200be9729e9728cb7dacca505 # 2.15.1
     hooks:
       - id: hadolint
         exclude: \.j2$

@@ -2,12 +2,12 @@
 # IMPORTANT
 # If you change the Rust toolchain version here, make sure to also change
 # docker-images/ubi10-rust-builder/Dockerfile
-rust_version: 1.97.1
+rust_version: 1.99.0
 
 # This nightly version is only used for cargo fmt invocations, because we use nightly-only
 # rustfmt config options in rustfmt.toml. The version should be kept in line with the version
 # used in the operator-rs repository.
-rust_nightly_version: nightly-2026-08-23
+rust_nightly_version: nightly-2026-11-02
 
 # This edition is mostly used for rustfmt commands and the rustfmt config file. The edition should
 # be kept in line with the edition in the operator-rs repository.
@@ -16,8 +16,11 @@ rust_edition: 2024
 # IMPORTANT
 # If you change the Hadolint version here, make sure to also change the hook
 # refs in the local and templated .pre-commit-config.yaml files.
-# And due to a bug you also need to update the version in .github/workflows/pr_pre_commit.yml
-hadolint_version: v2.14.0
+# See https://github.com/hadolint/hadolint/releases for the latest release.
+#
+# And due to a bug you also need to update the version in .github/workflows/pr_prek.yaml
+# See https://github.com/hadolint/hadolint/issues/886.
+hadolint_version: v2.15.1
 
 # IMPORTANT
 # If you change the Python version here, make sure to also change it in
@@ -29,7 +32,7 @@ python_version: 3.14
 # https://github.com/NixOS/nix/tags
 # Usually the latest version should just work and as such the version here can
 # be bumped without any constraints.
-nix_pkg_manager_version: 2.33.3
+nix_pkg_manager_version: 2.35.4
 
 # Check https://pypi.org/project/jinja2-cli/#history for updates
-jinja2_cli_version: 1.0.0
+jinja2_cli_version: 1.0.1
