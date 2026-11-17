@@ -5,38 +5,50 @@ DO NOT MANUALLY EDIT THIS FILE
 
 ## Description
 
-*Please add a description here. This will become the commit message of the merge request later.*
+<!-- Becomes the squash commit message. -->
 
-## Definition of Done Checklist
+## Docs
 
-- Not all of these items are applicable to all PRs, the author should update this template to only leave the boxes in that are relevant
-- Please make sure all these things are done and tick the boxes
+<!--
+Link any relevant nightly docs pages this changes or adds.
+If a parent issue covers the docs, link that issue instead.
+"None" if none.
+-->
+
+## Release note
+
+<!--
+A snippet for the release notes, plus the `release-note` label, or `release-note/action-required` if users must do something on upgrade.
+If a parent issue has the release note, link that issue instead and skip the label here.
+"None" if not user-facing.
+
+For bugs worth mentioning:
+"Previously, <what went wrong>. With this release, <how it was fixed>."
+-->
+
+## Checklist
+
+<!-- Delete what doesn't apply. -->
 
 ### Author
 
-- [ ] Changes are OpenShift compatible
-- [ ] CRD changes approved
-- [ ] CRD documentation for all fields, following the [style guide](https://docs.stackable.tech/home/nightly/contributor/docs/style-guide).
-- [ ] Helm chart can be installed and deployed operator works
-- [ ] Integration tests passed (for non trivial changes)
-- [ ] Changes need to be "offline" compatible
-- [ ] Links to generated (nightly) docs added
-- [ ] Release note snippet added
+- [ ] AI review done, findings addressed
+- [ ] OpenShift compatible
+- [ ] Works offline / air-gapped
+- [ ] CRD changes approved, all new fields documented per the [style guide](https://docs.stackable.tech/home/nightly/contributor/docs/style-guide)
+- [ ] Helm chart installs, operator works
+- [ ] Integration tests passed (non-trivial changes)
+- [ ] Changelog updated
 
 ### Reviewer
 
-- [ ] Code contains useful comments
-- [ ] Code contains useful logging statements
-- [ ] (Integration-)Test cases added
-- [ ] Documentation added or updated. Follows the [style guide](https://docs.stackable.tech/home/nightly/contributor/docs/style-guide).
-- [ ] Changelog updated
-- [ ] Cargo.toml only contains references to git tags (not specific commits or branches)
+- [ ] Useful comments and logging
+- [ ] Tests added
+- [ ] Docs added or updated per the [style guide](https://docs.stackable.tech/home/nightly/contributor/docs/style-guide)
+- [ ] Cargo.toml only references git tags
 
 ### Acceptance
 
-- [ ] Feature Tracker has been updated
-- [ ] Proper release label has been added
-- [ ] Links to generated (nightly) docs added
-- [ ] Release note snippet added
-- [ ] Add `type/deprecation` label & add to the [deprecation schedule](https://github.com/orgs/stackabletech/projects/44/views/1)
-- [ ] Add `type/experimental` label & add to the [experimental features tracker](https://github.com/orgs/stackabletech/projects/47)
+- [ ] Check for release notes and docs
+- [ ] Deprecation: `type/deprecation` label, added to the [deprecation schedule](https://github.com/orgs/stackabletech/projects/44/views/1)
+- [ ] Experimental: `type/experimental` label, added to the [experimental tracker](https://github.com/orgs/stackabletech/projects/47)
