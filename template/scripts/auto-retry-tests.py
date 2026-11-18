@@ -44,7 +44,10 @@ class TestConstants:
     DEFAULT_PARALLEL_WORKERS = 2  # Default number of parallel workers
 
     # Regex patterns
-    NAMESPACE_PATTERN = r"Creating namespace: (kuttl-test-[^\s]+)"
+    # kuttl 0.23 and later log `Creating namespace "<name>"`,
+    # earlier versions `Creating namespace: <name>`.
+    # Generated names are `kuttl-<pet>-<suffix>` since 0.26, `kuttl-test-<pet>` before.
+    NAMESPACE_PATTERN = r'Creating namespace:? "?(kuttl-[^\s"]+)'
     FAILED_TEST_PATTERN = r"--- FAIL: kuttl/harness/([^\s]+)"
 
 
@@ -440,7 +443,6 @@ class TestExecutor:
             with open(log_file, "r") as file_handle:
                 content = file_handle.read()
 
-            # Look for: "Creating namespace: kuttl-test-xyz"
             match = re.search(TestConstants.NAMESPACE_PATTERN, content)
             return match.group(1) if match else None
         except Exception:
