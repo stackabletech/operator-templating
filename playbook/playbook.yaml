@@ -12,6 +12,12 @@
       with_fileglob:
         - "../config/*.yaml"
 
+    - name: Ensure repository names are unique
+      assert:
+        that: repositories | map(attribute='name') | unique | length == repositories | length
+        fail_msg: "Duplicate repository names in config/repositories.yaml"
+      tags: local
+
     - name: Ensure work directory exists
       file:
         path: "{{ work_dir }}"

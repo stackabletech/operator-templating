@@ -23,32 +23,42 @@ on:
 permissions: {}
 
 jobs:
+  list-repositories:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      repositories: ${{ steps.list.outputs.repositories }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # config/repositories.yaml is the single source of truth for the matrix below
+      - name: List repositories from config/repositories.yaml
+        id: list
+        run: |
+          set -euo pipefail
+          repos=$(yq -o=json -I=0 '[.repositories[].name]' config/repositories.yaml)
+          if [ "$(jq 'length' <<< "$repos")" -eq 0 ]; then
+            echo "::error::No repositories found in config/repositories.yaml"
+            exit 1
+          fi
+          dupes=$(jq -r 'group_by(.)[] | select(length > 1) | .[0]' <<< "$repos")
+          if [ -n "$dupes" ]; then
+            echo "::error::Duplicate repository names in config/repositories.yaml: $dupes"
+            exit 1
+          fi
+          echo "repositories=$repos" >> "$GITHUB_OUTPUT"
+
   create-prs:
+    needs: list-repositories
     runs-on: ubuntu-latest
     permissions:
       contents: read
     strategy:
       fail-fast: ${{ inputs.fail-fast }}
       matrix:
-        # This should be the list of repository names from config/repositories.yaml:
-        # yq '.repositories | map(.name)' config/repositories.yaml
-        repository:
-          - airflow-operator
-          - commons-operator
-          - druid-operator
-          - hbase-operator
-          - hdfs-operator
-          - hive-operator
-          - kafka-operator
-          - nifi-operator
-          - listener-operator
-          - opa-operator
-          - opensearch-operator
-          - secret-operator
-          - spark-k8s-operator
-          - superset-operator
-          - trino-operator
-          - zookeeper-operator
+        repository: ${{ fromJSON(needs.list-repositories.outputs.repositories) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
