@@ -15,6 +15,8 @@ This script:
 Usage: ./scripts/auto-retry-tests.py --parallel 4 --attempts-serial 3 --attempts-parallel 2 --venv ./venv
 """
 
+from __future__ import annotations
+
 import argparse
 import hashlib
 import json
@@ -31,7 +33,6 @@ from dataclasses import asdict, dataclass
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
 
 
 class TestConstants:
@@ -44,7 +45,10 @@ class TestConstants:
     DEFAULT_PARALLEL_WORKERS = 2  # Default number of parallel workers
 
     # Regex patterns
-    NAMESPACE_PATTERN = r"Creating namespace: (kuttl-test-[^\s]+)"
+    # kuttl 0.23 and later log `Creating namespace "<name>"`,
+    # earlier versions `Creating namespace: <name>`.
+    # Generated names are `kuttl-<pet>-<suffix>` since 0.26, `kuttl-test-<pet>` before.
+    NAMESPACE_PATTERN = r'Creating namespace:? "?(kuttl-[^\s"]+)'
     FAILED_TEST_PATTERN = r"--- FAIL: kuttl/harness/([^\s]+)"
 
 
@@ -61,7 +65,7 @@ class RuntimeHistory:
     """Tracks runtime history for a specific test."""
 
     test_name: str
-    runtimes: List[float]  # List of all recorded runtimes in seconds
+    runtimes: list[float]  # List of all recorded runtimes in seconds
     last_updated: str  # ISO timestamp of last update
 
     def add_runtime(self, duration: float) -> None:
@@ -82,7 +86,7 @@ class RuntimeHistory:
         """Get the median runtime."""
         return statistics.median(self.runtimes) if self.runtimes else 0.0
 
-    def get_runtime_range(self) -> Tuple[float, float]:
+    def get_runtime_range(self) -> tuple[float, float]:
         """Get the min and max runtime."""
         if not self.runtimes:
             return 0.0, 0.0
@@ -101,10 +105,10 @@ class TestResult:
     attempt: int
     attempt_type: str  # 'initial', 'parallel', 'serial'
     success: bool
-    namespace: Optional[str] = None
+    namespace: str | None = None
     duration: float = 0.0
-    log_file: Optional[str] = None
-    failed_step: Optional[str] = None
+    log_file: str | None = None
+    failed_step: str | None = None
 
 
 @dataclass
@@ -113,16 +117,14 @@ class TestSummary:
 
     test_name: str
     initial_result: TestResult
-    retry_results: List[TestResult]
+    retry_results: list[TestResult]
     final_status: str  # 'passed', 'failed', 'flaky'
     total_attempts: int
-    final_namespace: Optional[str] = None
+    final_namespace: str | None = None
 
 
 class FileOperationError(Exception):
     """Exception raised for file operation errors."""
-
-    pass
 
 
 class StateManager:
@@ -132,7 +134,7 @@ class StateManager:
         self.output_dir = output_dir
         self.state_file = output_dir / "test_run_state.json"
         self.runtime_file = output_dir / "runtime_history.json"
-        self.runtime_history: Dict[str, RuntimeHistory] = {}
+        self.runtime_history: dict[str, RuntimeHistory] = {}
 
     @contextmanager
     def safe_file_operation(self, file_path: Path, mode: str = "r"):
@@ -146,11 +148,11 @@ class StateManager:
             raise
         except PermissionError:
             raise FileOperationError(f"Permission denied: {file_path}")
-        except Exception as exception:
+        except Exception as exception:  # noqa: BLE001 - the retry run reports the error and carries on
             raise FileOperationError(f"Unexpected error with {file_path}: {exception}")
 
     def safe_json_operation(
-        self, operation: str, file_path: Path, data: dict = None
+        self, operation: str, file_path: Path, data: dict | None = None
     ) -> any:
         """Safely handle JSON file operations with consistent error handling."""
         try:
@@ -305,11 +307,11 @@ class StateManager:
 
             return True
 
-        except Exception as exception:
+        except Exception as exception:  # noqa: BLE001 - the retry run reports the error and carries on
             print(f"❌ Failed to restore state: {exception}")
             return False
 
-    def find_latest_state_file(self) -> Optional[Path]:
+    def find_latest_state_file(self) -> Path | None:
         """Find the most recent state file in the output directory."""
         state_files = list(self.output_dir.glob("**/test_run_state.json"))
         if not state_files:
@@ -318,9 +320,7 @@ class StateManager:
         # Return the most recently modified state file
         return max(state_files, key=lambda file_path: file_path.stat().st_mtime)
 
-    def load_failed_tests_from_state(
-        self, state_file: Optional[Path] = None
-    ) -> List[str]:
+    def load_failed_tests_from_state(self, state_file: Path | None = None) -> list[str]:
         """Load failed test list from a state file."""
         if state_file is None:
             state_file = self.find_latest_state_file()
@@ -391,8 +391,11 @@ class TestExecutor:
         return f"{safe_test_name}_attempt_{attempt}_{attempt_type}.txt"
 
     def build_test_command(
-        self, test_name: str = None, skip_delete: bool = False, work_dir: str = None
-    ) -> List[str]:
+        self,
+        test_name: str | None = None,
+        skip_delete: bool = False,
+        work_dir: str | None = None,
+    ) -> list[str]:
         """Build the command arguments for running tests."""
         command_args = ["scripts/run-tests"]
 
@@ -419,7 +422,7 @@ class TestExecutor:
 
         return command_args
 
-    def setup_test_environment(self) -> Optional[dict]:
+    def setup_test_environment(self) -> dict | None:
         """Set up environment with virtualenv if specified."""
         if not self.args.venv:
             return None
@@ -434,20 +437,19 @@ class TestExecutor:
         return environment_vars
 
     @staticmethod
-    def extract_test_namespace_from_log_file(log_file: Path) -> Optional[str]:
+    def extract_test_namespace_from_log_file(log_file: Path) -> str | None:
         """Extract namespace from test log file."""
         try:
             with open(log_file, "r") as file_handle:
                 content = file_handle.read()
 
-            # Look for: "Creating namespace: kuttl-test-xyz"
             match = re.search(TestConstants.NAMESPACE_PATTERN, content)
             return match.group(1) if match else None
-        except Exception:
+        except Exception:  # noqa: BLE001 - the retry run reports the error and carries on
             return None
 
     @staticmethod
-    def extract_failed_step(log_file: Path) -> Optional[str]:
+    def extract_failed_step(log_file: Path) -> str | None:
         """Extract the failed step from the log."""
         try:
             with open(log_file, "r") as file_handle:
@@ -459,11 +461,11 @@ class TestExecutor:
                 return f"failed in step {step_match.group(1)}"
 
             return "Could not find failed step"
-        except Exception:
+        except Exception:  # noqa: BLE001 - the retry run reports the error and carries on
             return "Could not find failed step"
 
     @staticmethod
-    def parse_failed_tests_from_log(log_file: Path) -> List[str]:
+    def parse_failed_tests_from_log(log_file: Path) -> list[str]:
         """Parse failed tests from the initial test run log."""
         try:
             with open(log_file, "r") as file_handle:
@@ -472,7 +474,7 @@ class TestExecutor:
             # Look for lines that match the pattern: "--- FAIL: kuttl/harness/TEST_NAME"
             matches = re.findall(TestConstants.FAILED_TEST_PATTERN, content)
             return matches
-        except Exception as exception:
+        except Exception as exception:  # noqa: BLE001 - the retry run reports the error and carries on
             print(f"Error parsing failed tests: {exception}")
             return []
 
@@ -484,21 +486,23 @@ class TestExecutor:
 
         try:
             command_args = ["kubectl", "delete", "namespace", namespace]
-            result = subprocess.run(command_args, capture_output=True, text=True)
+            result = subprocess.run(
+                command_args, capture_output=True, text=True, check=False
+            )
             if result.returncode == 0:
                 print(f"  ✓ Deleted namespace: {namespace}")
                 return True
             else:
                 print(f"  ✗ Failed to delete namespace {namespace}: {result.stderr}")
                 return False
-        except Exception as exception:
+        except Exception as exception:  # noqa: BLE001 - the retry run reports the error and carries on
             print(f"  ✗ Error deleting namespace {namespace}: {exception}")
             return False
 
     def run_single_test_suite(
         self,
         output_dir: Path,
-        test_name: str = None,
+        test_name: str | None = None,
         skip_delete: bool = False,
         attempt: int = 1,
         attempt_type: str = "initial",
@@ -560,6 +564,7 @@ class TestExecutor:
 
             result = subprocess.run(
                 command_args,
+                check=False,
                 stdout=file_handle,
                 stderr=subprocess.STDOUT,
                 env=environment_vars,
@@ -617,7 +622,7 @@ class TestExecutor:
         if work_dir and Path(work_dir).exists():
             try:
                 shutil.rmtree(work_dir)
-            except Exception as exception:
+            except Exception as exception:  # noqa: BLE001 - the retry run reports the error and carries on
                 print(f"  ⚠️ Failed to clean up work directory {work_dir}: {exception}")
 
         return test_result
@@ -640,7 +645,7 @@ class ReportGenerator:
         else:
             return f"{seconds / 3600:.1f}h"
 
-    def print_runtime_summary(self, test_names: List[str], title: str) -> None:
+    def print_runtime_summary(self, test_names: list[str], title: str) -> None:
         """Print a summary of runtime estimates for a list of tests."""
         print(f"\n📊 {title}")
         print("-" * 46)
@@ -782,7 +787,7 @@ class ReportGenerator:
 
         return "\n".join(report)
 
-    def _add_runtime_statistics_to_report(self, report: List[str]) -> None:
+    def _add_runtime_statistics_to_report(self, report: list[str]) -> None:
         """Add runtime statistics section to the report."""
         if not self.state_manager.runtime_history:
             return
@@ -866,7 +871,7 @@ class ReportGenerator:
             with open(report_file, "w") as file_handle:
                 file_handle.write(report)
             print(f"Text report saved to: {report_file}")
-        except Exception as exception:
+        except Exception as exception:  # noqa: BLE001 - the retry run reports the error and carries on
             print(f"⚠️ Failed to save text report: {exception}")
 
         # Save JSON report
@@ -878,8 +883,8 @@ class AutoRetryTestRunner:
 
     def __init__(self, args):
         self.args = args
-        self.results: List[TestResult] = []
-        self.test_summaries: Dict[str, TestSummary] = {}
+        self.results: list[TestResult] = []
+        self.test_summaries: dict[str, TestSummary] = {}
         self.start_time = datetime.now()
         self.output_dir = Path(args.output_dir)
         self.output_dir.mkdir(exist_ok=True)
@@ -888,10 +893,10 @@ class AutoRetryTestRunner:
         (self.output_dir / "retries").mkdir(exist_ok=True)
 
         # State management
-        self.failed_tests: List[str] = []
+        self.failed_tests: list[str] = []
         self.parallel_attempts_done = 0
-        self.serial_attempts_done: Dict[str, int] = {}
-        self.initial_result_log: Optional[str] = None
+        self.serial_attempts_done: dict[str, int] = {}
+        self.initial_result_log: str | None = None
 
         # Initialize components
         self.state_manager = StateManager(self.output_dir)
@@ -902,8 +907,8 @@ class AutoRetryTestRunner:
         self.state_manager.load_runtime_history()
 
     def retry_tests_in_parallel(
-        self, test_names: List[str], max_attempts: int, serial_tests_follow: bool = True
-    ) -> Dict[str, List[TestResult]]:
+        self, test_names: list[str], max_attempts: int, serial_tests_follow: bool = True
+    ) -> dict[str, list[TestResult]]:
         """Retry multiple tests in parallel, with multiple attempts per test."""
         if max_attempts <= 0 or not test_names:
             return {test_name: [] for test_name in test_names}
@@ -968,7 +973,7 @@ class AutoRetryTestRunner:
                         else:
                             print(f"  ✗ {test_name} FAILED (attempt {attempt})")
 
-                    except Exception as exception:
+                    except Exception as exception:  # noqa: BLE001 - the retry run reports the error and carries on
                         print(f"  ✗ {test_name} ERROR (attempt {attempt}): {exception}")
 
             # Update parallel attempts counter
@@ -984,7 +989,7 @@ class AutoRetryTestRunner:
         max_attempts: int,
         current_test: int = 1,
         total_tests: int = 1,
-    ) -> List[TestResult]:
+    ) -> list[TestResult]:
         """Retry a test multiple times serially."""
         if max_attempts <= 0:
             return []
@@ -1028,7 +1033,7 @@ class AutoRetryTestRunner:
         self,
         test_name: str,
         initial_result: TestResult,
-        retry_results: List[TestResult],
+        retry_results: list[TestResult],
     ) -> TestSummary:
         """Process and summarize all results for a single test."""
         # Determine final status
@@ -1136,7 +1141,7 @@ class AutoRetryTestRunner:
         self.initial_result_log = initial_result.log_file
         return InitOutcome.RETRY
 
-    def execute_parallel_retries(self) -> Dict[str, List[TestResult]]:
+    def execute_parallel_retries(self) -> dict[str, list[TestResult]]:
         """Execute parallel retry attempts for failed tests."""
         all_parallel_results = {}
 
@@ -1173,8 +1178,8 @@ class AutoRetryTestRunner:
         return all_parallel_results
 
     def execute_serial_retries(
-        self, all_parallel_results: Dict[str, List[TestResult]]
-    ) -> Dict[str, List[TestResult]]:
+        self, all_parallel_results: dict[str, list[TestResult]]
+    ) -> dict[str, list[TestResult]]:
         """Execute serial retry attempts for tests that failed parallel retries."""
         # Determine tests that still need serial retries
         tests_still_failing = []
